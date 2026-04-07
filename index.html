@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Para Anthuanete ❤️</title>
+  <meta name="theme-color" content="#120a18" />
+  <style>
+    :root {
+      --bg-1: #120a18;
+      --bg-2: #241128;
+      --bg-3: #3b1836;
+      --rose: #f5a6b8;
+      --rose-strong: #ff7fa2;
+      --gold: #f0d7a1;
+      --text: #fff9fb;
+      --muted: rgba(255,255,255,.72);
+      --card: rgba(255,255,255,.10);
+      --card-strong: rgba(255,255,255,.14);
+      --stroke: rgba(255,255,255,.14);
+      --shadow: 0 18px 50px rgba(0,0,0,.28);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --maxw: 460px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255, 179, 196, 0.18), transparent 28%),
+        radial-gradient(circle at 85% 15%, rgba(240, 215, 161, 0.12), transparent 24%),
+        radial-gradient(circle at 50% 80%, rgba(255, 127, 162, 0.10), transparent 35%),
+        linear-gradient(160deg, var(--bg-1), var(--bg-2) 45%, var(--bg-3));
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+      mask-image: radial-gradient(circle at center, black 45%, transparent 95%);
+      pointer-events: none;
+      opacity: .18;
+    }
+
+    .hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .heart {
+      position: absolute;
+      bottom: -40px;
+      opacity: .18;
+      animation: floatUp linear infinite;
+      filter: blur(.3px);
+    }
+
+    @keyframes floatUp {
+      0% { transform: translate3d(0, 0, 0) scale(.8) rotate(0deg); opacity: 0; }
+      12% { opacity: .18; }
+      100% { transform: translate3d(var(--drift), -120vh, 0) scale(1.15) rotate(14deg); opacity: 0; }
+    }
+
+    .app {
+      width: min(100%, var(--maxw));
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      padding: max(18px, env(safe-area-inset-top)) 18px max(26px, env(safe-area-inset-bottom));
+    }
+
+    .glass {
+      background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.07));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .hero {
+      position: relative;
+      padding: 20px;
+      border-radius: 32px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -10% -20% auto;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(255,255,255,.18), transparent 70%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.12);
+      color: var(--gold);
+      font-size: .77rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+    .hero h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 7vw, 3rem);
+      line-height: .98;
+      letter-spacing: -.02em;
+      margin-bottom: 10px;
+      text-wrap: balance;
+    }
+
+    .hero p {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: .98rem;
+      max-width: 34ch;
+    }
+
+    .hero-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid rgba(255,255,255,.15);
+      background: linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.10));
+      color: var(--text);
+      border-radius: 18px;
+      min-height: 56px;
+      padding: 14px 18px;
+      font-size: .98rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      box-shadow: 0 10px 30px rgba(0,0,0,.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: transform .22s ease, background .22s ease, border-color .22s ease;
+      cursor: pointer;
+    }
+
+    .btn:active { transform: scale(.985); }
+    .btn.primary {
+      background: linear-gradient(180deg, rgba(255, 162, 189, .34), rgba(255, 127, 162, .18));
+      border-color: rgba(255, 195, 213, .25);
+    }
+
+    .music-state {
+      font-size: .88rem;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 6px;
+      min-height: 20px;
+    }
+
+    section {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: var(--radius-xl);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .section-head h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: -.02em;
+    }
+
+    .section-head span {
+      color: var(--gold);
+      font-size: .8rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .counter-copy {
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 14px;
+    }
+
+    .time-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .time-card {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.1);
+      text-align: center;
+    }
+
+    .time-card strong {
+      display: block;
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .time-card span {
+      color: var(--muted);
+      font-size: .86rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .timeline-note {
+      margin-top: 14px;
+      color: rgba(255,255,255,.82);
+      font-size: .95rem;
+      line-height: 1.65;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .letter-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .envelope-scene {
+      width: 100%;
+      display: grid;
+      place-items: center;
+      perspective: 1400px;
+      padding: 8px 0 2px;
+    }
+
+    .envelope {
+      position: relative;
+      width: min(100%, 320px);
+      aspect-ratio: 1.34 / 1;
+      cursor: pointer;
+      filter: drop-shadow(0 22px 40px rgba(0,0,0,.25));
+      transform-style: preserve-3d;
+    }
+
+    .env-back,
+    .env-front,
+    .env-flap,
+    .letter {
+      position: absolute;
+      inset: 0;
+      border-radius: 0 0 24px 24px;
+    }
+
+    .env-back {
+      background: linear-gradient(180deg, #f9d5dd, #efb8c5 80%);
+      border-radius: 18px;
+    }
+
+    .env-front {
+      clip-path: polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%);
+      background: linear-gradient(180deg, #f6c5d1, #eaa0b4 90%);
+      border-radius: 18px;
+      z-index: 4;
+    }
+
+    .env-side-left,
+    .env-side-right {
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      z-index: 3;
+      background: linear-gradient(180deg, #f6cad4, #ebb2c0 90%);
+    }
+
+    .env-side-left { clip-path: polygon(0 0, 54% 58%, 0 100%); }
+    .env-side-right { clip-path: polygon(100% 0, 46% 58%, 100% 100%); }
+
+    .env-flap {
+      inset: 0 0 auto 0;
+      height: 58%;
+      background: linear-gradient(180deg, #ffe2e8, #f4c2cf 85%);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transform-origin: top;
+      transition: transform .9s cubic-bezier(.2,.8,.2,1);
+      z-index: 6;
+      border-radius: 18px 18px 0 0;
+      box-shadow: inset 0 -10px 18px rgba(255,255,255,.18);
+    }
+
+    .seal {
+      position: absolute;
+      left: 50%;
+      top: 44%;
+      transform: translate(-50%, -50%);
+      z-index: 7;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at 35% 30%, #ffd8e2, #ff91ab 62%, #f36c8f);
+      color: white;
+      font-size: 20px;
+      box-shadow: 0 10px 24px rgba(243,108,143,.36);
+      transition: opacity .35s ease, transform .35s ease;
+    }
+
+    .letter {
+      inset: 12% 6% 10% 6%;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,246,249,.96));
+      color: #5e3244;
+      z-index: 2;
+      padding: 18px 16px;
+      transform: translateY(26%) scale(.98);
+      transition: transform 1s cubic-bezier(.2,.8,.2,1), box-shadow .8s ease;
+      box-shadow: 0 12px 24px rgba(0,0,0,.08);
+      overflow: hidden;
+    }
+
+    .letter::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(250, 211, 221, .15), transparent 25%, transparent 75%, rgba(240, 215, 161, .08));
+      pointer-events: none;
+    }
+
+    .letter-content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .letter-kicker {
+      color: #b56f85;
+      text-transform: uppercase;
+      font-size: .72rem;
+      letter-spacing: .14em;
+    }
+
+    .letter h3 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.45rem;
+      color: #6d3d50;
+    }
+
+    .letter p {
+      line-height: 1.65;
+      font-size: .96rem;
+      color: #6d4b59;
+    }
+
+    .letter-sign {
+      margin-top: 4px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-style: italic;
+      color: #8e5367;
+    }
+
+    .envelope.open .env-flap {
+      transform: rotateX(180deg);
+    }
+
+    .envelope.open .letter {
+      transform: translateY(-26%) scale(1.02);
+      box-shadow: 0 22px 44px rgba(0,0,0,.14);
+    }
+
+    .envelope.open .seal {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(.7);
+    }
+
+    .hint {
+      color: var(--muted);
+      text-align: center;
+      font-size: .9rem;
+      line-height: 1.5;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .photo-card {
+      position: relative;
+      min-height: 210px;
+      border-radius: 22px;
+      overflow: hidden;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.09);
+      transform: translateZ(0);
+      transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+      box-shadow: 0 12px 28px rgba(0,0,0,.14);
+    }
+
+    .photo-card:active {
+      transform: scale(.985);
+    }
+
+    .photo-img,
+    .photo-placeholder {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-placeholder {
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,.15), transparent 40%),
+        linear-gradient(160deg, rgba(255, 168, 190, .18), rgba(255,255,255,.04));
+      color: rgba(255,255,255,.78);
+      text-align: center;
+      padding: 18px;
+      font-size: .9rem;
+      line-height: 1.5;
+    }
+
+    .photo-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 20%, rgba(17, 9, 20, .15) 55%, rgba(17, 9, 20, .72) 100%);
+      pointer-events: none;
+    }
+
+    .photo-caption {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      z-index: 2;
+    }
+
+    .photo-caption strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .photo-caption span {
+      color: rgba(255,255,255,.84);
+      font-size: .84rem;
+      line-height: 1.45;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: .95rem;
+      padding: 0 8px 4px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      color: rgba(255,255,255,.86);
+      font-size: .86rem;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity .75s ease, transform .75s ease;
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (min-width: 680px) {
+      .app { width: min(100%, 520px); }
+      .hero-actions { grid-template-columns: 1fr 1fr; }
+      .time-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts" id="hearts" aria-hidden="true"></div>
+
+  <main class="app">
+    <section class="hero glass reveal">
+      <div class="eyebrow">✨ Una página solo para ti</div>
+      <h1 id="heroTitle">Para Anthuanete</h1>
+      <p id="heroText">
+        Hay detalles que no necesitan hacer ruido para quedarse en el corazón.
+        Este es uno de ellos: una pausa bonita, hecha con calma, para recordarte lo importante que eres para mí.
+      </p>
+
+      <div class="hero-actions">
+        <button class="btn primary" id="openLetterBtn" type="button">💌 Abrir la carta</button>
+        <button class="btn" id="musicBtn" type="button">🎵 Reproducir música</button>
+      </div>
+      <div class="music-state" id="musicState">Música lista para reproducirse cuando quieras.</div>
+    </section>
+
+    <section class="glass reveal">
+      <div class="section-head">
+        <h2>Nuestro tiempo</h2>
+        <span>desde el inicio</span>
+      </div>
+      <p class="counter-copy" id="counterCopy"></p>
+      <div class="time-grid">
+        <div class="time-card"><strong id="years">0</strong><span>Años</span></div>
+        <div class="time-card"><strong id="months">0</strong><span>Meses</span></div>
+        <div class="time-card"><strong id="days">0</strong><span>Días</span></div>
+        <div class="time-card"><strong id="hours">0</strong><span>Horas</span></div>
+      </div>
+      <div class="timeline-note" id="timelineNote"></div>
+    </section>
+
+    <section class="glass reveal">
+      <div class="section-head">
+        <h2>Una carta para ti</h2>
+        <span>tócala</span>
+      </div>
+      <div class="letter-wrap">
+        <div class="envelope-scene">
+          <div class="envelope" id="envelope" role="button" aria-label="Abrir carta" tabindex="0">
+            <div class="env-back"></div>
+            <div class="env-side-left"></div>
+            <div class="env-side-right"></div>
+            <div class="letter" id="letterPaper">
+              <div class="letter-content">
+                <div class="letter-kicker">Para mi persona favorita</div>
+                <h3 id="letterTitle">Anthuanete,</h3>
+                <p id="letterMessage"></p>
+                <div class="letter-sign" id="letterSign"></div>
+              </div>
+            </div>
+            <div class="env-front"></div>
+            <div class="env-flap"></div>
+            <div class="seal">❤</div>
+          </div>
+        </div>
+        <p class="hint" id="letterHint">Toca el sobre para abrirlo con calma.</p>
+      </div>
+    </section>
+
+    <section class="glass reveal">
+      <div class="section-head">
+        <h2>Nuestros recuerdos</h2>
+        <span>galería</span>
+      </div>
+      <div class="gallery-grid" id="gallery"></div>
+      <div class="pill-row">
+        <div class="pill">📷 Reemplaza las fotos desde JavaScript</div>
+        <div class="pill">🫶 Cada imagen tiene una frase suave</div>
+      </div>
+    </section>
+
+    <p class="footer-note reveal" id="footerNote"></p>
+  </main>
+
+  <!--
+    Reemplaza el archivo local por tu canción:
+    1) Crea una carpeta llamada "audio"
+    2) Pon tu archivo como "nuestra-cancion.mp3"
+    3) O cambia la ruta en CONFIG.musicSrc
+  -->
+  <audio id="bgMusic" preload="none" playsinline>
+    <source src="audio/nuestra-cancion.mp3" type="audio/mpeg" />
+  </audio>
+
+  <script>
+    /* =========================================================
+       CONFIGURACION RAPIDA
+       ========================================================= */
+    const CONFIG = {
+      novia: "Anthuanete",
+      tuNombre: "Jorge",
+
+      // Usa formato ISO para que el contador funcione bien.
+      // IMPORTANTE: cambia el ano por el real si fue otro distinto.
+      fechaInicio: "2025-03-08T00:00:00",
+
+      carta:
+        "Quise hacerte algo bonito, algo que se sintiera sereno y verdadero, porque así es como te pienso. Estar contigo ha llenado mis días de una luz distinta: más suave, más profunda, más humana. Me gusta tu manera de existir en mi vida, la calma que me das, la alegría que aparece cuando te recuerdo y la certeza de que, incluso en lo simple, contigo todo se vuelve especial. Gracias por tu ternura, por tu forma de mirar el mundo y por hacerme sentir que el amor también puede ser elegante, sincero y tranquilo. Esta página es pequeña frente a lo que significas para mí, pero está hecha con cariño, con intención y completamente para ti.",
+
+      fraseTiempo:
+        "Cada etapa contigo me confirma que el amor más bonito no siempre es el más ruidoso, sino el que se queda, acompaña y hace del tiempo algo valioso.",
+
+      musicSrc: "audio/nuestra-cancion.mp3",
+
+      intro:
+        "Hay detalles que no necesitan hacer ruido para quedarse en el corazón. Este es uno de ellos: una pausa bonita, hecha con calma, para recordarte lo importante que eres para mí.",
+
+      footer:
+        "Con todo mi cariño, Jorge. Para que la abras cuando quieras volver a sentirte amada, admirada y profundamente importante para mí.",
+
+      galeria: [
+        {
+          src: "images/foto1.jpg",
+          titulo: "Tu sonrisa",
+          frase: "Siempre encuentra la forma de volver bonito cualquier momento."
+        },
+        {
+          src: "images/foto2.jpg",
+          titulo: "Nuestro instante",
+          frase: "Hay recuerdos que no se borran porque nacieron con verdad."
+        },
+        {
+          src: "images/foto3.jpg",
+          titulo: "Lo simple contigo",
+          frase: "Hasta lo cotidiano se vuelve especial cuando estás cerca."
+        },
+        {
+          src: "images/foto4.jpg",
+          titulo: "Nosotros",
+          frase: "Mi lugar favorito sigue siendo cualquier sitio donde coincidimos."
+        }
+      ]
+    };
+
+    /* =========================================================
+       TEXTOS DINAMICOS
+       ========================================================= */
+    const heroTitle = document.getElementById("heroTitle");
+    const heroText = document.getElementById("heroText");
+    const counterCopy = document.getElementById("counterCopy");
+    const timelineNote = document.getElementById("timelineNote");
+    const letterMessage = document.getElementById("letterMessage");
+    const letterTitle = document.getElementById("letterTitle");
+    const letterSign = document.getElementById("letterSign");
+    const footerNote = document.getElementById("footerNote");
+    const music = document.getElementById("bgMusic");
+    const musicBtn = document.getElementById("musicBtn");
+    const musicState = document.getElementById("musicState");
+    const envelope = document.getElementById("envelope");
+    const openLetterBtn = document.getElementById("openLetterBtn");
+    const letterHint = document.getElementById("letterHint");
+
+    heroTitle.textContent = `Para ${CONFIG.novia}`;
+    heroText.textContent = CONFIG.intro;
+    counterCopy.textContent = `Desde el ${formatDatePretty(CONFIG.fechaInicio)}, cada tramo compartido contigo tiene algo que me gusta recordar.`;
+    timelineNote.textContent = CONFIG.fraseTiempo;
+    letterTitle.textContent = `${CONFIG.novia},`;
+    letterMessage.textContent = CONFIG.carta;
+    letterSign.textContent = `Con amor, ${CONFIG.tuNombre}`;
+    footerNote.textContent = CONFIG.footer;
+
+    if (music.querySelector("source").getAttribute("src") !== CONFIG.musicSrc) {
+      music.querySelector("source").setAttribute("src", CONFIG.musicSrc);
+      music.load();
+    }
+
+    /* =========================================================
+       CONTADOR DE TIEMPO EN TIEMPO REAL
+       ========================================================= */
+    const yearsEl = document.getElementById("years");
+    const monthsEl = document.getElementById("months");
+    const daysEl = document.getElementById("days");
+    const hoursEl = document.getElementById("hours");
+
+    function padDate(date) {
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), 0, 0, 0);
+    }
+
+    function diffPrecise(startDate, endDate) {
+      if (!(startDate instanceof Date) || Number.isNaN(startDate)) return null;
+      if (endDate < startDate) return { years: 0, months: 0, days: 0, hours: 0 };
+
+      let years = endDate.getFullYear() - startDate.getFullYear();
+      let months = endDate.getMonth() - startDate.getMonth();
+      let days = endDate.getDate() - startDate.getDate();
+      let hours = endDate.getHours() - startDate.getHours();
+
+      if (hours < 0) {
+        hours += 24;
+        days -= 1;
+      }
+
+      if (days < 0) {
+        const prevMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0);
+        days += prevMonth.getDate();
+        months -= 1;
+      }
+
+      if (months < 0) {
+        months += 12;
+        years -= 1;
+      }
+
+      return { years, months, days, hours };
+    }
+
+    function updateCounter() {
+      const start = new Date(CONFIG.fechaInicio);
+      const now = new Date();
+
+      if (Number.isNaN(start.getTime())) {
+        yearsEl.textContent = "--";
+        monthsEl.textContent = "--";
+        daysEl.textContent = "--";
+        hoursEl.textContent = "--";
+        timelineNote.textContent = "Configura una fecha válida en CONFIG.fechaInicio con formato ISO, por ejemplo: 2025-03-08T00:00:00";
+        return;
+      }
+
+      const diff = diffPrecise(start, now);
+      yearsEl.textContent = diff.years;
+      monthsEl.textContent = diff.months;
+      daysEl.textContent = diff.days;
+      hoursEl.textContent = diff.hours;
+    }
+
+    updateCounter();
+    setInterval(updateCounter, 1000 * 60);
+
+    /* =========================================================
+       CARTA ANIMADA
+       ========================================================= */
+    function toggleLetter(forceOpen = null) {
+      const isOpen = envelope.classList.contains("open");
+      const nextState = forceOpen === null ? !isOpen : !!forceOpen;
+      envelope.classList.toggle("open", nextState);
+      letterHint.textContent = nextState
+        ? "A veces las palabras más sinceras solo necesitan un instante de silencio."
+        : "Toca el sobre para abrirlo con calma.";
+    }
+
+    envelope.addEventListener("click", () => toggleLetter());
+    envelope.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggleLetter();
+      }
+    });
+    openLetterBtn.addEventListener("click", () => {
+      toggleLetter(true);
+      document.getElementById("envelope").scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+
+    /* =========================================================
+       MUSICA OPCIONAL
+       ========================================================= */
+    let isPlaying = false;
+
+    async function toggleMusic() {
+      try {
+        if (!isPlaying) {
+          const playPromise = music.play();
+          if (playPromise !== undefined) {
+            await playPromise;
+          }
+          isPlaying = true;
+          musicBtn.textContent = "⏸ Pausar música";
+          musicState.textContent = "Reproduciendo un fondo especial para este momento.";
+        } else {
+          music.pause();
+          isPlaying = false;
+          musicBtn.textContent = "🎵 Reproducir música";
+          musicState.textContent = "Música en pausa.";
+        }
+      } catch (error) {
+        isPlaying = false;
+        musicBtn.textContent = "🎵 Reproducir música";
+        musicState.textContent = "No se pudo reproducir. Verifica la ruta del archivo en CONFIG.musicSrc o toca de nuevo.";
+      }
+    }
+
+    musicBtn.addEventListener("click", toggleMusic);
+    music.addEventListener("ended", () => {
+      isPlaying = false;
+      musicBtn.textContent = "🎵 Reproducir música";
+      musicState.textContent = "La canción terminó. Puedes volver a reproducirla cuando quieras.";
+    });
+
+    /* =========================================================
+       GALERIA
+       ========================================================= */
+    const gallery = document.getElementById("gallery");
+
+    function createPhotoCard(item, index) {
+      const article = document.createElement("article");
+      article.className = "photo-card";
+
+      const img = document.createElement("img");
+      img.className = "photo-img";
+      img.alt = item.titulo;
+      img.loading = "lazy";
+      img.src = item.src;
+
+      const placeholder = document.createElement("div");
+      placeholder.className = "photo-placeholder";
+      placeholder.innerHTML = `<div><strong>Espacio para tu foto ${index + 1}</strong><br>Coloca el archivo en:<br><code>${escapeHtml(item.src)}</code></div>`;
+
+      img.addEventListener("error", () => {
+        img.style.display = "none";
+        placeholder.style.display = "grid";
+      });
+
+      img.addEventListener("load", () => {
+        placeholder.style.display = "none";
+      });
+
+      const caption = document.createElement("div");
+      caption.className = "photo-caption";
+      caption.innerHTML = `<strong>${escapeHtml(item.titulo)}</strong><span>${escapeHtml(item.frase)}</span>`;
+
+      article.appendChild(img);
+      article.appendChild(placeholder);
+      article.appendChild(caption);
+      return article;
+    }
+
+    function renderGallery() {
+      gallery.innerHTML = "";
+      CONFIG.galeria.forEach((item, index) => gallery.appendChild(createPhotoCard(item, index)));
+    }
+
+    renderGallery();
+
+    /* =========================================================
+       CORAZONES FLOTANTES SUAVES
+       ========================================================= */
+    const hearts = document.getElementById("hearts");
+    const HEARTS_COUNT = 12;
+
+    function makeHeart() {
+      const el = document.createElement("div");
+      el.className = "heart";
+      el.textContent = Math.random() > 0.5 ? "❤" : "♡";
+      el.style.left = `${Math.random() * 100}%`;
+      el.style.fontSize = `${12 + Math.random() * 16}px`;
+      el.style.animationDuration = `${12 + Math.random() * 14}s`;
+      el.style.animationDelay = `${Math.random() * 8}s`;
+      el.style.setProperty("--drift", `${(Math.random() - 0.5) * 80}px`);
+      hearts.appendChild(el);
+    }
+
+    for (let i = 0; i < HEARTS_COUNT; i += 1) makeHeart();
+
+    /* =========================================================
+       REVEAL SUAVE AL HACER SCROLL
+       ========================================================= */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add("in");
+      });
+    }, { threshold: 0.18 });
+
+    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+
+    /* =========================================================
+       UTILIDADES
+       ========================================================= */
+    function formatDatePretty(input) {
+      const date = new Date(input);
+      if (Number.isNaN(date.getTime())) return "una fecha especial";
+      return new Intl.DateTimeFormat("es-ES", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      }).format(date);
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>
