@@ -373,8 +373,9 @@
       height: 100%;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      justify-content: center;
+      gap: 12px;
+      justify-content: center; /* Esto centrará tu nuevo texto corto verticalmente */
+      text-align: center;      /* Y esto horizontalmente para que parezca una dedicatoria */
     }
 
     .letter-kicker {
@@ -391,9 +392,10 @@
     }
 
     .letter p {
-      line-height: 1.65;
-      font-size: .96rem;
-      color: #6d4b59;
+      line-height: 1.6;
+      font-size: 1.05rem;      /* Subimos un poquito el tamaño ya que hay menos texto */
+      color: #5e3244;
+      margin: 0;
     }
 
     .letter-sign {
@@ -408,8 +410,12 @@
     }
 
     .envelope.open .letter {
-      transform: translateY(-26%) scale(1.02);
-      box-shadow: 0 22px 44px rgba(0,0,0,.14);
+        transform: translateY(-80%) scale(1.1); /* Sube más la carta para que se lea */
+        height: auto; /* Permite que crezca según el texto */
+        min-height: 280px;
+        z-index: 100 !important; /* Asegura que esté sobre las solapas */
+        box-shadow: 0 15px 45px rgba(0,0,0,0.4);
+        background: white !important; /* Fondo blanco sólido para lectura clara */
     }
 
     .envelope.open .seal {
@@ -556,8 +562,8 @@
       <div class="eyebrow">✨ Una página solo para ti</div>
       <h1 id="heroTitle">Para Anthuanete</h1>
       <p id="heroText">
-        Hay detalles que no necesitan hacer ruido para quedarse en el corazón.
-        Este es uno de ellos: una pausa bonita, hecha con calma, para recordarte lo importante que eres para mí.
+        Este es un pequeño detalle que ire actualizando con el paso del tiempo.
+        Para que la abras siempre que quieras recordar lo mucho que te admiro. 💜
       </p>
 
       <div class="hero-actions">
@@ -642,24 +648,21 @@
     const CONFIG = {
       novia: "Anthuanete",
       tuNombre: "Jorge",
+      fechaInicio: "2026-03-08T00:00:00", 
 
-      // Usa formato ISO para que el contador funcione bien.
-      // IMPORTANTE: cambia el ano por el real si fue otro distinto.
-      fechaInicio: "2025-03-08T00:00:00",
+      intro: 
+        "Esta página es una pequeña pausa para recordarte lo especial que eres para mí.",
 
       carta:
-        "Quise hacerte algo bonito, algo que se sintiera sereno y verdadero, porque así es como te pienso. Estar contigo ha llenado mis días de una luz distinta: más suave, más profunda, más humana. Me gusta tu manera de existir en mi vida, la calma que me das, la alegría que aparece cuando te recuerdo y la certeza de que, incluso en lo simple, contigo todo se vuelve especial. Gracias por tu ternura, por tu forma de mirar el mundo y por hacerme sentir que el amor también puede ser elegante, sincero y tranquilo. Esta página es pequeña frente a lo que significas para mí, pero está hecha con cariño, con intención y completamente para ti.",
+        "Estar contigo ha llenado mis días. Me gusta la calma que me das, contigo todo se vuelve especial. Gracias por hacerme sentir amado. Te amo 💜.",
 
       fraseTiempo:
-        "Cada etapa contigo me confirma que el amor más bonito no siempre es el más ruidoso, sino el que se queda, acompaña y hace del tiempo algo valioso.",
-
-      musicSrc: "audio/nuestra-cancion.mp3",
-
-      intro:
-        "Hay detalles que no necesitan hacer ruido para quedarse en el corazón. Este es uno de ellos: una pausa bonita, hecha con calma, para recordarte lo importante que eres para mí.",
+        "Haces que cada segundo valga la pena.",
 
       footer:
-        "Con todo mi cariño, Jorge. Para que la abras cuando quieras volver a sentirte amada, admirada y profundamente importante para mí.",
+        "Con todo mi cariño, Jorge.",
+
+      musicSrc: "audio/nuestra-cancion.mp3",
 
       galeria: [
         {
