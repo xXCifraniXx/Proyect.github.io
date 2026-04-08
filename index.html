@@ -580,10 +580,10 @@
       </div>
       <p class="counter-copy" id="counterCopy"></p>
       <div class="time-grid">
-        <div class="time-card"><strong id="years">0</strong><span>Años</span></div>
-        <div class="time-card"><strong id="months">0</strong><span>Meses</span></div>
-        <div class="time-card"><strong id="days">0</strong><span>Días</span></div>
-        <div class="time-card"><strong id="hours">0</strong><span>Horas</span></div>
+        <div class="time-card"><strong id="days">0</strong><span>DÍAS</span></div>
+        <div class="time-card"><strong id="hours">0</strong><span>HORAS</span></div>
+        <div class="time-card"><strong id="minutes">0</strong><span>MINUTOS</span></div>
+        <div class="time-card"><strong id="seconds">0</strong><span>SEGUNDOS</span></div>
       </div>
       <div class="timeline-note" id="timelineNote"></div>
     </section>
@@ -622,10 +622,12 @@
         <span>galería</span>
       </div>
       <div class="gallery-grid" id="gallery"></div>
+      <!--
       <div class="pill-row">
         <div class="pill">📷 Reemplaza las fotos desde JavaScript</div>
         <div class="pill">🫶 Cada imagen tiene una frase suave</div>
       </div>
+      -->
     </section>
 
     <p class="footer-note reveal" id="footerNote"></p>
@@ -651,7 +653,7 @@
       fechaInicio: "2026-03-08T00:00:00", 
 
       intro: 
-        "Esta página es una pequeña pausa para recordarte lo especial que eres para mí.",
+        "Este es un pequeño detalle que iré actualizando con el paso del tiempo. Para que la abras siempre que quieras recordar lo mucho que te admiro. 💜",
 
       carta:
         "Estar contigo ha llenado mis días. Me gusta la calma que me das, contigo todo se vuelve especial. Gracias por hacerme sentir amado. Te amo 💜.",
@@ -662,28 +664,28 @@
       footer:
         "Con todo mi cariño, Jorge.",
 
-      musicSrc: "audio/nuestra-cancion.mp3",
+      musicSrc: "audio/the-first-time.mp3",
 
       galeria: [
         {
-          src: "images/foto1.jpg",
-          titulo: "Tu sonrisa",
-          frase: "Siempre encuentra la forma de volver bonito cualquier momento."
+          src: "images/primera_Cita.jpg",
+          titulo: "Donde todo comenzó",
+          frase: "Desde nuestra primera cita supe que eras la indicada."
         },
         {
-          src: "images/foto2.jpg",
-          titulo: "Nuestro instante",
-          frase: "Hay recuerdos que no se borran porque nacieron con verdad."
+          src: "images/Picnic.jpg",
+          titulo: "Un lienzo entre dos",
+          frase: "Nuestra primera vez pintando al aire libre."
         },
         {
-          src: "images/foto3.jpg",
-          titulo: "Lo simple contigo",
-          frase: "Hasta lo cotidiano se vuelve especial cuando estás cerca."
+          src: "images/Compromiso.jpg",
+          titulo: "Nuestra promesa",
+          frase: "El compromiso de caminar juntos."
         },
         {
-          src: "images/foto4.jpg",
-          titulo: "Nosotros",
-          frase: "Mi lugar favorito sigue siendo cualquier sitio donde coincidimos."
+          src: "images/Astronautas.jpg",
+          titulo: "Probar cosas nuevas",
+          frase: "Pronto iremos a buscar nuestra propia constelación."
         }
       ]
     };
@@ -700,6 +702,7 @@
     const letterSign = document.getElementById("letterSign");
     const footerNote = document.getElementById("footerNote");
     const music = document.getElementById("bgMusic");
+    music.volume = 0.2;
     const musicBtn = document.getElementById("musicBtn");
     const musicState = document.getElementById("musicState");
     const envelope = document.getElementById("envelope");
@@ -708,7 +711,7 @@
 
     heroTitle.textContent = `Para ${CONFIG.novia}`;
     heroText.textContent = CONFIG.intro;
-    counterCopy.textContent = `Desde el ${formatDatePretty(CONFIG.fechaInicio)}, cada tramo compartido contigo tiene algo que me gusta recordar.`;
+    counterCopy.textContent = `Desde el ${formatDatePretty(CONFIG.fechaInicio)}, cada día es especial 💜.`;
     timelineNote.textContent = CONFIG.fraseTiempo;
     letterTitle.textContent = `${CONFIG.novia},`;
     letterMessage.textContent = CONFIG.carta;
@@ -721,67 +724,40 @@
     }
 
     /* =========================================================
-       CONTADOR DE TIEMPO EN TIEMPO REAL
-       ========================================================= */
-    const yearsEl = document.getElementById("years");
-    const monthsEl = document.getElementById("months");
+      NUEVO CONTADOR: DÍAS, HORAS, MINUTOS Y SEGUNDOS
+      ========================================================= */
     const daysEl = document.getElementById("days");
     const hoursEl = document.getElementById("hours");
-
-    function padDate(date) {
-      return new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), 0, 0, 0);
-    }
-
-    function diffPrecise(startDate, endDate) {
-      if (!(startDate instanceof Date) || Number.isNaN(startDate)) return null;
-      if (endDate < startDate) return { years: 0, months: 0, days: 0, hours: 0 };
-
-      let years = endDate.getFullYear() - startDate.getFullYear();
-      let months = endDate.getMonth() - startDate.getMonth();
-      let days = endDate.getDate() - startDate.getDate();
-      let hours = endDate.getHours() - startDate.getHours();
-
-      if (hours < 0) {
-        hours += 24;
-        days -= 1;
-      }
-
-      if (days < 0) {
-        const prevMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0);
-        days += prevMonth.getDate();
-        months -= 1;
-      }
-
-      if (months < 0) {
-        months += 12;
-        years -= 1;
-      }
-
-      return { years, months, days, hours };
-    }
+    const minutesEl = document.getElementById("minutes");
+    const secondsEl = document.getElementById("seconds");
 
     function updateCounter() {
       const start = new Date(CONFIG.fechaInicio);
       const now = new Date();
+      const diff = now - start; // Diferencia en milisegundos
 
-      if (Number.isNaN(start.getTime())) {
-        yearsEl.textContent = "--";
-        monthsEl.textContent = "--";
-        daysEl.textContent = "--";
-        hoursEl.textContent = "--";
-        timelineNote.textContent = "Configura una fecha válida en CONFIG.fechaInicio con formato ISO, por ejemplo: 2025-03-08T00:00:00";
+      // Si la fecha aún no llega, mostrar todo en 0
+      if (diff < 0) {
+        [daysEl, hoursEl, minutesEl, secondsEl].forEach(el => el.textContent = "0");
         return;
       }
 
-      const diff = diffPrecise(start, now);
-      yearsEl.textContent = diff.years;
-      monthsEl.textContent = diff.months;
-      daysEl.textContent = diff.days;
-      hoursEl.textContent = diff.hours;
+      // Cálculos de tiempo
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+      // Actualizar el HTML
+      daysEl.textContent = d;
+      hoursEl.textContent = h;
+      minutesEl.textContent = m;
+      secondsEl.textContent = s;
     }
 
+    // Ejecutar de inmediato y luego cada segundo
     updateCounter();
-    setInterval(updateCounter, 1000 * 60);
+    setInterval(updateCounter, 1000);
 
     /* =========================================================
        CARTA ANIMADA
