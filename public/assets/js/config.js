@@ -130,7 +130,7 @@ window.APP_CONFIG = {
     // 1. Crea una cuenta en https://cloudinary.com
     // 2. En el panel, crea un upload preset no firmado (unsigned upload preset)
     // 3. Pon el nombre de tu cloud y el preset aquí.
-    cloudName: "TU_CLOUD_NAME",
-    uploadPreset: "TU_UPLOAD_PRESET"
+    cloudName: "anthuanete",
+    uploadPreset: "anthuanete_DATA"
   }
 };
