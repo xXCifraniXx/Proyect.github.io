@@ -102,6 +102,45 @@ Importante:
 - Si eliges una cancion desde el boton de la pagina, queda guardada solo en ese navegador/dispositivo.
 - Para que ella la escuche desde el link, debes subir el mp3 dentro de `assets/audio` y agregarlo en `assets/js/config.js`.
 
+## Capsula del tiempo (reemplaza a la galeria por ahora)
+
+La galeria de fotos quedo en pausa porque, sin una base de datos conectada, las
+fotos que se agregan desde el celular o la PC solo se ven en ese mismo
+dispositivo. Mientras no se conecte un backend real, la seccion
+**Capsula del tiempo** ocupa su lugar: son cartas que se desbloquean solas en
+una fecha que tu eliges, y no necesitan ningun servidor.
+
+La configuracion esta en `assets/js/config.js`, dentro de `capsula.cartas`:
+
+```
+{
+  fecha: "2026-09-01T00:00:00",
+  icono: "🎁",
+  titulo: "Una sorpresa de septiembre",
+  mensaje: "El mensaje completo que se vera cuando se desbloquee."
+}
+```
+
+- `fecha`: momento en que la carta se desbloquea. Si la fecha ya paso, la
+  carta aparece abierta desde el primer momento.
+- `icono`: un emoji que identifica la carta en la tarjeta.
+- `titulo` y `mensaje`: lo que se muestra al abrirla.
+
+Las cartas se ordenan solas por fecha y la pagina revisa cada minuto si ya
+toca desbloquear alguna, sin que ella tenga que recargar.
+
+### Volver a activar la galeria
+
+Todo el codigo de la galeria (HTML, CSS y JS) se dejo intacto, solo
+deshabilitado, para no perder el trabajo ya hecho:
+
+1. En `index.html`, quita los comentarios `<!--` y `-->` que envuelven la
+   seccion `<section ... id="galeria">`.
+2. En `assets/js/app.js`, dentro de `init()`, descomenta la linea
+   `setupGallery();`.
+3. Si quieres, deja la seccion `capsula` como una seccion aparte en vez de
+   quitarla del todo.
+
 ## Agregar fotos permanentes
 
 1. Copia las fotos a:
@@ -147,7 +186,18 @@ Mas alto = mas lento. Mas bajo = mas rapido.
 
 ## Publicar
 
-Sube la carpeta completa a GitHub Pages, Netlify o Vercel. La pagina principal debe seguir llamandose `index.html`.
+Este proyecto se publica con **GitHub Pages**, sin ningun servicio externo
+(ya no usa Firebase). Como el repo se llama `usuario.github.io`, GitHub lo
+detecta automaticamente:
+
+1. Entra a **Settings → Pages** en el repositorio de GitHub.
+2. En **Source**, elige `Deploy from a branch`.
+3. Selecciona la rama `main` y la carpeta `/ (root)`.
+4. Guarda. GitHub publica el sitio en `https://usuario.github.io/` y lo
+   actualiza solo, unos minutos despues de cada `push` a `main`.
+
+No hace falta build, ni `npm install`, ni ninguna configuracion adicional:
+lo que hay en `index.html` y `assets/` es exactamente lo que se publica.
 
 ## Calendario de mina 14 x 7
 
@@ -197,5 +247,11 @@ Y la pagina calculara los siguientes ciclos automaticamente.
 - El calendario 14 x 7 muestra solo un mes para que sea mas limpio en celular.
 - Se agrego el boton "Volver a hoy" en el calendario.
 - El boton de pausa de la galeria ahora es un boton simple con iconos: pausa y reproducir.
+- Se reemplazo temporalmente la Galeria por la Capsula del tiempo (ver seccion de arriba).
+- Limpieza de codigo: se elimino un calendario viejo sin usar en `app.js`/`styles.css`,
+  la carpeta `public/` duplicada (el sitio ahora se sirve directo desde la raiz),
+  `public.backup/` (paginas de ejemplo de Firebase), `.agents/` y `skills-lock.json`
+  (documentacion para asistentes de IA que no aplicaba a este proyecto), y
+  `package.json`/`package-lock.json` (dependencia de npm que nunca se usaba en el sitio).
 
 Para volver a mostrar dos meses, cambia `mesesAMostrar: 1` por `mesesAMostrar: 2` en `assets/js/config.js` y ajusta `.calendar-months` si quieres dos columnas.

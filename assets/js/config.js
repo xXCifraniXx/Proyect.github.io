@@ -91,6 +91,9 @@ window.APP_CONFIG = {
     ]
   },
 
+  // GALERIA EN PAUSA: se deja la configuracion lista para cuando se conecte
+  // una base de datos (ver README, seccion "Cambiar la Capsula del tiempo por
+  // la Galeria"). Por ahora esta seccion no se muestra en la pagina.
   galeria: [
     {
       src: "assets/images/primera_Cita.jpg",
@@ -118,19 +121,47 @@ window.APP_CONFIG = {
     // { src: "assets/images/foto-nueva.jpg", titulo: "Titulo", frase: "Frase" }
   ],
 
+  // CAPSULA DEL TIEMPO
+  // Reemplaza a la galeria mientras no hay base de datos. Cada carta se
+  // desbloquea sola en la fecha que pongas en "fecha". Antes de esa fecha se
+  // ve bloqueada con una cuenta regresiva; despues se puede abrir y leer.
+  capsula: {
+    titulo: "Cartas que se abren con el tiempo",
+    intro: "Cada carta tiene su propio momento para abrirse. Antes de esa fecha solo verás cuánto falta.",
+    cartas: [
+      {
+        // Fecha en el pasado = ya se puede abrir desde ahora.
+        fecha: "2026-01-01T00:00:00",
+        icono: "💌",
+        titulo: "Para cuando abras esto por primera vez",
+        mensaje: "Esta es la primera carta de nuestra cápsula del tiempo. Cada cierto tiempo voy a dejar una nueva, con algo que quiera decirte en ese momento. Ábrelas cuando se desbloqueen y guarda las que más te gusten."
+      },
+      {
+        fecha: "2026-09-01T00:00:00",
+        icono: "🎁",
+        titulo: "Una sorpresa de septiembre",
+        mensaje: "Escribe aquí el mensaje que quieras que se desbloquee en esta fecha."
+      },
+      {
+        fecha: "2026-12-24T00:00:00",
+        icono: "🎄",
+        titulo: "Feliz Navidad, Anthu",
+        mensaje: "Escribe aquí el mensaje que quieras que se desbloquee en Navidad."
+      }
+      // Para agregar otra carta:
+      // {
+      //   fecha: "AAAA-MM-DDTHH:MM:SS",
+      //   icono: "✨",
+      //   titulo: "Titulo de la carta",
+      //   mensaje: "El mensaje completo que se vera cuando se desbloquee."
+      // }
+    ]
+  },
+
   opciones: {
     galeriaAutoMs: 3600,
     corazones: 18,
     // true = el calendario abre en el mes actual.
     calendarioDesdeHoy: true
-  },
-
-  cloudinary: {
-    // Configura tu Cloudinary aquí para subir imágenes desde la web.
-    // 1. Crea una cuenta en https://cloudinary.com
-    // 2. En el panel, crea un upload preset no firmado (unsigned upload preset)
-    // 3. Pon el nombre de tu cloud y el preset aquí.
-    cloudName: "TU_CLOUD_NAME",
-    uploadPreset: "TU_UPLOAD_PRESET"
   }
 };

@@ -42,7 +42,7 @@
           <a href="#tiempo">Tiempo</a>
           <a href="#calendario">Bajada</a>
           <a href="#musica">Música</a>
-          <a href="#galeria">Galería</a>
+          <a href="#capsula">Cápsula</a>
           <a href="#personalizar">Editar</a>
         </div>
       </nav>
@@ -56,7 +56,7 @@
           </p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#carta">Abrir mi carta 💌</a>
-            <a class="btn btn-secondary" href="#galeria">Ver recuerdos 📷</a>
+            <a class="btn btn-secondary" href="#capsula">Abrir cápsula ⏳</a>
           </div>
         </div>
 
@@ -224,6 +224,10 @@
         </div>
       </section>
 
+      <!-- GALERIA EN PAUSA: se deja el markup listo para cuando se conecte una
+           base de datos real (ver README). Mientras tanto se muestra la
+           Capsula del tiempo mas abajo. -->
+      <!--
       <section class="section reveal" id="galeria">
         <div class="section-head gallery-head">
           <div>
@@ -256,11 +260,21 @@
           <button class="carousel-btn next" id="galleryNext" type="button" aria-label="Siguiente foto">›</button>
         </div>
         <div class="gallery-dots" id="galleryDots" aria-label="Indicadores de galería"></div>
-        <!--
         <p class="gallery-note" id="galleryNote">
           Las fotos agregadas desde el botón son temporales en este navegador. Para que ella las vea desde el link en otro celular, agrégalas al proyecto y configúralas en <code>assets/js/config.js</code>.
         </p>
-        -->
+      </section>
+      -->
+
+      <section class="section reveal" id="capsula">
+        <div class="section-head">
+          <span class="eyebrow">Cápsula del tiempo</span>
+          <h2 id="capsulaTitle">Cartas que se abren con el tiempo</h2>
+          <p id="capsulaIntro">
+            Cada carta tiene su propio momento para abrirse. Antes de esa fecha solo verás cuánto falta.
+          </p>
+        </div>
+        <div class="capsule-grid" id="capsulaGrid"></div>
       </section>
 
       <!-- SECCIÓN PERSONALIZAR QUEDÓ EN DESUSO POR AHORA, PERO SE DEJÓ PLANTEADA PARA FUTURAS ACTUALIZACIONES -->
@@ -304,6 +318,16 @@
     </main>
   </div>
 
+  <div class="lightbox" id="capsuleModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Carta abierta">
+    <div class="lightbox-card capsule-modal-card">
+      <button class="lightbox-close" id="capsuleModalClose" type="button" aria-label="Cerrar carta">×</button>
+      <span class="capsule-modal-icon" id="capsuleModalIcon">💌</span>
+      <span class="capsule-modal-date" id="capsuleModalDate"></span>
+      <h3 id="capsuleModalTitle"></h3>
+      <p id="capsuleModalMessage"></p>
+    </div>
+  </div>
+
   <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Foto ampliada">
     <div class="lightbox-card">
       <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Cerrar foto">×</button>
@@ -313,10 +337,6 @@
   </div>
 
   <script src="assets/js/config.js"></script>
-  <!-- Firebase (inyección automática desde Firebase Hosting) -->
-  <script defer src="/__/firebase/12.13.0/firebase-app-compat.js"></script>
-  <script defer src="/__/firebase/12.13.0/firebase-storage-compat.js"></script>
-  <script defer src="/__/firebase/init.js"></script>
   <script src="assets/js/app.js"></script>
 </body>
 </html>

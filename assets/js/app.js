@@ -17,8 +17,7 @@
     galleryPaused: false,
     galleryItems: [],
     localObjectUrls: [],
-    calendarCursor: null,
-    calendarMonth: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+    calendarCursor: null
   };
 
   function safeText(id, value) {
@@ -82,38 +81,6 @@
       tx.oncomplete = () => resolve();
       tx.onerror = () => reject(tx.error);
     });
-  }
-
-  async function uploadFileToCloudinary(file) {
-    try {
-      const cloudCfg = CONFIG.cloudinary || {};
-      if (!cloudCfg.cloudName || !cloudCfg.uploadPreset) {
-        console.debug("Cloudinary no está configurado en config.js");
-        return null;
-      }
-
-      const endpoint = `https://api.cloudinary.com/v1_1/${cloudCfg.cloudName}/upload`;
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", cloudCfg.uploadPreset);
-
-      const response = await fetch(endpoint, {
-        method: "POST",
-        body: formData
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.warn("Cloudinary upload error:", response.status, errorText);
-        return null;
-      }
-
-      const json = await response.json();
-      return json.secure_url || json.url || null;
-    } catch (e) {
-      console.warn("Cloudinary upload failed:", e);
-      return null;
-    }
   }
 
   function setConfigText() {
@@ -404,108 +371,6 @@
     update();
     setInterval(update, 1000);
   }
-
-  function getPhaseForCalendar(date) {
-    const info = getRotationInfo(date);
-    if (!info) return { phase: "casa", label: "Casa", detail: "" };
-    if (info.phase === "subida") return { phase: "subida", label: "Subida", detail: info.detail };
-    if (info.phase === "mina") return { phase: "mina", label: "Mina", detail: info.detail };
-    if (info.phase === "bajada") return { phase: "bajada", label: "Bajada", detail: info.detail };
-    return { phase: "casa", label: "Casa", detail: info.detail };
-  }
-
-  function updateRotationStatus() {
-    const info = getRotationInfo(new Date());
-    const panel = $("#calendarStatus");
-    if (!info || !panel) {
-      $("#calendario")?.remove();
-      return;
-    }
-
-    safeText("#calendarStatusLabel", info.label);
-    safeText("#calendarStatusTitle", info.detail);
-
-    if (info.phase === "casa") {
-      safeText("#calendarStatusText", `${info.cfg.textoEnCasa || "Está en casa."} Próxima subida: ${formatDateLong(info.nextDepartureDate)}.`);
-    } else if (info.phase === "bajada") {
-      safeText("#calendarStatusText", `Hoy es día de bajada. Regresa por la noche (${formatDateLong(info.nextReturnDate)}).`);
-    } else {
-      safeText("#calendarStatusText", `${info.cfg.textoEnMina || "Está en mina."} Próxima bajada: ${formatDateLong(info.nextReturnDate)}.`);
-    }
-  }
-
-  function renderRotationCalendar() {
-    const container = $("#rotationCalendar");
-    const label = $("#calendarMonthLabel");
-    if (!container || !label || !getRotationInfo(new Date())) return;
-
-    const monthDate = state.calendarMonth;
-    const year = monthDate.getFullYear();
-    const month = monthDate.getMonth();
-    const first = new Date(year, month, 1);
-    const totalDays = new Date(year, month + 1, 0).getDate();
-    const firstWeekdayMonday = (first.getDay() + 6) % 7;
-    const todayNumber = dayNumber(new Date());
-
-    label.textContent = first.toLocaleDateString("es-ES", { month: "long", year: "numeric" });
-    container.innerHTML = "";
-
-    for (let i = 0; i < firstWeekdayMonday; i += 1) {
-      const empty = document.createElement("div");
-      empty.className = "calendar-day empty";
-      container.appendChild(empty);
-    }
-
-    for (let day = 1; day <= totalDays; day += 1) {
-      const date = new Date(year, month, day);
-      const phase = getPhaseForCalendar(date);
-      const cell = document.createElement("article");
-      cell.className = `calendar-day ${phase.phase}`;
-      if (dayNumber(date) === todayNumber) cell.classList.add("today");
-      cell.innerHTML = `
-        <div>
-          <strong>${day}</strong>
-          <span>${phase.detail}</span>
-        </div>
-        <small>${phase.label}</small>
-      `;
-      cell.title = `${formatDateLong(date)} - ${phase.detail}`;
-      container.appendChild(cell);
-    }
-  }
-
-  function setupRotationCalendar() {
-    if (!getRotationInfo(new Date())) {
-      $("#calendario")?.remove();
-      return;
-    }
-
-    updateRotationStatus();
-    renderRotationCalendar();
-
-    $("#prevCalendarMonth")?.addEventListener("click", () => {
-      state.calendarMonth = new Date(state.calendarMonth.getFullYear(), state.calendarMonth.getMonth() - 1, 1);
-      renderRotationCalendar();
-    });
-
-    $("#nextCalendarMonth")?.addEventListener("click", () => {
-      state.calendarMonth = new Date(state.calendarMonth.getFullYear(), state.calendarMonth.getMonth() + 1, 1);
-      renderRotationCalendar();
-    });
-
-    $("#todayCalendarMonth")?.addEventListener("click", () => {
-      const now = new Date();
-      state.calendarMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-      renderRotationCalendar();
-      updateRotationStatus();
-    });
-
-    setInterval(() => {
-      updateRotationStatus();
-      renderRotationCalendar();
-    }, 60000);
-  }
-
 
   function startOfDay(date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -1037,6 +902,91 @@
     startGalleryTimer();
   }
 
+  function renderCapsula() {
+    const grid = $("#capsulaGrid");
+    if (!grid) return;
+
+    const cartas = [...(CONFIG.capsula?.cartas || [])].sort(
+      (a, b) => new Date(a.fecha) - new Date(b.fecha)
+    );
+
+    grid.innerHTML = "";
+    const now = new Date();
+
+    cartas.forEach((carta, index) => {
+      const fecha = new Date(carta.fecha);
+      const isLocked = fecha > now;
+
+      const card = document.createElement("article");
+      card.className = `capsule-card glass-soft ${isLocked ? "is-locked" : "is-unlocked"}`;
+
+      if (isLocked) {
+        const diff = calculateDiff(now, fecha);
+        const partes = [];
+        if (diff.years) partes.push(`${diff.years} a`);
+        if (diff.months) partes.push(`${diff.months} m`);
+        partes.push(`${diff.days} d`);
+
+        card.innerHTML = `
+          <span class="capsule-icon">🔒</span>
+          <h3>Carta sellada</h3>
+          <p class="capsule-lock-note">Se abre el ${formatDateLong(fecha)}</p>
+          <span class="capsule-date">Faltan ${partes.join(" ")}</span>
+        `;
+      } else {
+        const preview = (carta.mensaje || "").slice(0, 90);
+        card.innerHTML = `
+          <span class="capsule-icon">${carta.icono || "💌"}</span>
+          <h3>${carta.titulo || "Una carta para ti"}</h3>
+          <p>${preview}${(carta.mensaje || "").length > 90 ? "…" : ""}</p>
+          <span class="capsule-date">Desbloqueada el ${formatDateLong(fecha)}</span>
+        `;
+        card.addEventListener("click", () => openCapsuleModal(carta, fecha));
+      }
+
+      card.style.animationDelay = `${index * 60}ms`;
+      grid.appendChild(card);
+    });
+
+    if (!cartas.length) {
+      grid.innerHTML = `<p class="capsule-empty">Aún no hay cartas. Agrega la primera en <code>capsula.cartas</code> dentro de <code>assets/js/config.js</code>.</p>`;
+    }
+  }
+
+  function openCapsuleModal(carta, fecha) {
+    const modal = $("#capsuleModal");
+    if (!modal) return;
+    safeText("#capsuleModalIcon", carta.icono || "💌");
+    safeText("#capsuleModalDate", `Desbloqueada el ${formatDateLong(fecha)}`);
+    safeText("#capsuleModalTitle", carta.titulo || "Una carta para ti");
+    safeText("#capsuleModalMessage", carta.mensaje || "");
+    modal.classList.add("show");
+    modal.setAttribute("aria-hidden", "false");
+  }
+
+  function closeCapsuleModal() {
+    const modal = $("#capsuleModal");
+    if (!modal) return;
+    modal.classList.remove("show");
+    modal.setAttribute("aria-hidden", "true");
+  }
+
+  function setupCapsula() {
+    renderCapsula();
+
+    // Vuelve a dibujar cada minuto para que una carta se desbloquee sola
+    // sin que ella tenga que recargar la página.
+    setInterval(renderCapsula, 60000);
+
+    $("#capsuleModalClose")?.addEventListener("click", closeCapsuleModal);
+    $("#capsuleModal")?.addEventListener("click", (event) => {
+      if (event.target.id === "capsuleModal") closeCapsuleModal();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeCapsuleModal();
+    });
+  }
+
   async function setupGallery() {
     await buildGalleryItems();
     renderGallery();
@@ -1065,36 +1015,19 @@
     localPhotoInput?.addEventListener("change", async () => {
       const files = Array.from(localPhotoInput.files || []).filter((file) => file.type.startsWith("image/"));
       for (const file of files) {
-        let uploadedUrl = null;
         try {
-          uploadedUrl = await uploadFileToCloudinary(file);
-        } catch (e) {
-          uploadedUrl = null;
-        }
-
-        if (uploadedUrl) {
-          try {
-            const items = getUrlPhotos();
-            items.push({ src: uploadedUrl, titulo: file.name.replace(/\.[^/.]+$/, ""), frase: "Foto subida a Cloudinary." });
-            saveUrlPhotos(items);
-          } catch (e) {
-            console.warn("No se pudo guardar la URL localmente:", e);
-          }
-        } else {
-          try {
-            await idbPut(STORE_PHOTOS, {
-              id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-              titulo: file.name.replace(/\.[^/.]+$/, ""),
-              frase: "Foto agregada desde este dispositivo.",
-              type: file.type,
-              blob: file,
-              createdAt: Date.now()
-            });
-          } catch (_) {
-            const src = URL.createObjectURL(file);
-            state.localObjectUrls.push(src);
-            state.galleryItems.push({ id: src, src, titulo: file.name, frase: "Agregada para esta sesión.", type: "session" });
-          }
+          await idbPut(STORE_PHOTOS, {
+            id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+            titulo: file.name.replace(/\.[^/.]+$/, ""),
+            frase: "Foto agregada desde este dispositivo.",
+            type: file.type,
+            blob: file,
+            createdAt: Date.now()
+          });
+        } catch (_) {
+          const src = URL.createObjectURL(file);
+          state.localObjectUrls.push(src);
+          state.galleryItems.push({ id: src, src, titulo: file.name, frase: "Agregada para esta sesión.", type: "session" });
         }
       }
       await buildGalleryItems();
@@ -1146,7 +1079,10 @@
     setupRosterCalendar();
     setupSurprise();
     setupMusic();
-    setupGallery();
+    // GALERIA EN PAUSA: descomenta la linea de abajo (y el markup en
+    // index.html) cuando conectes una base de datos real para las fotos.
+    // setupGallery();
+    setupCapsula();
   }
 
   if (document.readyState === "loading") {
