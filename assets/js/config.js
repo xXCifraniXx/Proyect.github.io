@@ -168,19 +168,18 @@ window.APP_CONFIG = {
     constelacionEyebrow: "Nuestro cielo",
     constelacionTitle: "Una constelación para los dos",
     constelacionIntro: "Un cielo en blanco donde cada toque crea una estrella con un recuerdo. Las estrellas se unen y " +
-        "forman nuestra constelación. Ábrelo, arma el tuyo y guárdalo como imagen.",
+        "forman una constelación. Podrás guardala como imagen",
     constelacionBtn: "Abrir nuestra constelación ✦",
 
     // Minijuego
     juegoEyebrow: "Un momento juntos",
     juegoTitle: "Encuentra las parejas",
-    juegoIntro: "Un memory rápido para jugar los dos. Voltea las cartas y encuentra los pares. Cuando termines, hay una " +
-        "sorpresa.",
+    juegoIntro: "Un memory rápido para jugar los dos.",
     juegoMovesLabel: "Intentos",
     juegoPairsLabel: "Parejas",
     juegoRestart: "Reiniciar",
     juegoPlayAgain: "Jugar de nuevo",
-    juegoWin: "¡Lo lograste! Igual que en la vida real, encontraste todas las parejas. Te amo 💜",
+    juegoWin: "¡Lo lograste! Eres muy buena amorcito. Te amo 💜",
 
     // Cierre
     finalEyebrow: "Para terminar",
