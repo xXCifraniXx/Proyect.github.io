@@ -9,3 +9,9 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Dependencias (no se usan en el sitio publicado)
+node_modules/
+
+# Ajustes locales del asistente
+.claude/settings.local.json

@@ -1,257 +1,95 @@
-# Proyecto romantico escalable para Anthuanete
+# Proyecto romántico para Anthuanete
 
-Esta version separa el proyecto en archivos para que puedas mantenerlo, agregar fotos, cambiar musica y modificar textos sin tocar todo el HTML.
+Landing estática (HTML + CSS + JavaScript vanilla, sin backend ni build) que se
+publica en **GitHub Pages**. Todo el contenido editable vive en un solo archivo:
+[`assets/js/config.js`](assets/js/config.js).
 
 ## Estructura
 
 ```text
-Proyect.github.io-escalable/
-├── index.html
+Proyect.github.io/
+├── index.html                  Plantilla: solo estructura, sin textos fijos
 ├── assets/
-│   ├── css/
-│   │   └── styles.css
-│   ├── js/
-│   │   ├── config.js
-│   │   └── app.js
-│   ├── images/
-│   │   ├── primera_Cita.jpg
-│   │   ├── picnic.jpg
-│   │   ├── Astronautas.jpg
-│   │   └── Compromiso.jpg
-│   └── audio/
-│       └── the-first-time.mp3
+│   ├── css/styles.css          Estilos
+│   ├── js/config.js            ← TODO el contenido editable
+│   ├── js/app.js               Lógica: rellena la plantilla y maneja interacciones
+│   ├── images/                 Fotos de la línea de tiempo
+│   └── audio/                  Canción
+└── constelacion/               Mini-experiencia aparte (lienzo de estrellas)
+    ├── index.html
+    ├── estrellas.css
+    └── estrellas.js
 ```
 
-## Archivo principal para editar
+## Cómo funciona la plantilla
 
-Casi todo lo personalizable esta en:
+`index.html` no contiene textos: cada elemento visible lleva un atributo
+`data-bind="textos.clave"`. Al cargar, `app.js` recorre esos elementos y les
+pone el texto correspondiente de `config.textos`. Para cambiar cualquier frase
+del sitio, editas `config.js` y nada más.
 
-```text
-assets/js/config.js
-```
+Las secciones con contenido repetido (línea de tiempo, calendario 14×7,
+La Bóveda, minijuego) se generan solas desde las listas de `config.js`.
 
-Ahi puedes cambiar nombres, fechas, textos, canciones y fotos.
+## Qué se puede editar en `config.js`
 
-## Cambiar fecha de inicio
+| Clave | Para qué sirve |
+|---|---|
+| `nombres` | Nombre de ella y del autor (título, marca, firma). |
+| `fechas.inicioRelacion` | Desde cuándo están juntos (contadores y línea de tiempo). |
+| `fechas.regreso` | Cuenta regresiva de reencuentro (o `null`). |
+| `rotacionMina` | Turno 14×7: `salidaBase` (un día en que subió a mina), días de mina/descanso, hora de bajada. `activa: false` oculta la sección. |
+| `textos` | Todas las frases del sitio. |
+| `lineaTiempo` | Una foto por mes. `mes` en formato `"AAAA-MM"`. Un mes sin entrada se muestra vacío. |
+| `musica.cancion` | Título, artista y ruta del mp3 (`assets/audio/...`). |
+| `boveda.cartas` | Cartas que se desbloquean solas en su fecha. |
+| `juego.parejas` | Emojis del memory (cada uno se duplica para formar un par). |
 
-Busca en `assets/js/config.js`:
+### La Bóveda
+
+Cada carta tiene una `fecha`. Antes de esa fecha se ve sellada con una cuenta
+regresiva; a partir de ahí se puede abrir y leer. Una carta puede incluir:
 
 ```js
-inicioRelacion: "2026-03-08T00:00:00"
+accion: { tipo: "constelacion", etiqueta: "Ir a nuestra constelación ✦" }
 ```
 
-Reemplazalo por la fecha real desde que estan juntos.
+que añade un botón dentro de la carta para saltar a la sección **Constelación**.
 
-## Cambiar fecha de regreso
+### Ajustar bajadas de mina desde la página
 
-Busca:
+Dentro de la sección **Bajada** hay un panel plegable **"Ajustar bajadas de
+mina"**. Se elige el día de la próxima bajada (y, si cambia, días en mina /
+descanso / hora de regreso) y el calendario 14×7, el estado y la cuenta
+regresiva se recalculan al instante desde esa fecha en adelante.
 
-```js
-regreso: "2026-05-25T00:00:00"
-```
+Ese ajuste se guarda en `localStorage` **solo en ese navegador/dispositivo**
+(clave `roster-override-v1`); "Volver a lo de config.js" lo borra. Para que un
+cambio valga para siempre en el link, hay que actualizar `rotacionMina.salidaBase`
+en `config.js` (por ejemplo: si baja el jueves 10, `salidaBase` es el jueves
+anterior a 14 días, el 27 del mes previo).
 
-Reemplazalo por la fecha en la que ella vuelve. Si no quieres usar la cuenta regresiva, puedes poner:
+### Añadir una carta permanente a la línea de tiempo
 
-```js
-regreso: null
-```
+1. Copia la imagen a `assets/images/`.
+2. Añade un objeto en `lineaTiempo` con `mes`, `titulo`, `src` y `texto`.
 
-## Agregar una cancion permanente
+### Cambiar la canción
 
-1. Copia el archivo mp3 a:
+1. Copia el mp3 a `assets/audio/`.
+2. Actualiza `musica.cancion.src`.
 
-```text
-assets/audio/
-```
+## Constelación
 
-2. Abre `assets/js/config.js`.
-3. Busca `musica.playlist`.
-4. Agrega otra entrada:
-
-```js
-{
-  titulo: "Nombre de la cancion",
-  artista: "Artista o frase especial",
-  src: "assets/audio/nombre-del-archivo.mp3"
-}
-```
-
-Ejemplo:
-
-```js
-playlist: [
-  {
-    titulo: "The First Time",
-    artista: "Nuestra cancion",
-    src: "assets/audio/the-first-time.mp3"
-  },
-  {
-    titulo: "La cancion que ella eligio",
-    artista: "Su favorita",
-    src: "assets/audio/cancion-de-anthuanete.mp3"
-  }
-]
-```
-
-## Cambiar musica desde la pagina
-
-La pagina tiene un selector de canciones y tambien permite elegir una cancion desde el celular o PC.
-
-Importante:
-
-- Si eliges una cancion desde el boton de la pagina, queda guardada solo en ese navegador/dispositivo.
-- Para que ella la escuche desde el link, debes subir el mp3 dentro de `assets/audio` y agregarlo en `assets/js/config.js`.
-
-## Capsula del tiempo (reemplaza a la galeria por ahora)
-
-La galeria de fotos quedo en pausa porque, sin una base de datos conectada, las
-fotos que se agregan desde el celular o la PC solo se ven en ese mismo
-dispositivo. Mientras no se conecte un backend real, la seccion
-**Capsula del tiempo** ocupa su lugar: son cartas que se desbloquean solas en
-una fecha que tu eliges, y no necesitan ningun servidor.
-
-La configuracion esta en `assets/js/config.js`, dentro de `capsula.cartas`:
-
-```
-{
-  fecha: "2026-09-01T00:00:00",
-  icono: "🎁",
-  titulo: "Una sorpresa de septiembre",
-  mensaje: "El mensaje completo que se vera cuando se desbloquee."
-}
-```
-
-- `fecha`: momento en que la carta se desbloquea. Si la fecha ya paso, la
-  carta aparece abierta desde el primer momento.
-- `icono`: un emoji que identifica la carta en la tarjeta.
-- `titulo` y `mensaje`: lo que se muestra al abrirla.
-
-Las cartas se ordenan solas por fecha y la pagina revisa cada minuto si ya
-toca desbloquear alguna, sin que ella tenga que recargar.
-
-### Volver a activar la galeria
-
-Todo el codigo de la galeria (HTML, CSS y JS) se dejo intacto, solo
-deshabilitado, para no perder el trabajo ya hecho:
-
-1. En `index.html`, quita los comentarios `<!--` y `-->` que envuelven la
-   seccion `<section ... id="galeria">`.
-2. En `assets/js/app.js`, dentro de `init()`, descomenta la linea
-   `setupGallery();`.
-3. Si quieres, deja la seccion `capsula` como una seccion aparte en vez de
-   quitarla del todo.
-
-## Agregar fotos permanentes
-
-1. Copia las fotos a:
-
-```text
-assets/images/
-```
-
-2. Abre `assets/js/config.js`.
-3. Busca `galeria`.
-4. Agrega una entrada:
-
-```js
-{
-  src: "assets/images/foto-nueva.jpg",
-  titulo: "Titulo bonito",
-  frase: "Frase para esa foto"
-}
-```
-
-## Agregar fotos desde la pagina
-
-La pagina permite elegir fotos desde el dispositivo. Esas fotos quedan guardadas en el navegador donde se agregaron.
-
-Importante:
-
-- Si tu agregas fotos desde tu PC, se veran en tu PC.
-- Para que ella vea esas fotos desde su celular al abrir el link, las fotos deben estar dentro del proyecto en `assets/images` y registradas en `assets/js/config.js`.
-
-## Agregar foto por URL
-
-Tambien puedes pegar una URL de imagen desde la pagina. Funcionara si la pagina origen permite mostrar la imagen desde otro sitio.
-
-## Galeria en movimiento
-
-La galeria se mueve automaticamente. Puedes cambiar la velocidad en:
-
-```js
-galeriaAutoMs: 3600
-```
-
-Mas alto = mas lento. Mas bajo = mas rapido.
+`constelacion/` es una página aparte enlazada desde la sección **Constelación**
+y desde la carta de aniversario de La Bóveda. Es un cielo en blanco: cada toque
+crea una estrella con un recuerdo y se van uniendo en una constelación. Se
+guarda en `localStorage` del navegador y se puede exportar como imagen PNG.
 
 ## Publicar
 
-Este proyecto se publica con **GitHub Pages**, sin ningun servicio externo
-(ya no usa Firebase). Como el repo se llama `usuario.github.io`, GitHub lo
-detecta automaticamente:
+1. **Settings → Pages** en el repositorio.
+2. **Source**: `Deploy from a branch`, rama `main`, carpeta `/ (root)`.
 
-1. Entra a **Settings → Pages** en el repositorio de GitHub.
-2. En **Source**, elige `Deploy from a branch`.
-3. Selecciona la rama `main` y la carpeta `/ (root)`.
-4. Guarda. GitHub publica el sitio en `https://usuario.github.io/` y lo
-   actualiza solo, unos minutos despues de cada `push` a `main`.
-
-No hace falta build, ni `npm install`, ni ninguna configuracion adicional:
-lo que hay en `index.html` y `assets/` es exactamente lo que se publica.
-
-## Calendario de mina 14 x 7
-
-Esta version incluye una seccion nueva llamada **Bajada**, pensada para el turno 14 x 7.
-
-La configuracion esta en `assets/js/config.js`:
-
-```js
-rotacionMina: {
-  activa: true,
-  salidaBase: "2026-05-14T08:00:00",
-  diasMina: 14,
-  diasDescanso: 7,
-  horaRegreso: "21:00",
-  mesesAMostrar: 2
-}
-```
-
-### Como funciona
-
-- `salidaBase`: el dia que se fue a mina. En este ejemplo: jueves 14.
-- `diasMina`: cuantos dias esta en mina. Para 14 x 7, deja `14`.
-- `diasDescanso`: cuantos dias dura el ciclo de descanso/bajada. Para 14 x 7, deja `7`.
-- `horaRegreso`: hora aproximada en que llega el dia de bajada. Puedes usar `21:00` si vuelve por la noche.
-- `mesesAMostrar`: cuantos meses se ven en pantalla al mismo tiempo.
-
-Con estos datos, la pagina marca automaticamente:
-
-- dias en mina,
-- dia de bajada,
-- dias de descanso,
-- proxima subida,
-- y cuenta regresiva para la proxima bajada o subida.
-
-Si ella se fue jueves 14 y regresa jueves 28 por la noche, deja:
-
-```js
-salidaBase: "2026-05-14T08:00:00",
-horaRegreso: "21:00"
-```
-
-Y la pagina calculara los siguientes ciclos automaticamente.
-
-
-## Ajustes recientes
-
-- El calendario 14 x 7 muestra solo un mes para que sea mas limpio en celular.
-- Se agrego el boton "Volver a hoy" en el calendario.
-- El boton de pausa de la galeria ahora es un boton simple con iconos: pausa y reproducir.
-- Se reemplazo temporalmente la Galeria por la Capsula del tiempo (ver seccion de arriba).
-- Limpieza de codigo: se elimino un calendario viejo sin usar en `app.js`/`styles.css`,
-  la carpeta `public/` duplicada (el sitio ahora se sirve directo desde la raiz),
-  `public.backup/` (paginas de ejemplo de Firebase), `.agents/` y `skills-lock.json`
-  (documentacion para asistentes de IA que no aplicaba a este proyecto), y
-  `package.json`/`package-lock.json` (dependencia de npm que nunca se usaba en el sitio).
-
-Para volver a mostrar dos meses, cambia `mesesAMostrar: 1` por `mesesAMostrar: 2` en `assets/js/config.js` y ajusta `.calendar-months` si quieres dos columnas.
+GitHub publica en `https://usuario.github.io/` unos minutos después de cada
+`push`. No hace falta build ni `npm install`.

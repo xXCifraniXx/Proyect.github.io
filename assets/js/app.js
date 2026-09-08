@@ -1,22 +1,22 @@
+/*
+  LÓGICA DEL SITIO
+  ----------------
+  El HTML es una plantilla vacía. Este archivo:
+   1. Rellena todos los textos desde config.textos (data-bind).
+   2. Genera las secciones dinámicas (línea de tiempo, calendario, Bóveda, juego).
+   3. Maneja las interacciones (sobre, música, minijuego, modales).
+
+  Para editar contenido no hace falta tocar este archivo: casi todo sale de
+  assets/js/config.js.
+*/
 (() => {
   const CONFIG = window.APP_CONFIG || {};
+  const TEXTOS = CONFIG.textos || {};
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
 
-  const DB_NAME = "romantic_landing_media_v1";
-  const DB_VERSION = 1;
-  const STORE_PHOTOS = "photos";
-  const STORE_MUSIC = "music";
-  const URL_PHOTOS_KEY = "romantic_landing_url_photos";
-
   const state = {
-    currentSongIndex: 0,
     isPlaying: false,
-    galleryIndex: 0,
-    galleryTimer: null,
-    galleryPaused: false,
-    galleryItems: [],
-    localObjectUrls: [],
     calendarCursor: null
   };
 
@@ -25,103 +25,36 @@
     if (el && value !== undefined && value !== null) el.textContent = value;
   }
 
-  function openDB() {
-    return new Promise((resolve, reject) => {
-      if (!window.indexedDB) {
-        reject(new Error("IndexedDB no disponible"));
-        return;
-      }
-
-      const request = indexedDB.open(DB_NAME, DB_VERSION);
-      request.onupgradeneeded = () => {
-        const db = request.result;
-        if (!db.objectStoreNames.contains(STORE_PHOTOS)) db.createObjectStore(STORE_PHOTOS, { keyPath: "id" });
-        if (!db.objectStoreNames.contains(STORE_MUSIC)) db.createObjectStore(STORE_MUSIC, { keyPath: "id" });
-      };
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
+  function resolvePath(obj, path) {
+    return String(path).split(".").reduce((acc, key) => (acc == null ? acc : acc[key]), obj);
   }
 
-  async function idbPut(storeName, value) {
-    const db = await openDB();
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(storeName, "readwrite");
-      tx.objectStore(storeName).put(value);
-      tx.oncomplete = () => resolve();
-      tx.onerror = () => reject(tx.error);
-    });
+  function shuffle(list) {
+    const copy = list.slice();
+    for (let i = copy.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
   }
 
-  async function idbGet(storeName, id) {
-    const db = await openDB();
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(storeName, "readonly");
-      const req = tx.objectStore(storeName).get(id);
-      req.onsuccess = () => resolve(req.result || null);
-      req.onerror = () => reject(req.error);
-    });
-  }
-
-  async function idbGetAll(storeName) {
-    const db = await openDB();
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(storeName, "readonly");
-      const req = tx.objectStore(storeName).getAll();
-      req.onsuccess = () => resolve(req.result || []);
-      req.onerror = () => reject(req.error);
-    });
-  }
-
-  async function idbClear(storeName) {
-    const db = await openDB();
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(storeName, "readwrite");
-      tx.objectStore(storeName).clear();
-      tx.oncomplete = () => resolve();
-      tx.onerror = () => reject(tx.error);
-    });
-  }
-
-  function setConfigText() {
+  /* ---------------------------------------------------------------------------
+     TEXTOS: un solo lugar. Cada [data-bind="ruta.en.config"] recibe su texto.
+  --------------------------------------------------------------------------- */
+  function bindTexts() {
     const nombres = CONFIG.nombres || {};
-    const textos = CONFIG.textos || {};
-
     document.title = `Para ${nombres.novia || "Anthuanete"} | Una carta de ${nombres.autor || "Jorge"}`;
     safeText("#brandText", `Para ${nombres.novia || "Anthuanete"}`);
-    safeText("#welcomeEyebrow", textos.welcomeEyebrow);
-    safeText("#welcomeTitle", textos.welcomeTitle);
-    safeText("#welcomeText", textos.welcomeText);
-    safeText("#heroEyebrow", textos.heroEyebrow);
-    safeText("#heroTitle", textos.heroTitle);
-    safeText("#heroIntro", textos.heroIntro);
-    safeText("#letterTitle", textos.letterTitle);
-    safeText("#letterMessage", textos.letterMessage);
-    safeText("#letterSignature", textos.letterSignature);
-    safeText("#sectionCartaIntro", textos.cartaIntro);
-    safeText("#surpriseMessage", textos.surpriseMessage);
-    safeText("#timeIntro", textos.timeIntro);
-    safeText("#returnTitle", textos.returnTitle);
-    safeText("#returnText", textos.returnText);
-    safeText("#calendarTitle", textos.calendarTitle);
-    safeText("#calendarIntro", textos.calendarIntro);
-    safeText("#finalPhrase", textos.finalPhrase);
-    safeText("#finalSign", textos.finalSign);
+
+    $$("[data-bind]").forEach((el) => {
+      const value = resolvePath(CONFIG, el.dataset.bind);
+      if (value !== undefined && value !== null) el.textContent = value;
+    });
   }
 
-  function renderStory() {
-    const grid = $("#storyGrid");
-    if (!grid) return;
-    const items = CONFIG.historia || [];
-    grid.innerHTML = items.map((item) => `
-      <article class="story-card glass-soft">
-        <span>${item.numero || ""}</span>
-        <h3>${item.titulo || ""}</h3>
-        <p>${item.texto || ""}</p>
-      </article>
-    `).join("");
-  }
-
+  /* ---------------------------------------------------------------------------
+     FONDO: corazones flotantes y ráfaga de celebración.
+  --------------------------------------------------------------------------- */
   function createHearts() {
     const container = $("#floatingHearts");
     if (!container) return;
@@ -140,6 +73,25 @@
     }
   }
 
+  function burstHearts(count = 22) {
+    const layer = $("#floatingHearts");
+    if (!layer) return;
+    for (let i = 0; i < count; i += 1) {
+      const heart = document.createElement("span");
+      heart.className = "heart burst";
+      heart.textContent = i % 2 ? "❤" : "♡";
+      heart.style.left = `${38 + Math.random() * 24}%`;
+      heart.style.fontSize = `${16 + Math.random() * 18}px`;
+      heart.style.setProperty("--drift", `${Math.random() * 260 - 130}px`);
+      heart.style.animationDuration = `${1.6 + Math.random() * 1.3}s`;
+      layer.appendChild(heart);
+      setTimeout(() => heart.remove(), 3200);
+    }
+  }
+
+  /* ---------------------------------------------------------------------------
+     BIENVENIDA + SOBRE / CARTA INTERACTIVA
+  --------------------------------------------------------------------------- */
   function setupWelcomeAndLetter() {
     const welcome = $("#welcome");
     const enterBtn = $("#enterBtn");
@@ -151,11 +103,15 @@
       if (!envelope) return;
       envelope.classList.toggle("open", isOpen);
       envelope.setAttribute("aria-pressed", isOpen ? "true" : "false");
-      if (openLetterBtn) openLetterBtn.textContent = isOpen ? "Cerrar carta" : "Abrir carta";
+      if (openLetterBtn) {
+        openLetterBtn.textContent = isOpen
+          ? (TEXTOS.letterClose || "Cerrar carta")
+          : (TEXTOS.letterOpen || "Abrir carta");
+      }
       if (letterHint) {
         letterHint.textContent = isOpen
-          ? "La carta ya está abierta. Puedes tocar el sobre para cerrarla."
-          : "Toca el sobre para abrirlo con calma.";
+          ? (TEXTOS.letterHintOpen || "La carta ya está abierta. Toca el sobre para cerrarla.")
+          : (TEXTOS.letterHintClosed || "Toca el sobre para abrirlo con calma.");
       }
     };
 
@@ -164,9 +120,7 @@
       setEnvelopeState(false);
     });
 
-    const toggleEnvelope = () => {
-      setEnvelopeState(!envelope?.classList.contains("open"));
-    };
+    const toggleEnvelope = () => setEnvelopeState(!envelope?.classList.contains("open"));
 
     envelope?.addEventListener("click", toggleEnvelope);
     envelope?.addEventListener("keydown", (event) => {
@@ -177,15 +131,16 @@
     });
 
     openLetterBtn?.addEventListener("click", () => {
-      const shouldOpen = !envelope?.classList.contains("open");
-      setEnvelopeState(shouldOpen);
+      setEnvelopeState(!envelope?.classList.contains("open"));
       envelope?.scrollIntoView({ behavior: "smooth", block: "center" });
     });
 
-    // La carta queda cerrada hasta que ella toque el sobre o el boton.
     setEnvelopeState(false);
   }
 
+  /* ---------------------------------------------------------------------------
+     PROGRESO DE SCROLL + APARICIÓN DE SECCIONES
+  --------------------------------------------------------------------------- */
   function setupRevealAndProgress() {
     const progress = $("#scrollProgress");
     const updateProgress = () => {
@@ -205,6 +160,9 @@
     $$(".reveal").forEach((el) => observer.observe(el));
   }
 
+  /* ---------------------------------------------------------------------------
+     UTILIDADES DE FECHA (compartidas por contadores y calendario)
+  --------------------------------------------------------------------------- */
   function calculateDiff(start, end) {
     let years = end.getFullYear() - start.getFullYear();
     let months = end.getMonth() - start.getMonth();
@@ -215,7 +173,6 @@
       const previousMonth = new Date(end.getFullYear(), end.getMonth(), 0);
       days += previousMonth.getDate();
     }
-
     if (months < 0) {
       years -= 1;
       months += 12;
@@ -223,10 +180,6 @@
 
     const totalDays = Math.max(0, Math.floor((end - start) / 86400000));
     return { years: Math.max(0, years), months: Math.max(0, months), days: Math.max(0, days), totalDays };
-  }
-
-  function pad2(value) {
-    return String(value).padStart(2, "0");
   }
 
   function dayNumber(date) {
@@ -249,127 +202,16 @@
     return ((value % total) + total) % total;
   }
 
+  function pad2(value) {
+    return String(value).padStart(2, "0");
+  }
+
   function formatDateLong(date) {
     try {
       return date.toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
     } catch (_) {
       return `${pad2(date.getDate())}/${pad2(date.getMonth() + 1)}/${date.getFullYear()}`;
     }
-  }
-
-  function getRotationInfo(date = new Date()) {
-    const minaCfg = CONFIG.rotacionMina || {};
-    const cfg = CONFIG.rotacion || {
-      activa: minaCfg.activa,
-      salidaBase: minaCfg.salidaBase,
-      diasMina: minaCfg.diasMina,
-      diasCasa: minaCfg.diasDescanso,
-      horaRegreso: minaCfg.horaRegreso,
-      horaSalida: minaCfg.horaSalida,
-      textoEnCasa: "Está en sus días de descanso.",
-      textoEnMina: "Está en mina, pero cada día que pasa también acerca más el abrazo de regreso."
-    };
-    if (cfg.activa === false || !cfg.salidaBase) return null;
-
-    const start = new Date(cfg.salidaBase);
-    if (Number.isNaN(start.getTime())) return null;
-
-    const daysMine = Number(cfg.diasMina || 14);
-    const daysHome = Number(cfg.diasCasa || cfg.diasDescanso || 7);
-    const cycle = daysMine + daysHome;
-    const currentDay = dayNumber(date);
-    const startDay = dayNumber(start);
-    const diff = currentDay - startDay;
-    const cycleDay = mod(diff, cycle);
-    const cycleStartDay = currentDay - cycleDay;
-    const returnDay = cycleStartDay + daysMine;
-    const nextDepartureDay = cycleStartDay + cycle;
-    const nextReturnDay = cycleDay <= daysMine ? returnDay : nextDepartureDay + daysMine;
-
-    let phase = "casa";
-    let label = "En casa";
-    let detail = `Día ${cycleDay - daysMine + 1} de ${daysHome} en casa`;
-
-    if (cycleDay === 0) {
-      phase = "subida";
-      label = "Subida a mina";
-      detail = `Día 1 de ${daysMine} en mina`;
-    } else if (cycleDay > 0 && cycleDay < daysMine) {
-      phase = "mina";
-      label = "En mina";
-      detail = `Día ${cycleDay + 1} de ${daysMine} en mina`;
-    } else if (cycleDay === daysMine) {
-      phase = "bajada";
-      label = "Día de bajada";
-      detail = "Regresa por la noche";
-    }
-
-    const nextReturnDate = applyTime(dateFromDayNumber(nextReturnDay), cfg.horaRegreso || "20:00");
-    const nextDepartureDate = applyTime(dateFromDayNumber(nextDepartureDay), cfg.horaSalida || "07:00");
-    const countdownTarget = phase === "casa" ? nextDepartureDate : nextReturnDate;
-
-    return {
-      cfg,
-      phase,
-      label,
-      detail,
-      cycleDay,
-      daysMine,
-      daysHome,
-      cycle,
-      nextReturnDate,
-      nextDepartureDate,
-      countdownTarget,
-      daysToReturn: Math.max(0, nextReturnDay - currentDay),
-      daysToDeparture: Math.max(0, nextDepartureDay - currentDay)
-    };
-  }
-
-  function setupCounters() {
-    const startDate = new Date(CONFIG.fechas?.inicioRelacion || Date.now());
-    const staticReturnDate = CONFIG.fechas?.regreso ? new Date(CONFIG.fechas.regreso) : null;
-
-    const update = () => {
-      const now = new Date();
-      const together = calculateDiff(startDate, now);
-      safeText("#yearsTogether", together.years);
-      safeText("#monthsTogether", together.months);
-      safeText("#daysTogether", together.days);
-      safeText("#totalDaysTogether", together.totalDays);
-
-      const rotation = getRotationInfo(now);
-      const targetDate = rotation?.countdownTarget || staticReturnDate;
-
-      if (targetDate && !Number.isNaN(targetDate.getTime())) {
-        const ms = Math.max(0, targetDate - now);
-        const days = Math.floor(ms / 86400000);
-        const hours = Math.floor((ms % 86400000) / 3600000);
-        const minutes = Math.floor((ms % 3600000) / 60000);
-        const seconds = Math.floor((ms % 60000) / 1000);
-        safeText("#returnDays", days);
-        safeText("#returnHours", hours);
-        safeText("#returnMinutes", minutes);
-        safeText("#returnSeconds", seconds);
-
-        if (rotation) {
-          if (rotation.phase === "casa") {
-            safeText("#returnTitle", "Próxima subida");
-            safeText("#returnText", `Está en casa. La próxima subida sería el ${formatDateLong(rotation.nextDepartureDate)}.`);
-          } else if (rotation.phase === "bajada") {
-            safeText("#returnTitle", "Hoy es día de bajada");
-            safeText("#returnText", `Hoy regresa por la noche: ${formatDateLong(rotation.nextReturnDate)}.`);
-          } else {
-            safeText("#returnTitle", CONFIG.textos?.returnTitle || "Para volver a verte");
-            safeText("#returnText", `Próxima bajada: ${formatDateLong(rotation.nextReturnDate)}.`);
-          }
-        }
-      } else {
-        $("#returnCard")?.remove();
-      }
-    };
-
-    update();
-    setInterval(update, 1000);
   }
 
   function startOfDay(date) {
@@ -383,7 +225,7 @@
   }
 
   function dateKey(date) {
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
   }
 
   function diffCalendarDays(start, end) {
@@ -418,8 +260,238 @@
     return text ? text.charAt(0).toUpperCase() + text.slice(1) : text;
   }
 
+  function splitCountdown(target, from = new Date()) {
+    const ms = Math.max(0, target - from);
+    return {
+      days: Math.floor(ms / 86400000),
+      hours: Math.floor((ms % 86400000) / 3600000),
+      minutes: Math.floor((ms % 3600000) / 60000),
+      seconds: Math.floor((ms % 60000) / 1000)
+    };
+  }
+
+  /* ---------------------------------------------------------------------------
+     LÍNEA DE TIEMPO MENSUAL
+  --------------------------------------------------------------------------- */
+  function monthKey(date) {
+    return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}`;
+  }
+
+  function monthLabel(key) {
+    const [year, month] = key.split("-").map(Number);
+    const label = new Date(year, month - 1, 1).toLocaleDateString("es-ES", { month: "long", year: "numeric" });
+    return capitalize(label);
+  }
+
+  function renderMonthlyTimeline() {
+    const track = $("#timelineTrack");
+    if (!track) return;
+
+    const startRaw = CONFIG.fechas?.inicioRelacion;
+    const start = startRaw ? new Date(startRaw) : null;
+    if (!start || Number.isNaN(start.getTime())) {
+      track.innerHTML = "";
+      return;
+    }
+
+    const now = new Date();
+    const configuredByMonth = new Map((CONFIG.lineaTiempo || []).map((item) => [item.mes, item]));
+
+    const months = [];
+    const cursor = new Date(start.getFullYear(), start.getMonth(), 1);
+    const limit = new Date(now.getFullYear(), now.getMonth(), 1);
+    while (cursor <= limit) {
+      months.push(monthKey(cursor));
+      cursor.setMonth(cursor.getMonth() + 1);
+    }
+
+    track.innerHTML = months.map((key) => {
+      const item = configuredByMonth.get(key);
+      if (item && item.src) {
+        return `
+          <article class="timeline-card">
+            <img src="${item.src}" alt="${item.titulo || monthLabel(key)}" loading="lazy" />
+            <div class="timeline-body">
+              <span class="timeline-month">${monthLabel(key)}</span>
+              <h3>${item.titulo || ""}</h3>
+              <p>${item.texto || ""}</p>
+            </div>
+          </article>
+        `;
+      }
+      return `
+        <article class="timeline-card is-empty">
+          <span class="timeline-empty-icon">🖼️</span>
+          <h3>${monthLabel(key)}</h3>
+          <p>Aún no tiene foto. Agrégala en <code>lineaTiempo</code> dentro de <code>config.js</code>.</p>
+        </article>
+      `;
+    }).join("");
+  }
+
+  function setupMonthlyTimeline() {
+    renderMonthlyTimeline();
+    const viewport = $("#timelineViewport");
+    $("#timelinePrev")?.addEventListener("click", () => viewport?.scrollBy({ left: -230, behavior: "smooth" }));
+    $("#timelineNext")?.addEventListener("click", () => viewport?.scrollBy({ left: 230, behavior: "smooth" }));
+  }
+
+  /* ---------------------------------------------------------------------------
+     CONFIGURACIÓN DE LA ROTACIÓN DE MINA
+     Fuente única: config.rotacionMina, con un ajuste opcional que la persona
+     puede guardar desde la página (solo en su dispositivo, en localStorage).
+     El ajuste se expresa como "próxima bajada"; de ahí se deriva la salidaBase
+     y el patrón 14x7 se recalcula desde esa fecha en adelante.
+  --------------------------------------------------------------------------- */
+  const ROSTER_OVERRIDE_KEY = "roster-override-v1";
+
+  function readRosterOverride() {
+    try {
+      const raw = localStorage.getItem(ROSTER_OVERRIDE_KEY);
+      const data = raw ? JSON.parse(raw) : null;
+      return data && typeof data === "object" && data.proximaBajada ? data : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function writeRosterOverride(data) {
+    try {
+      localStorage.setItem(ROSTER_OVERRIDE_KEY, JSON.stringify(data));
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function clearRosterOverride() {
+    try { localStorage.removeItem(ROSTER_OVERRIDE_KEY); } catch (_) { /* noop */ }
+  }
+
+  function readMinaConfig() {
+    const source = CONFIG.rotacionMina || {};
+    const cfg = {
+      activa: source.activa,
+      salidaBase: source.salidaBase,
+      diasMina: Math.max(1, Number(source.diasMina || 14)),
+      diasDescanso: Math.max(1, Number(source.diasDescanso || 7)),
+      horaRegreso: source.horaRegreso || "21:00",
+      horaSalida: source.horaSalida,
+      mesesAMostrar: source.mesesAMostrar,
+      edited: false
+    };
+
+    const override = readRosterOverride();
+    if (override) {
+      if (Number(override.diasMina) > 0) cfg.diasMina = Math.max(1, Number(override.diasMina));
+      if (Number(override.diasDescanso) > 0) cfg.diasDescanso = Math.max(1, Number(override.diasDescanso));
+      if (override.horaRegreso) cfg.horaRegreso = override.horaRegreso;
+
+      const bajada = new Date(`${override.proximaBajada}T00:00:00`);
+      if (!Number.isNaN(bajada.getTime())) {
+        const origen = new Date(source.salidaBase || 0);
+        const hora = Number.isNaN(origen.getTime()) ? 8 : origen.getHours();
+        const min = Number.isNaN(origen.getTime()) ? 0 : origen.getMinutes();
+        const salida = new Date(bajada);
+        salida.setDate(salida.getDate() - cfg.diasMina);
+        cfg.salidaBase = `${salida.getFullYear()}-${pad2(salida.getMonth() + 1)}-${pad2(salida.getDate())}T${pad2(hora)}:${pad2(min)}:00`;
+        cfg.activa = true;
+        cfg.edited = true;
+      }
+    }
+    return cfg;
+  }
+
+  /* ---------------------------------------------------------------------------
+     CONTADORES + CUENTA REGRESIVA DE REGRESO
+  --------------------------------------------------------------------------- */
+  function getRotationInfo(date = new Date()) {
+    const cfg = readMinaConfig();
+    if (cfg.activa === false || !cfg.salidaBase) return null;
+
+    const start = new Date(cfg.salidaBase);
+    if (Number.isNaN(start.getTime())) return null;
+
+    const daysMine = Number(cfg.diasMina || 14);
+    const daysHome = Number(cfg.diasDescanso || 7);
+    const cycle = daysMine + daysHome;
+    const currentDay = dayNumber(date);
+    const startDay = dayNumber(start);
+    const cycleDay = mod(currentDay - startDay, cycle);
+    const cycleStartDay = currentDay - cycleDay;
+    const returnDay = cycleStartDay + daysMine;
+    const nextDepartureDay = cycleStartDay + cycle;
+    const nextReturnDay = cycleDay <= daysMine ? returnDay : nextDepartureDay + daysMine;
+
+    let phase = "casa";
+    if (cycleDay === 0) phase = "subida";
+    else if (cycleDay > 0 && cycleDay < daysMine) phase = "mina";
+    else if (cycleDay === daysMine) phase = "bajada";
+
+    const nextReturnDate = applyTime(dateFromDayNumber(nextReturnDay), cfg.horaRegreso || "20:00");
+    const nextDepartureDate = applyTime(dateFromDayNumber(nextDepartureDay), cfg.horaSalida || "07:00");
+
+    return {
+      phase,
+      nextReturnDate,
+      nextDepartureDate,
+      countdownTarget: phase === "casa" ? nextDepartureDate : nextReturnDate
+    };
+  }
+
+  // Reasignada por setupCounters; la usa el editor de bajadas para refrescar
+  // la cuenta regresiva al instante en vez de esperar al siguiente segundo.
+  let refreshCounters = () => {};
+
+  function setupCounters() {
+    const startDate = new Date(CONFIG.fechas?.inicioRelacion || Date.now());
+    const staticReturnDate = CONFIG.fechas?.regreso ? new Date(CONFIG.fechas.regreso) : null;
+
+    const update = () => {
+      const now = new Date();
+      const together = calculateDiff(startDate, now);
+      safeText("#yearsTogether", together.years);
+      safeText("#monthsTogether", together.months);
+      safeText("#daysTogether", together.days);
+      safeText("#totalDaysTogether", together.totalDays);
+
+      const rotation = getRotationInfo(now);
+      const targetDate = rotation?.countdownTarget || staticReturnDate;
+
+      if (targetDate && !Number.isNaN(targetDate.getTime())) {
+        const parts = splitCountdown(targetDate, now);
+        safeText("#returnDays", parts.days);
+        safeText("#returnHours", parts.hours);
+        safeText("#returnMinutes", parts.minutes);
+        safeText("#returnSeconds", parts.seconds);
+
+        if (rotation) {
+          if (rotation.phase === "casa") {
+            safeText("#returnTitle", "Próxima subida");
+            safeText("#returnText", `Está en casa. La próxima subida sería el ${formatDateLong(rotation.nextDepartureDate)}.`);
+          } else if (rotation.phase === "bajada") {
+            safeText("#returnTitle", "Hoy es día de bajada");
+            safeText("#returnText", `Hoy regresa por la noche: ${formatDateLong(rotation.nextReturnDate)}.`);
+          } else {
+            safeText("#returnTitle", TEXTOS.returnTitle || "Para volver a verte");
+            safeText("#returnText", `Próxima bajada: ${formatDateLong(rotation.nextReturnDate)}.`);
+          }
+        }
+      } else {
+        $("#returnCard")?.remove();
+      }
+    };
+
+    refreshCounters = update;
+    update();
+    setInterval(update, 1000);
+  }
+
+  /* ---------------------------------------------------------------------------
+     CALENDARIO DE ROTACIÓN 14 x 7
+  --------------------------------------------------------------------------- */
   function getRosterConfig() {
-    const cfg = CONFIG.rotacionMina || {};
+    const cfg = readMinaConfig();
     const base = new Date(cfg.salidaBase || CONFIG.fechas?.regreso || Date.now());
     const mineDays = Math.max(1, Number(cfg.diasMina || 14));
     const restDays = Math.max(1, Number(cfg.diasDescanso || 7));
@@ -431,18 +503,34 @@
       restDays,
       cycleDays: mineDays + restDays,
       returnClock: parseClock(cfg.horaRegreso, 21, 0),
-      monthsToShow: Math.max(1, Math.min(4, Number(cfg.mesesAMostrar || 1)))
+      monthsToShow: Math.max(1, Math.min(4, Number(cfg.mesesAMostrar || 1))),
+      edited: cfg.edited
     };
+  }
+
+  // Próxima fecha de bajada (día "return") a partir de ahora.
+  function nextBajadaDate(roster, now = new Date()) {
+    if (!roster.active) return null;
+    let cycleNumber = Math.floor(diffCalendarDays(roster.baseDay, now) / roster.cycleDays);
+    if (cycleNumber < 0) cycleNumber = 0;
+    for (let i = 0; i < 500; i += 1) {
+      const cycle = buildRosterCycle(roster, cycleNumber + i);
+      if (cycle.returnDate >= now) return cycle.returnDate;
+    }
+    return null;
+  }
+
+  function toDateInputValue(date) {
+    return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
   }
 
   function buildRosterCycle(roster, cycleNumber) {
     const startDay = addDays(roster.baseDay, cycleNumber * roster.cycleDays);
     const start = setClock(startDay, { hour: roster.base.getHours(), minute: roster.base.getMinutes() });
-    const returnDay = addDays(startDay, roster.mineDays);
-    const returnDate = setClock(returnDay, roster.returnClock);
+    const returnDate = setClock(addDays(startDay, roster.mineDays), roster.returnClock);
     const nextStartDay = addDays(startDay, roster.cycleDays);
     const nextStart = setClock(nextStartDay, { hour: roster.base.getHours(), minute: roster.base.getMinutes() });
-    return { startDay, start, returnDay, returnDate, nextStartDay, nextStart };
+    return { startDay, start, returnDate, nextStartDay, nextStart };
   }
 
   function getCurrentRosterPhase(roster, now = new Date()) {
@@ -463,40 +551,32 @@
 
     if (now < cycle.start) {
       return {
-        phase: "before",
         title: "Próxima subida programada",
         text: `La rotación empezará el ${formatLongDate(cycle.start)}.`,
         targetLabel: "Próxima subida",
-        target: cycle.start,
-        cycle
+        target: cycle.start
       };
     }
-
     if (now < cycle.returnDate) {
       return {
-        phase: "mine",
         title: "Ahora estás en mina 😿",
         text: `La próxima bajada será el ${formatLongDate(cycle.returnDate)} por la noche. Falta cada vez menos para volver a verte.`,
         targetLabel: "Próxima bajada",
-        target: cycle.returnDate,
-        cycle
+        target: cycle.returnDate
       };
     }
-
     return {
-      phase: "rest",
       title: "Estás en tus días de bajada 😼",
       text: `La próxima subida será el ${formatLongDate(cycle.nextStart)}. Estos días son para descansar y guardar recuerdos bonitos 💜.`,
       targetLabel: "Próxima subida",
-      target: cycle.nextStart,
-      cycle
+      target: cycle.nextStart
     };
   }
 
   function classifyRosterDay(roster, day) {
     const diff = diffCalendarDays(roster.baseDay, day);
     if (diff < 0) return { type: "none", label: "" };
-    const index = ((diff % roster.cycleDays) + roster.cycleDays) % roster.cycleDays;
+    const index = mod(diff, roster.cycleDays);
 
     if (index === 0) return { type: "departure mine", label: "Sube" };
     if (index > 0 && index < roster.mineDays) return { type: "mine", label: "Mina" };
@@ -505,22 +585,17 @@
   }
 
   function updateRosterCountdown(target) {
-    const ms = Math.max(0, target - new Date());
-    const days = Math.floor(ms / 86400000);
-    const hours = Math.floor((ms % 86400000) / 3600000);
-    const minutes = Math.floor((ms % 3600000) / 60000);
-    const seconds = Math.floor((ms % 60000) / 1000);
-    safeText("#rosterDays", days);
-    safeText("#rosterHours", hours);
-    safeText("#rosterMinutes", minutes);
-    safeText("#rosterSeconds", seconds);
+    const parts = splitCountdown(target);
+    safeText("#rosterDays", parts.days);
+    safeText("#rosterHours", parts.hours);
+    safeText("#rosterMinutes", parts.minutes);
+    safeText("#rosterSeconds", parts.seconds);
   }
 
   function renderRosterSummary() {
     const roster = getRosterConfig();
-    const section = $("#calendario");
     if (!roster.active) {
-      section?.remove();
+      $("#calendario")?.remove();
       return null;
     }
 
@@ -530,7 +605,13 @@
     safeText("#rosterStatusText", phase.text);
     safeText("#rosterCountdownLabel", phase.targetLabel);
     updateRosterCountdown(phase.target);
+    $("#rosterEditor")?.classList.toggle("is-edited", !!roster.edited);
     return roster;
+  }
+
+  function refreshRoster() {
+    const roster = renderRosterSummary();
+    if (roster) renderCalendarMonths(roster);
   }
 
   function renderCalendarMonths(roster) {
@@ -541,8 +622,8 @@
     const today = new Date();
     const cursor = state.calendarCursor || new Date(today.getFullYear(), today.getMonth(), 1);
     state.calendarCursor = cursor;
-    const monthsToShow = roster.monthsToShow;
-    const monthDates = Array.from({ length: monthsToShow }, (_, index) => new Date(cursor.getFullYear(), cursor.getMonth() + index, 1));
+    const monthDates = Array.from({ length: roster.monthsToShow }, (_, index) =>
+      new Date(cursor.getFullYear(), cursor.getMonth() + index, 1));
 
     if (rangeLabel) {
       const first = monthDates[0];
@@ -587,338 +668,198 @@
     state.calendarCursor = new Date(baseForCursor.getFullYear(), baseForCursor.getMonth(), 1);
     renderCalendarMonths(roster);
 
-    setInterval(() => {
-      const currentRoster = renderRosterSummary();
-      if (currentRoster) renderCalendarMonths(currentRoster);
-    }, 1000);
+    setInterval(refreshRoster, 1000);
 
     $("#calendarPrev")?.addEventListener("click", () => {
       state.calendarCursor = new Date(state.calendarCursor.getFullYear(), state.calendarCursor.getMonth() - 1, 1);
-      renderCalendarMonths(roster);
+      renderCalendarMonths(getRosterConfig());
     });
-
     $("#calendarNext")?.addEventListener("click", () => {
       state.calendarCursor = new Date(state.calendarCursor.getFullYear(), state.calendarCursor.getMonth() + 1, 1);
-      renderCalendarMonths(roster);
+      renderCalendarMonths(getRosterConfig());
     });
-
     $("#calendarToday")?.addEventListener("click", () => {
       const today = new Date();
       state.calendarCursor = new Date(today.getFullYear(), today.getMonth(), 1);
-      const currentRoster = renderRosterSummary();
-      renderCalendarMonths(currentRoster || roster);
+      refreshRoster();
     });
+
+    setupRosterEditor();
   }
 
+  /* ---------------------------------------------------------------------------
+     EDITOR DE BAJADAS: ajustar la próxima bajada desde la propia página.
+  --------------------------------------------------------------------------- */
+  function setupRosterEditor() {
+    const form = $("#rosterEditorForm");
+    if (!form) return;
+
+    const nextDownInput = $("#rosterNextDown");
+    const mineDaysInput = $("#rosterMineDays");
+    const restDaysInput = $("#rosterRestDays");
+    const returnTimeInput = $("#rosterReturnTime");
+    const resetBtn = $("#rosterReset");
+    const statusEl = $("#rosterEditorStatus");
+
+    let statusTimer = null;
+    const flash = (message) => {
+      if (!statusEl) return;
+      statusEl.textContent = message;
+      statusEl.classList.add("is-visible");
+      clearTimeout(statusTimer);
+      statusTimer = setTimeout(() => statusEl.classList.remove("is-visible"), 4000);
+    };
+
+    const fillForm = () => {
+      const cfg = readMinaConfig();
+      const bajada = nextBajadaDate(getRosterConfig()) || new Date();
+      if (nextDownInput) {
+        nextDownInput.value = toDateInputValue(bajada);
+        nextDownInput.min = toDateInputValue(new Date());
+      }
+      if (mineDaysInput) mineDaysInput.value = cfg.diasMina;
+      if (restDaysInput) restDaysInput.value = cfg.diasDescanso;
+      if (returnTimeInput) returnTimeInput.value = String(cfg.horaRegreso || "21:00").slice(0, 5);
+      if (resetBtn) resetBtn.hidden = !readRosterOverride();
+    };
+
+    const recenterToToday = () => {
+      const today = new Date();
+      state.calendarCursor = new Date(today.getFullYear(), today.getMonth(), 1);
+    };
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const proximaBajada = nextDownInput?.value;
+      const parsed = proximaBajada ? new Date(`${proximaBajada}T00:00:00`) : null;
+      if (!parsed || Number.isNaN(parsed.getTime())) {
+        flash(TEXTOS.rosterEditorInvalidMsg || "Elige una fecha válida.");
+        return;
+      }
+
+      const saved = writeRosterOverride({
+        proximaBajada,
+        diasMina: Math.max(1, Number(mineDaysInput?.value) || 14),
+        diasDescanso: Math.max(1, Number(restDaysInput?.value) || 7),
+        horaRegreso: returnTimeInput?.value || "21:00"
+      });
+
+      if (!saved) {
+        flash(TEXTOS.rosterEditorStorageError || "No se pudo guardar en este navegador.");
+        return;
+      }
+
+      recenterToToday();
+      refreshRoster();
+      refreshCounters();
+      fillForm();
+      flash(TEXTOS.rosterEditorSavedMsg || "Guardado.");
+    });
+
+    resetBtn?.addEventListener("click", () => {
+      clearRosterOverride();
+      recenterToToday();
+      refreshRoster();
+      refreshCounters();
+      fillForm();
+      flash(TEXTOS.rosterEditorResetMsg || "Listo.");
+    });
+
+    fillForm();
+  }
+
+  /* ---------------------------------------------------------------------------
+     MENSAJE SORPRESA
+  --------------------------------------------------------------------------- */
   function setupSurprise() {
     const btn = $("#surpriseBtn");
     const message = $("#surpriseMessage");
-    btn?.addEventListener("click", () => {
-      message?.classList.toggle("show");
-      btn.textContent = message?.classList.contains("show") ? "Ocultar mensaje 💌" : "Ver mensaje sorpresa 💗";
+    if (!btn || !message) return;
+
+    message.textContent = TEXTOS.surpriseMessage || "";
+    btn.textContent = TEXTOS.surpriseOpen || "Ver mensaje sorpresa 💗";
+    btn.addEventListener("click", () => {
+      const open = message.classList.toggle("show");
+      btn.textContent = open
+        ? (TEXTOS.surpriseClose || "Ocultar mensaje 💌")
+        : (TEXTOS.surpriseOpen || "Ver mensaje sorpresa 💗");
     });
   }
 
+  /* ---------------------------------------------------------------------------
+     MÚSICA: una sola canción, controlada por eventos del <audio>.
+  --------------------------------------------------------------------------- */
   function setupMusic() {
     const audio = $("#audioPlayer");
-    const select = $("#musicSelect");
     const playBtn = $("#playMusicBtn");
-    const prevBtn = $("#prevSongBtn");
-    const nextBtn = $("#nextSongBtn");
-    const title = $("#currentSongTitle");
-    const artist = $("#currentSongArtist");
-    const status = $("#musicStatus");
     const volume = $("#volumeRange");
-    const localInput = $("#localMusicInput");
-    const playlist = [...(CONFIG.musica?.playlist || [])];
+    const song = CONFIG.musica?.cancion;
 
-    if (!audio || !select) return;
+    if (!audio || !song?.src) {
+      $("#musica")?.remove();
+      return;
+    }
 
+    audio.src = song.src;
     audio.volume = Number(CONFIG.musica?.volumenInicial ?? 0.24);
     if (volume) volume.value = audio.volume;
 
-    function renderSelect(extraLocal = false) {
-      select.innerHTML = playlist.map((song, index) => `<option value="${index}">${song.titulo}</option>`).join("");
-      if (extraLocal) {
-        const option = document.createElement("option");
-        option.value = "local-saved";
-        option.textContent = "Canción guardada en este dispositivo";
-        select.appendChild(option);
+    safeText("#currentSongTitle", song.titulo || "Nuestra canción");
+    safeText("#currentSongArtist", song.artista || "");
+
+    const syncButton = () => {
+      if (playBtn) {
+        playBtn.textContent = state.isPlaying
+          ? (TEXTOS.musicPause || "Pausar ⏸")
+          : (TEXTOS.musicPlay || "Reproducir 🎵");
       }
-    }
+    };
+    syncButton();
 
-    function setSong(index) {
-      const song = playlist[index];
-      if (!song) return;
-      state.currentSongIndex = index;
-      audio.src = song.src;
-      safeText(title, song.titulo || "Canción");
-      safeText(artist, song.artista || "");
-      safeText(status, "Lista para reproducir. La música inicia cuando presionas el botón.");
-      select.value = String(index);
-      state.isPlaying = false;
-      if (playBtn) playBtn.textContent = "Reproducir 🎵";
-    }
-
-    async function playPause() {
-      if (!audio.src) return;
+    playBtn?.addEventListener("click", async () => {
       try {
-        if (!state.isPlaying) {
-          await audio.play();
-          state.isPlaying = true;
-          if (playBtn) playBtn.textContent = "Pausar ⏸";
-          safeText(status, "Música reproduciéndose.");
-        } else {
-          audio.pause();
-          state.isPlaying = false;
-          if (playBtn) playBtn.textContent = "Reproducir 🎵";
-          safeText(status, "Música pausada.");
-        }
-      } catch (error) {
-        safeText(status, "No se pudo reproducir. Revisa que el archivo exista y el navegador permita audio.");
-      }
-    }
-
-    async function loadSavedMusicOption() {
-      try {
-        const saved = await idbGet(STORE_MUSIC, "custom");
-        if (saved?.blob) renderSelect(true);
+        if (state.isPlaying) audio.pause();
+        else await audio.play();
       } catch (_) {
-        renderSelect(false);
+        safeText("#currentSongArtist", "No se pudo reproducir el audio en este navegador.");
       }
-    }
-
-    select.addEventListener("change", async () => {
-      if (select.value === "local-saved") {
-        const saved = await idbGet(STORE_MUSIC, "custom");
-        if (saved?.blob) {
-          audio.src = URL.createObjectURL(saved.blob);
-          safeText(title, saved.name || "Canción guardada");
-          safeText(artist, "Guardada en este dispositivo");
-          safeText(status, "Canción local cargada desde este navegador.");
-          state.isPlaying = false;
-          if (playBtn) playBtn.textContent = "Reproducir 🎵";
-        }
-        return;
-      }
-      setSong(Number(select.value));
     });
 
-    playBtn?.addEventListener("click", playPause);
-    prevBtn?.addEventListener("click", () => {
-      if (!playlist.length) return;
-      const nextIndex = (state.currentSongIndex - 1 + playlist.length) % playlist.length;
-      setSong(nextIndex);
-    });
-    nextBtn?.addEventListener("click", () => {
-      if (!playlist.length) return;
-      const nextIndex = (state.currentSongIndex + 1) % playlist.length;
-      setSong(nextIndex);
-    });
+    audio.addEventListener("play", () => { state.isPlaying = true; syncButton(); });
+    audio.addEventListener("pause", () => { state.isPlaying = false; syncButton(); });
+    audio.addEventListener("ended", () => { state.isPlaying = false; syncButton(); });
     volume?.addEventListener("input", () => { audio.volume = Number(volume.value); });
-    audio.addEventListener("ended", () => {
-      state.isPlaying = false;
-      if (playBtn) playBtn.textContent = "Reproducir 🎵";
-    });
-
-    localInput?.addEventListener("change", async () => {
-      const file = localInput.files?.[0];
-      if (!file) return;
-      const objectUrl = URL.createObjectURL(file);
-      audio.src = objectUrl;
-      safeText(title, file.name.replace(/\.[^/.]+$/, ""));
-      safeText(artist, "Elegida desde este dispositivo");
-      safeText(status, "Canción local cargada. También intentaré guardarla en este navegador.");
-      try {
-        await idbPut(STORE_MUSIC, { id: "custom", name: file.name, type: file.type, blob: file, updatedAt: Date.now() });
-        renderSelect(true);
-        select.value = "local-saved";
-        safeText(status, "Canción guardada en este navegador. Para que todos la escuchen desde el link, súbela a assets/audio y configúrala.");
-      } catch (_) {
-        safeText(status, "Canción cargada para esta sesión. Si quieres que quede en el link, súbela a assets/audio.");
-      }
-      state.isPlaying = false;
-      if (playBtn) playBtn.textContent = "Reproducir 🎵";
-    });
-
-    renderSelect(false);
-    if (playlist.length) setSong(0);
-    loadSavedMusicOption();
   }
 
-  function getUrlPhotos() {
-    try {
-      return JSON.parse(localStorage.getItem(URL_PHOTOS_KEY) || "[]");
-    } catch (_) {
-      return [];
-    }
+  /* ---------------------------------------------------------------------------
+     LA BÓVEDA: cartas que se desbloquean con el tiempo.
+  --------------------------------------------------------------------------- */
+  function goToConstelacion() {
+    $("#constelacion")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function saveUrlPhotos(items) {
-    localStorage.setItem(URL_PHOTOS_KEY, JSON.stringify(items));
-  }
-
-  async function buildGalleryItems() {
-    state.localObjectUrls.forEach((url) => URL.revokeObjectURL(url));
-    state.localObjectUrls = [];
-
-    const permanent = (CONFIG.galeria || []).map((item, index) => ({
-      id: `config-${index}`,
-      src: item.src,
-      titulo: item.titulo || "Recuerdo",
-      frase: item.frase || "Un momento bonito.",
-      type: "config"
-    }));
-
-    let localPhotos = [];
-    try {
-      const saved = await idbGetAll(STORE_PHOTOS);
-      localPhotos = saved.map((item) => {
-        const src = URL.createObjectURL(item.blob);
-        state.localObjectUrls.push(src);
-        return {
-          id: item.id,
-          src,
-          titulo: item.titulo || "Foto agregada",
-          frase: item.frase || "Agregada desde este dispositivo.",
-          type: "local"
-        };
-      });
-    } catch (_) {
-      localPhotos = [];
-    }
-
-    const urlPhotos = getUrlPhotos().map((item, index) => ({
-      id: `url-${index}`,
-      src: item.src,
-      titulo: item.titulo || "Foto por URL",
-      frase: item.frase || "Agregada desde un enlace.",
-      type: "url"
-    }));
-
-    state.galleryItems = [...permanent, ...urlPhotos, ...localPhotos];
-  }
-
-  function renderGallery() {
-    const track = $("#galleryTrack");
-    const dots = $("#galleryDots");
-    if (!track || !dots) return;
-
-    track.innerHTML = "";
-    dots.innerHTML = "";
-
-    state.galleryItems.forEach((item, index) => {
-      const card = document.createElement("article");
-      card.className = "gallery-card";
-      card.dataset.index = String(index);
-      card.innerHTML = `
-        <img src="${item.src}" alt="${item.titulo}" loading="lazy" />
-        <div class="gallery-caption">
-          <strong>${item.titulo}</strong>
-          <span>${item.frase}</span>
-        </div>
-      `;
-      card.addEventListener("click", () => openLightbox(item));
-      track.appendChild(card);
-
-      const dot = document.createElement("button");
-      dot.type = "button";
-      dot.setAttribute("aria-label", `Ver foto ${index + 1}`);
-      dot.addEventListener("click", () => goToGallery(index));
-      dots.appendChild(dot);
-    });
-
-    state.galleryIndex = Math.min(state.galleryIndex, Math.max(0, state.galleryItems.length - 1));
-    updateGalleryPosition();
-  }
-
-  function getVisibleCards() {
-    if (window.matchMedia("(max-width: 640px)").matches) return 1;
-    if (window.matchMedia("(max-width: 920px)").matches) return 2;
-    return 3;
-  }
-
-  function updateGalleryPosition() {
-    const track = $("#galleryTrack");
-    if (!track) return;
-    const firstCard = $(".gallery-card", track);
-    const gap = 14;
-    const cardWidth = firstCard ? firstCard.getBoundingClientRect().width + gap : 0;
-    track.style.transform = `translateX(-${state.galleryIndex * cardWidth}px)`;
-    $$("#galleryDots button").forEach((dot, index) => dot.classList.toggle("active", index === state.galleryIndex));
-  }
-
-  function goToGallery(index) {
-    const maxIndex = Math.max(0, state.galleryItems.length - getVisibleCards());
-    state.galleryIndex = Math.max(0, Math.min(index, maxIndex));
-    updateGalleryPosition();
-  }
-
-  function nextGallery() {
-    if (!state.galleryItems.length) return;
-    const maxIndex = Math.max(0, state.galleryItems.length - getVisibleCards());
-    state.galleryIndex = state.galleryIndex >= maxIndex ? 0 : state.galleryIndex + 1;
-    updateGalleryPosition();
-  }
-
-  function prevGallery() {
-    const maxIndex = Math.max(0, state.galleryItems.length - getVisibleCards());
-    state.galleryIndex = state.galleryIndex <= 0 ? maxIndex : state.galleryIndex - 1;
-    updateGalleryPosition();
-  }
-
-  function startGalleryTimer() {
-    stopGalleryTimer();
-    if (state.galleryPaused) return;
-    const interval = CONFIG.opciones?.galeriaAutoMs || 3600;
-    state.galleryTimer = setInterval(nextGallery, interval);
-  }
-
-  function stopGalleryTimer() {
-    if (state.galleryTimer) clearInterval(state.galleryTimer);
-    state.galleryTimer = null;
-  }
-
-  function openLightbox(item) {
-    const lightbox = $("#lightbox");
-    const image = $("#lightboxImage");
-    const caption = $("#lightboxCaption");
-    if (!lightbox || !image || !caption) return;
-    image.src = item.src;
-    image.alt = item.titulo;
-    caption.textContent = `${item.titulo} — ${item.frase}`;
-    lightbox.classList.add("show");
-    lightbox.setAttribute("aria-hidden", "false");
-    stopGalleryTimer();
-  }
-
-  function closeLightbox() {
-    const lightbox = $("#lightbox");
-    const image = $("#lightboxImage");
-    if (!lightbox || !image) return;
-    lightbox.classList.remove("show");
-    lightbox.setAttribute("aria-hidden", "true");
-    image.src = "";
-    startGalleryTimer();
-  }
-
-  function renderCapsula() {
-    const grid = $("#capsulaGrid");
+  function renderBoveda() {
+    const grid = $("#bovedaGrid");
     if (!grid) return;
 
-    const cartas = [...(CONFIG.capsula?.cartas || [])].sort(
+    const cartas = [...(CONFIG.boveda?.cartas || [])].sort(
       (a, b) => new Date(a.fecha) - new Date(b.fecha)
     );
 
     grid.innerHTML = "";
     const now = new Date();
 
+    if (!cartas.length) {
+      grid.innerHTML = `<p class="boveda-empty">Aún no hay cartas. Agrega la primera en <code>boveda.cartas</code> dentro de <code>assets/js/config.js</code>.</p>`;
+      return;
+    }
+
     cartas.forEach((carta, index) => {
       const fecha = new Date(carta.fecha);
       const isLocked = fecha > now;
-
       const card = document.createElement("article");
-      card.className = `capsule-card glass-soft ${isLocked ? "is-locked" : "is-unlocked"}`;
+      card.className = `boveda-card glass-soft ${isLocked ? "is-locked" : "is-unlocked"}`;
+      card.style.animationDelay = `${index * 60}ms`;
 
       if (isLocked) {
         const diff = calculateDiff(now, fecha);
@@ -926,163 +867,233 @@
         if (diff.years) partes.push(`${diff.years} a`);
         if (diff.months) partes.push(`${diff.months} m`);
         partes.push(`${diff.days} d`);
-
         card.innerHTML = `
-          <span class="capsule-icon">🔒</span>
-          <h3>Carta sellada</h3>
-          <p class="capsule-lock-note">Se abre el ${formatDateLong(fecha)}</p>
-          <span class="capsule-date">Faltan ${partes.join(" ")}</span>
+          <span class="boveda-icon">🔒</span>
+          <h3>${TEXTOS.bovedaLockedTitle || "Carta sellada"}</h3>
+          <p class="boveda-lock-note">Se abre el ${formatDateLong(fecha)}</p>
+          <span class="boveda-date">Faltan ${partes.join(" ")}</span>
         `;
       } else {
-        const preview = (carta.mensaje || "").slice(0, 90);
+        const mensaje = carta.mensaje || "";
+        const preview = mensaje.slice(0, 90);
         card.innerHTML = `
-          <span class="capsule-icon">${carta.icono || "💌"}</span>
+          <span class="boveda-icon">${carta.icono || "💌"}</span>
           <h3>${carta.titulo || "Una carta para ti"}</h3>
-          <p>${preview}${(carta.mensaje || "").length > 90 ? "…" : ""}</p>
-          <span class="capsule-date">Desbloqueada el ${formatDateLong(fecha)}</span>
+          <p>${preview}${mensaje.length > 90 ? "…" : ""}</p>
+          <span class="boveda-date">Desbloqueada el ${formatDateLong(fecha)}</span>
         `;
-        card.addEventListener("click", () => openCapsuleModal(carta, fecha));
+        card.addEventListener("click", () => openBovedaModal(carta, fecha));
       }
 
-      card.style.animationDelay = `${index * 60}ms`;
       grid.appendChild(card);
     });
-
-    if (!cartas.length) {
-      grid.innerHTML = `<p class="capsule-empty">Aún no hay cartas. Agrega la primera en <code>capsula.cartas</code> dentro de <code>assets/js/config.js</code>.</p>`;
-    }
   }
 
-  function openCapsuleModal(carta, fecha) {
-    const modal = $("#capsuleModal");
+  function openBovedaModal(carta, fecha) {
+    const modal = $("#bovedaModal");
     if (!modal) return;
-    safeText("#capsuleModalIcon", carta.icono || "💌");
-    safeText("#capsuleModalDate", `Desbloqueada el ${formatDateLong(fecha)}`);
-    safeText("#capsuleModalTitle", carta.titulo || "Una carta para ti");
-    safeText("#capsuleModalMessage", carta.mensaje || "");
+    safeText("#bovedaModalIcon", carta.icono || "💌");
+    safeText("#bovedaModalDate", `Desbloqueada el ${formatDateLong(fecha)}`);
+    safeText("#bovedaModalTitle", carta.titulo || "Una carta para ti");
+    safeText("#bovedaModalMessage", carta.mensaje || "");
+
+    const action = $("#bovedaModalAction");
+    if (action) {
+      const isConstelacion = carta.accion?.tipo === "constelacion";
+      action.hidden = !isConstelacion;
+      if (isConstelacion) {
+        action.textContent = carta.accion.etiqueta || "Ir a nuestra constelación ✦";
+        action.href = "#constelacion";
+        action.onclick = (event) => {
+          event.preventDefault();
+          closeBovedaModal();
+          goToConstelacion();
+        };
+      } else {
+        action.onclick = null;
+      }
+    }
+
     modal.classList.add("show");
     modal.setAttribute("aria-hidden", "false");
   }
 
-  function closeCapsuleModal() {
-    const modal = $("#capsuleModal");
+  function closeBovedaModal() {
+    const modal = $("#bovedaModal");
     if (!modal) return;
     modal.classList.remove("show");
     modal.setAttribute("aria-hidden", "true");
   }
 
-  function setupCapsula() {
-    renderCapsula();
+  function setupBoveda() {
+    renderBoveda();
+    // Revisa cada minuto por si una carta se desbloquea sin recargar.
+    setInterval(renderBoveda, 60000);
 
-    // Vuelve a dibujar cada minuto para que una carta se desbloquee sola
-    // sin que ella tenga que recargar la página.
-    setInterval(renderCapsula, 60000);
-
-    $("#capsuleModalClose")?.addEventListener("click", closeCapsuleModal);
-    $("#capsuleModal")?.addEventListener("click", (event) => {
-      if (event.target.id === "capsuleModal") closeCapsuleModal();
+    $("#bovedaModalClose")?.addEventListener("click", closeBovedaModal);
+    $("#bovedaModal")?.addEventListener("click", (event) => {
+      if (event.target.id === "bovedaModal") closeBovedaModal();
     });
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") closeCapsuleModal();
+      if (event.key === "Escape") closeBovedaModal();
     });
   }
 
-  async function setupGallery() {
-    await buildGalleryItems();
-    renderGallery();
-    startGalleryTimer();
+  /* ---------------------------------------------------------------------------
+     CONSTELACIÓN: cielo decorativo animado + enlace a la experiencia completa.
+  --------------------------------------------------------------------------- */
+  function setupConstelacionTeaser() {
+    const canvas = $("#constelacionTeaser");
+    if (!canvas || !canvas.getContext) return;
+    const ctx = canvas.getContext("2d");
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let stars = [];
 
-    $("#galleryNext")?.addEventListener("click", nextGallery);
-    $("#galleryPrev")?.addEventListener("click", prevGallery);
-    window.addEventListener("resize", updateGalleryPosition);
-
-    const toggleBtn = $("#toggleGalleryMotion");
-    const updateGalleryToggleButton = () => {
-      if (!toggleBtn) return;
-      toggleBtn.textContent = state.galleryPaused ? "▶" : "⏸";
-      toggleBtn.setAttribute("aria-label", state.galleryPaused ? "Reanudar galería" : "Pausar galería");
-      toggleBtn.setAttribute("title", state.galleryPaused ? "Reanudar galería" : "Pausar galería");
+    const seed = () => {
+      const w = canvas.clientWidth || 600;
+      const h = canvas.clientHeight || 240;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const count = Math.max(24, Math.round(w / 14));
+      stars = Array.from({ length: count }, () => ({
+        x: Math.random(),
+        y: Math.random(),
+        r: Math.random() * 1.4 + 0.4,
+        tw: Math.random() * Math.PI * 2
+      }));
     };
-    updateGalleryToggleButton();
-    toggleBtn?.addEventListener("click", () => {
-      state.galleryPaused = !state.galleryPaused;
-      updateGalleryToggleButton();
-      if (state.galleryPaused) stopGalleryTimer();
-      else startGalleryTimer();
-    });
 
-    const localPhotoInput = $("#localPhotoInput");
-    localPhotoInput?.addEventListener("change", async () => {
-      const files = Array.from(localPhotoInput.files || []).filter((file) => file.type.startsWith("image/"));
-      for (const file of files) {
-        try {
-          await idbPut(STORE_PHOTOS, {
-            id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-            titulo: file.name.replace(/\.[^/.]+$/, ""),
-            frase: "Foto agregada desde este dispositivo.",
-            type: file.type,
-            blob: file,
-            createdAt: Date.now()
-          });
-        } catch (_) {
-          const src = URL.createObjectURL(file);
-          state.localObjectUrls.push(src);
-          state.galleryItems.push({ id: src, src, titulo: file.name, frase: "Agregada para esta sesión.", type: "session" });
-        }
-      }
-      await buildGalleryItems();
-      renderGallery();
-      startGalleryTimer();
-      localPhotoInput.value = "";
-    });
+    const draw = (t) => {
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      ctx.clearRect(0, 0, w, h);
 
-    $("#clearLocalPhotosBtn")?.addEventListener("click", async () => {
-      try { await idbClear(STORE_PHOTOS); } catch (_) {}
-      localStorage.removeItem(URL_PHOTOS_KEY);
-      await buildGalleryItems();
-      renderGallery();
-      startGalleryTimer();
-    });
+      const path = stars.slice(0, 6);
+      ctx.strokeStyle = "rgba(255,158,184,0.32)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      path.forEach((s, i) => {
+        const x = s.x * w;
+        const y = s.y * h;
+        if (i) ctx.lineTo(x, y);
+        else ctx.moveTo(x, y);
+      });
+      ctx.stroke();
 
-    $("#addPhotoUrlBtn")?.addEventListener("click", async () => {
-      const input = $("#photoUrlInput");
-      const src = input?.value.trim();
-      if (!src || !/^https?:\/\//i.test(src)) {
-        alert("Pega una URL válida que empiece con http o https.");
+      stars.forEach((s) => {
+        const tw = reduceMotion ? 0.7 : 0.5 + 0.5 * Math.sin(t * 0.002 + s.tw);
+        ctx.beginPath();
+        ctx.arc(s.x * w, s.y * h, s.r * (0.7 + tw * 0.6), 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,248,251,${(0.3 + tw * 0.5).toFixed(3)})`;
+        ctx.fill();
+      });
+
+      if (!reduceMotion) requestAnimationFrame(draw);
+    };
+
+    seed();
+    draw(0);
+    window.addEventListener("resize", () => {
+      seed();
+      if (reduceMotion) draw(0);
+    });
+  }
+
+  /* ---------------------------------------------------------------------------
+     MINIJUEGO: Memory Match con emojis de config.juego.parejas
+  --------------------------------------------------------------------------- */
+  function setupMemoryGame() {
+    const board = $("#memoryBoard");
+    const movesEl = $("#gameMoves");
+    const pairsEl = $("#gamePairs");
+    const winEl = $("#gameWin");
+    if (!board) return;
+
+    const symbols = (CONFIG.juego?.parejas || ["💌", "🌙", "✦", "🎧"]).slice(0, 8);
+    const totalPairs = symbols.length;
+    const game = { first: null, lock: false, moves: 0, matched: 0 };
+
+    const reset = () => {
+      Object.assign(game, { first: null, lock: false, moves: 0, matched: 0 });
+      if (movesEl) movesEl.textContent = "0";
+      if (pairsEl) pairsEl.textContent = `0/${totalPairs}`;
+      if (winEl) winEl.hidden = true;
+      board.classList.remove("is-won");
+      board.innerHTML = shuffle([...symbols, ...symbols]).map((symbol) => `
+        <button class="memory-card" type="button" data-symbol="${symbol}" aria-label="Carta oculta">
+          <span class="memory-card-inner">
+            <span class="memory-face memory-front">✦</span>
+            <span class="memory-face memory-back">${symbol}</span>
+          </span>
+        </button>
+      `).join("");
+    };
+
+    const endGame = () => {
+      board.classList.add("is-won");
+      if (winEl) winEl.hidden = false;
+      burstHearts(26);
+    };
+
+    const flip = (card) => {
+      if (game.lock || card.classList.contains("is-flipped") || card.classList.contains("is-matched")) return;
+      card.classList.add("is-flipped");
+
+      if (!game.first) {
+        game.first = card;
         return;
       }
-      const items = getUrlPhotos();
-      items.push({ src, titulo: "Foto agregada por URL", frase: "Imagen cargada desde un enlace." });
-      saveUrlPhotos(items);
-      input.value = "";
-      await buildGalleryItems();
-      renderGallery();
-      startGalleryTimer();
-    });
 
-    $("#lightboxClose")?.addEventListener("click", closeLightbox);
-    $("#lightbox")?.addEventListener("click", (event) => {
-      if (event.target.id === "lightbox") closeLightbox();
+      game.moves += 1;
+      if (movesEl) movesEl.textContent = String(game.moves);
+
+      if (game.first.dataset.symbol === card.dataset.symbol) {
+        game.first.classList.add("is-matched");
+        card.classList.add("is-matched");
+        game.first = null;
+        game.matched += 1;
+        if (pairsEl) pairsEl.textContent = `${game.matched}/${totalPairs}`;
+        if (game.matched === totalPairs) endGame();
+      } else {
+        game.lock = true;
+        const [a, b] = [game.first, card];
+        game.first = null;
+        setTimeout(() => {
+          a.classList.remove("is-flipped");
+          b.classList.remove("is-flipped");
+          game.lock = false;
+        }, 750);
+      }
+    };
+
+    board.addEventListener("click", (event) => {
+      const card = event.target.closest(".memory-card");
+      if (card && board.contains(card)) flip(card);
     });
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") closeLightbox();
-    });
+    $("#gameRestart")?.addEventListener("click", reset);
+    $("#gamePlayAgain")?.addEventListener("click", reset);
+
+    reset();
   }
 
+  /* ---------------------------------------------------------------------------
+     ARRANQUE
+  --------------------------------------------------------------------------- */
   function init() {
-    setConfigText();
-    renderStory();
+    bindTexts();
     createHearts();
     setupWelcomeAndLetter();
     setupRevealAndProgress();
+    setupMonthlyTimeline();
     setupCounters();
     setupRosterCalendar();
     setupSurprise();
     setupMusic();
-    // GALERIA EN PAUSA: descomenta la linea de abajo (y el markup en
-    // index.html) cuando conectes una base de datos real para las fotos.
-    // setupGallery();
-    setupCapsula();
+    setupBoveda();
+    setupConstelacionTeaser();
+    setupMemoryGame();
   }
 
   if (document.readyState === "loading") {
