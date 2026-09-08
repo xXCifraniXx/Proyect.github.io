@@ -101,7 +101,7 @@ window.APP_CONFIG = {
 
     // Línea de tiempo mensual
     timelineEyebrow: "Cada mes juntos",
-    timelineTitle: "Un foto por mes, desde que empezamos",
+    timelineTitle: "Una foto por mes, desde que empezamos",
     timelineIntro: "Cada mes se suma una foto nueva a esta cinta. Desliza para verlas todas.",
 
     // Nuestro tiempo
@@ -233,7 +233,7 @@ window.APP_CONFIG = {
     },
     {
       mes: "2026-09",
-      titulo: "Septimebre",
+      titulo: "Septiembre",
       src: "assets/images/septiembre.webp",
       texto: "Recién empieza, llena de emociones pero agradezco que siempre estes a mi lado!"
     },
