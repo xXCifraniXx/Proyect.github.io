@@ -86,10 +86,25 @@ y desde la carta de aniversario de La Bóveda. Es un cielo en blanco: cada toque
 crea una estrella con un recuerdo y se van uniendo en una constelación. Se
 guarda en `localStorage` del navegador y se puede exportar como imagen PNG.
 
+## Vista previa del enlace
+
+El texto y la imagen que aparecen al compartir el link (WhatsApp, Instagram…)
+están en las etiquetas `<meta>` del `<head>` de `index.html` (`og:title`,
+`og:description`, `og:image`). Van ahí fijas y **no** en `config.js` porque los
+lectores de enlaces no ejecutan JavaScript.
+
+- Para cambiar el mensaje: edita `og:title` / `og:description` (y `description`).
+- Para cambiar la imagen: apunta `og:image` / `twitter:image` a otra foto con
+  URL absoluta. Si alguna app no muestra la imagen `.webp`, sube una `.jpg` o
+  `.png` (ideal 1200×630) y usa esa.
+- Los enlaces ya compartidos guardan la vista previa vieja en caché; se refresca
+  con el depurador de cada plataforma (p. ej. developers.facebook.com/tools/debug).
+
 ## Publicar
 
 1. **Settings → Pages** en el repositorio.
 2. **Source**: `Deploy from a branch`, rama `main`, carpeta `/ (root)`.
 
-GitHub publica en `https://usuario.github.io/` unos minutos después de cada
-`push`. No hace falta build ni `npm install`.
+Como el repo se llama `Proyect.github.io` (no `usuario.github.io`), GitHub lo
+publica en `https://xxcifranixx.github.io/Proyect.github.io/` unos minutos
+después de cada `push`. No hace falta build ni `npm install`.
