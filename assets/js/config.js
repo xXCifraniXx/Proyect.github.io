@@ -181,6 +181,22 @@ window.APP_CONFIG = {
     juegoPlayAgain: "Jugar de nuevo",
     juegoWin: "¡Lo lograste! Eres muy buena amorcito. Te amo 💜",
 
+    // Cumpleaños (la fecha y la carta están en "cumpleanos", más abajo)
+    navCumple: "Cumpleaños 🎂",
+    cumpleEyebrow: "Un día especial",
+    cumpleTituloAntes: "Falta poco para tu día",
+    cumpleIntroAntes: "Estoy preparando algo especial para cuando cumplas {edad}. Cuando llegue el día, esta sección se abre sola.",
+    cumpleAntesLabel: "Faltan para tu cumpleaños",
+    cumpleTituloHoy: "¡Feliz cumpleaños número {edad}, mi amor!",
+    cumpleIntroHoy: "Pide un deseo y apaga las velas: toca cada una o usa el botón.",
+    cumpleTituloDespues: "Tu día especial 🎂",
+    cumpleIntroDespues: "Aquí queda guardada tu sorpresa de cumpleaños. Puedes volver a encender las velas cuando quieras.",
+    cumpleBtnSoplar: "Soplar las velas 💨",
+    cumpleDeseo: "¡Pide un deseo! ✨ Ojalá se cumpla todo lo que sueñas.",
+    cumpleBtnCarta: "Abrir mi carta 💌",
+    cumpleBtnEncender: "Volver a encender 🕯️",
+    cumpleIrVelas: "Ir a soplar mis velas 🎂",
+
     // Cierre
     finalEyebrow: "Para terminar",
     finalPhrase: "Te amo hoy, mañana y siempre.",
@@ -258,8 +274,12 @@ window.APP_CONFIG = {
      se ven selladas con una cuenta regresiva; después se pueden abrir y leer.
 
      Campo opcional "accion":
-       { tipo: "constelacion", etiqueta: "..." }
-     añade un botón dentro de la carta que lleva a la sección Constelación.
+       { destino: "constelacion", etiqueta: "..." }
+     añade un botón dentro de la carta que lleva a esa sección de la página
+     (destino = id de la sección: "constelacion", "juego", "cumple"...).
+
+     La carta de cumpleaños NO se escribe aquí: se agrega sola desde
+     "cumpleanos.carta" con la fecha del cumpleaños.
   ------------------------------------------------------------------------- */
   boveda: {
     cartas: [
@@ -278,7 +298,7 @@ window.APP_CONFIG = {
             "siente firme, tranquilo y verdadero. Gracias por elegirme cada día, por tu paciencia con la distancia y por" +
             " hacer que todo sea más ligero. Te preparé un cielo en blanco para que armemos nuestra constelación cada vez" +
             " que entres podremos crear constelaciones juntos unu",
-        accion: { tipo: "constelacion", etiqueta: "Ir a nuestra constelación ✦" }
+        accion: { destino: "constelacion", etiqueta: "Ir a nuestra constelación ✦" }
       },
       {
         fecha: "2026-12-24T00:00:00",
@@ -296,6 +316,59 @@ window.APP_CONFIG = {
   ------------------------------------------------------------------------- */
   juego: {
     parejas: ["💌", "🌙", "🌟", "🎧", "🌻", "🪐"]
+  },
+
+  /* -------------------------------------------------------------------------
+     CUMPLEAÑOS
+     "nacimiento" (AAAA-MM-DD) es la única fuente: de ahí salen la fecha del
+     cumpleaños de cada año y la edad. Escribe {edad} en cualquier texto y se
+     reemplaza por la edad que cumple (27 en 2026, 28 en 2027...).
+
+     Cada año la sección pasa por tres momentos y el resto del año no se ve:
+       antes    → desde "diasAntes" días antes: regalo sellado con cuenta regresiva
+       hoy      → modo cumpleaños: bienvenida especial, confeti, pastel con velas
+       después  → durante "diasDespues" días queda de recuerdo
+     La carta se agrega sola a La Bóveda con la fecha de ese año (se abre a las 00:00).
+     Al cambiar de año, el pastel vuelve a empezar con las velas encendidas.
+
+     Para probarlo sin cambiar el reloj:  index.html?cumple=antes | hoy | despues
+
+     "velas": cuántas velas dibuja el pastel (1 a 9).
+     "textosHoy": textos que reemplazan a "textos" SOLO el día del cumpleaños.
+     El texto de la carta queda visible en este archivo del repositorio.
+  ------------------------------------------------------------------------- */
+  cumpleanos: {
+    activo: true,
+    nacimiento: "1999-10-11",
+    diasAntes: 45,
+    diasDespues: 60,
+    velas: 5,
+    carta: {
+      icono: "🎂",
+      titulo: "Feliz cumpleaños, mi amor",
+      mensaje: "Hoy cumples {edad} años y quería estar contigo, aunque la distancia diga que no. Aun así, quise que " +
+          "este día empezara contigo sintiendo lo especial que eres.\n" +
+          "\n" +
+          "Gracias por ser tan tú: por tu ternura, tu risa y tu paciencia, y por hacerme sentir en casa incluso estando " +
+          "lejos. Desde que llegaste, disfruto mucho los días y todo se siente más bonito.\n" +
+          "\n" +
+          "Deseo que este nuevo año te llene de salud, tranquilidad y de todo lo que sueñas, y que me dejes acompañarte " +
+          "en cada paso. Me fascina recordar cada instante que hemos construido juntos: desde los momentos más sencillos " +
+          "hasta los más especiales. Cada hora a tu lado se pasa volando, pero al mismo tiempo se queda grabada en mi corazón " +
+          "para siempre.\n" +
+          "\n" +
+          "Feliz cumpleaños con toda mi alma. ¡Que pases un día tan maravilloso como tú! 💜"
+    },
+    textosHoy: {
+      welcomeEyebrow: "Hoy es tu día 🎂",
+      welcomeTitle: "¡Feliz cumpleaños, Anthu!",
+      welcomeText: "Hoy cumples {edad} años y actualice la página de fiesta para ti. Te amo 💜",
+      welcomeButton: "Entrar a mi sorpresa 🎁",
+      welcomeNote: "Con todo mi amor, Jorge",
+      heroEyebrow: "Hoy es tu día",
+      heroTitle: "Feliz cumpleaños, mi amor",
+      heroCtaBoveda: "Sopla tus velas 🎂"
+    }
   },
 
   opciones: {

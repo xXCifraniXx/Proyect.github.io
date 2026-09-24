@@ -13,6 +13,8 @@ Proyect.github.io/
 │   ├── css/styles.css          Estilos
 │   ├── js/config.js            ← TODO el contenido editable
 │   ├── js/app.js               Lógica: rellena la plantilla y maneja interacciones
+│   ├── js/cumple.js            Cumpleaños: estados, pastel con velas, cuenta regresiva
+│   ├── js/confetti.js          Confeti en canvas (reutilizable)
 │   ├── images/                 Fotos de la línea de tiempo
 │   └── audio/                  Canción
 └── constelacion/               Mini-experiencia aparte (lienzo de estrellas)
@@ -51,10 +53,37 @@ Cada carta tiene una `fecha`. Antes de esa fecha se ve sellada con una cuenta
 regresiva; a partir de ahí se puede abrir y leer. Una carta puede incluir:
 
 ```js
-accion: { tipo: "constelacion", etiqueta: "Ir a nuestra constelación ✦" }
+accion: { destino: "constelacion", etiqueta: "Ir a nuestra constelación ✦" }
 ```
 
-que añade un botón dentro de la carta para saltar a la sección **Constelación**.
+que añade un botón dentro de la carta para saltar a esa sección (`destino` es
+el `id` de la sección: `constelacion`, `juego`, `cumple`…).
+
+### Cumpleaños
+
+Todo sale de `config.cumpleanos`. La única fecha que se escribe es la de
+`nacimiento` (`"1999-10-11"`): de ahí se calcula el cumpleaños de cada año y la
+**edad**, que se puede usar como `{edad}` en cualquier texto (27 en 2026, 28 en
+2027…). Cada año pasa por tres momentos y el resto del tiempo la sección no se ve:
+
+| Momento | Cuándo | Qué pasa |
+|---|---|---|
+| **Antes** | desde `diasAntes` (45) días antes | Sección con un regalo sellado y cuenta regresiva. La carta aparece sellada en La Bóveda. |
+| **Hoy** | el día del cumpleaños | Modo cumpleaños: bienvenida especial (`textosHoy`), confeti al entrar, globos flotando, la sección del pastel sube al inicio y el botón del hero lleva a las velas. |
+| **Después** | `diasDespues` (60) días | La sección queda de recuerdo y se pueden volver a encender las velas. |
+
+- **Pastel:** ella toca cada vela o usa "Soplar las velas". Al apagarlas todas
+  hay confeti y aparece "Abrir mi carta". Se acuerda de que ya las apagó
+  (`localStorage`, por dispositivo).
+- **Carta:** se escribe en `cumpleanos.carta` y se suma sola a La Bóveda con la
+  fecha del cumpleaños de ese año (se abre a las 00:00 del día). Al terminar
+  la ventana `diasDespues` sale de La Bóveda hasta el año siguiente.
+- `velas` define cuántas velas dibuja el pastel (1 a 9). Al cambiar de año
+  el pastel vuelve a empezar con las velas encendidas.
+- **Vista previa** sin cambiar el reloj: `index.html?cumple=antes`, `?cumple=hoy`
+  o `?cumple=despues` (en ese modo no se guarda nada).
+- Código: `assets/js/cumple.js` (lógica) y `assets/js/confetti.js` (confeti
+  reutilizable). Con "reducir movimiento" activado en el dispositivo no hay confeti.
 
 ### Ajustar bajadas de mina desde la página
 

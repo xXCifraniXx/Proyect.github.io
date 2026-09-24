@@ -68,6 +68,7 @@
           <a href="#tiempo" data-bind="textos.navTiempo"></a>
           <a href="#calendario" data-bind="textos.navBajada"></a>
           <a href="#musica" data-bind="textos.navMusica"></a>
+          <a href="#cumple" id="navCumple" data-bind="textos.navCumple" hidden></a>
           <a href="#boveda" data-bind="textos.navBoveda"></a>
           <a href="#constelacion" data-bind="textos.navConstelacion"></a>
           <a href="#juego" data-bind="textos.navJuego"></a>
@@ -81,7 +82,7 @@
           <p class="lead" data-bind="textos.heroIntro"></p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#carta" data-bind="textos.heroCtaCarta"></a>
-            <a class="btn btn-secondary" href="#boveda" data-bind="textos.heroCtaBoveda"></a>
+            <a class="btn btn-secondary" href="#boveda" id="heroCtaBoveda" data-bind="textos.heroCtaBoveda"></a>
           </div>
         </div>
 
@@ -279,6 +280,37 @@
         <div class="boveda-grid" id="bovedaGrid"></div>
       </section>
 
+      <section class="section reveal" id="cumple">
+        <div class="section-head">
+          <span class="eyebrow" data-bind="textos.cumpleEyebrow"></span>
+          <h2 id="cumpleTitle"></h2>
+          <p id="cumpleIntro"></p>
+        </div>
+        <div class="cumple-card glass-soft">
+          <div class="cumple-locked" id="cumpleLocked" hidden>
+            <span class="cumple-gift" aria-hidden="true">🎁</span>
+            <span class="cumple-locked-label" data-bind="textos.cumpleAntesLabel"></span>
+            <div class="return-grid">
+              <div><strong id="cumpleDays">0</strong><span data-bind="textos.labelCountdownDays"></span></div>
+              <div><strong id="cumpleHours">0</strong><span data-bind="textos.labelCountdownHours"></span></div>
+              <div><strong id="cumpleMinutes">0</strong><span data-bind="textos.labelCountdownMinutes"></span></div>
+              <div><strong id="cumpleSeconds">0</strong><span data-bind="textos.labelCountdownSeconds"></span></div>
+            </div>
+          </div>
+          <div class="cumple-stage" id="cumpleStage" hidden>
+            <div class="cake" id="cake" role="group" aria-label="Pastel de cumpleaños"></div>
+            <button class="btn btn-primary" id="cumpleBlow" type="button" data-bind="textos.cumpleBtnSoplar"></button>
+            <div class="cumple-wish" id="cumpleWish" hidden>
+              <p data-bind="textos.cumpleDeseo"></p>
+              <div class="cumple-wish-actions">
+                <button class="btn btn-primary" id="cumpleOpenLetter" type="button" data-bind="textos.cumpleBtnCarta"></button>
+                <button class="btn btn-ghost" id="cumpleRelight" type="button" data-bind="textos.cumpleBtnEncender"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="section reveal" id="constelacion">
         <div class="section-head">
           <span class="eyebrow" data-bind="textos.constelacionEyebrow"></span>
@@ -334,6 +366,8 @@
   </div>
 
   <script src="assets/js/config.js"></script>
+  <script src="assets/js/confetti.js"></script>
+  <script src="assets/js/cumple.js"></script>
   <script src="assets/js/app.js"></script>
 </body>
 </html>

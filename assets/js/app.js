@@ -7,11 +7,20 @@
    3. Maneja las interacciones (sobre, música, minijuego, modales).
 
   Para editar contenido no hace falta tocar este archivo: casi todo sale de
-  assets/js/config.js.
+  assets/js/config.js. El cumpleaños vive en cumple.js y el confeti en confetti.js.
 */
 (() => {
   const CONFIG = window.APP_CONFIG || {};
-  const TEXTOS = CONFIG.textos || {};
+  // Si cumple.js no cargó, el sitio funciona igual sin la parte del cumpleaños.
+  const Cumple = window.Cumple || {
+    now: () => new Date(),
+    estado: () => "off",
+    textos: (base) => base,
+    carta: () => null,
+    setup: () => {}
+  };
+  // Textos vigentes: el día del cumpleaños algunos se reemplazan (ver cumple.js).
+  const TEXTOS = Cumple.textos(CONFIG.textos || {});
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
 
@@ -46,8 +55,9 @@
     document.title = `Para ${nombres.novia || "Anthuanete"} | Una carta de ${nombres.autor || "Jorge"}`;
     safeText("#brandText", `Para ${nombres.novia || "Anthuanete"}`);
 
+    const source = { ...CONFIG, textos: TEXTOS };
     $$("[data-bind]").forEach((el) => {
-      const value = resolvePath(CONFIG, el.dataset.bind);
+      const value = resolvePath(source, el.dataset.bind);
       if (value !== undefined && value !== null) el.textContent = value;
     });
   }
@@ -59,11 +69,12 @@
     const container = $("#floatingHearts");
     if (!container) return;
     const total = CONFIG.opciones?.corazones || 18;
+    const glyphs = Cumple.estado() === "hoy" ? ["🎈", "✨", "❤", "🎉", "♡"] : ["♡", "❤", "❤"];
     container.innerHTML = "";
     for (let i = 0; i < total; i += 1) {
       const heart = document.createElement("span");
       heart.className = "heart";
-      heart.textContent = i % 3 === 0 ? "♡" : "❤";
+      heart.textContent = glyphs[i % glyphs.length];
       heart.style.left = `${Math.random() * 100}%`;
       heart.style.setProperty("--drift", `${Math.random() * 70 - 35}px`);
       heart.style.animationDuration = `${10 + Math.random() * 10}s`;
@@ -834,20 +845,21 @@
   /* ---------------------------------------------------------------------------
      LA BÓVEDA: cartas que se desbloquean con el tiempo.
   --------------------------------------------------------------------------- */
-  function goToConstelacion() {
-    $("#constelacion")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  function goToSection(id) {
+    $(`#${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function renderBoveda() {
     const grid = $("#bovedaGrid");
     if (!grid) return;
 
-    const cartas = [...(CONFIG.boveda?.cartas || [])].sort(
-      (a, b) => new Date(a.fecha) - new Date(b.fecha)
-    );
+    // Las cartas de config.boveda + la de cumpleaños (que trae su propia fecha).
+    const cartas = [...(CONFIG.boveda?.cartas || []), Cumple.carta()]
+      .filter(Boolean)
+      .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
     grid.innerHTML = "";
-    const now = new Date();
+    const now = Cumple.now();
 
     if (!cartas.length) {
       grid.innerHTML = `<p class="boveda-empty">Aún no hay cartas. Agrega la primera en <code>boveda.cartas</code> dentro de <code>assets/js/config.js</code>.</p>`;
@@ -889,7 +901,9 @@
     });
   }
 
-  function openBovedaModal(carta, fecha) {
+  // opciones.sinAccion: abre la carta sin su botón (p. ej. desde el pastel,
+  // donde el botón de "ir a las velas" no tendría sentido).
+  function openBovedaModal(carta, fecha, opciones = {}) {
     const modal = $("#bovedaModal");
     if (!modal) return;
     safeText("#bovedaModalIcon", carta.icono || "💌");
@@ -899,15 +913,15 @@
 
     const action = $("#bovedaModalAction");
     if (action) {
-      const isConstelacion = carta.accion?.tipo === "constelacion";
-      action.hidden = !isConstelacion;
-      if (isConstelacion) {
-        action.textContent = carta.accion.etiqueta || "Ir a nuestra constelación ✦";
-        action.href = "#constelacion";
+      const destino = opciones.sinAccion ? null : carta.accion?.destino;
+      action.hidden = !destino;
+      if (destino) {
+        action.textContent = carta.accion.etiqueta || "Ir ahí";
+        action.href = `#${destino}`;
         action.onclick = (event) => {
           event.preventDefault();
           closeBovedaModal();
-          goToConstelacion();
+          goToSection(destino);
         };
       } else {
         action.onclick = null;
@@ -1092,6 +1106,15 @@
     setupSurprise();
     setupMusic();
     setupBoveda();
+    Cumple.setup({
+      $,
+      $$,
+      safeText,
+      textos: TEXTOS,
+      splitCountdown,
+      burstHearts,
+      openCarta: (carta, fecha) => openBovedaModal(carta, fecha, { sinAccion: true })
+    });
     setupConstelacionTeaser();
     setupMemoryGame();
   }
