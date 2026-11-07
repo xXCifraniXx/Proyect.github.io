@@ -13,14 +13,20 @@ Proyect.github.io/
 │   ├── css/styles.css          Estilos
 │   ├── js/config.js            ← TODO el contenido editable
 │   ├── js/app.js               Lógica: rellena la plantilla y maneja interacciones
+│   ├── js/sello.js             Cifrado de las cartas de La Bóveda
 │   ├── js/cumple.js            Cumpleaños: estados, pastel con velas, cuenta regresiva
 │   ├── js/confetti.js          Confeti en canvas (reutilizable)
 │   ├── images/                 Fotos de la línea de tiempo
 │   └── audio/                  Canción
+├── herramientas/
+│   └── sellar-carta.html       Sellar / abrir cartas de La Bóveda (para ti)
 └── constelacion/               Mini-experiencia aparte (lienzo de estrellas)
     ├── index.html
     ├── estrellas.css
-    └── estrellas.js
+    ├── estrellas.js
+    ├── nube.js                 Cielo compartido con Firebase (opcional)
+    ├── nube-config.js          ← configuración de Firebase
+    └── firestore.rules         Reglas para pegar en Firebase
 ```
 
 ## Cómo funciona la plantilla
@@ -58,6 +64,20 @@ accion: { destino: "constelacion", etiqueta: "Ir a nuestra constelación ✦" }
 
 que añade un botón dentro de la carta para saltar a esa sección (`destino` es
 el `id` de la sección: `constelacion`, `juego`, `cumple`…).
+
+**Cartas selladas.** El texto va cifrado en `mensajeSellado` para que no se
+pueda leer en el código de la página antes de su fecha; la página solo lo
+descifra cuando la carta se desbloquea. Para escribir, leer o corregir una
+carta abre [`herramientas/sellar-carta.html`](herramientas/sellar-carta.html)
+(con el sitio publicado o un servidor local, no con doble clic): pega el texto,
+pulsa **Sellar** y copia el resultado en `mensajeSellado`. Sigue funcionando
+`mensaje` con texto normal, pero ese se puede leer antes de tiempo.
+
+> La clave viaja con la página (no hay servidor), así que esto evita que se lea
+> a simple vista, no a alguien que se proponga descifrarlo. Además, los textos
+> que estuvieron en `config.js` sin sellar siguen en el historial de Git.
+
+**Borradores.** `borrador: true` oculta una carta que aún no tiene texto.
 
 ### Cumpleaños
 
@@ -113,7 +133,20 @@ anterior a 14 días, el 27 del mes previo).
 `constelacion/` es una página aparte enlazada desde la sección **Constelación**
 y desde la carta de aniversario de La Bóveda. Es un cielo en blanco: cada toque
 crea una estrella con un recuerdo y se van uniendo en una constelación. Se
-guarda en `localStorage` del navegador y se puede exportar como imagen PNG.
+puede exportar como imagen PNG.
+
+**Cielo compartido (Firebase).** Sin configurar, cada dispositivo guarda su
+propio cielo en `localStorage`. Para que los dos vean y creen las mismas
+estrellas en tiempo real, sigue los pasos de
+[`constelacion/nube-config.js`](constelacion/nube-config.js): crear un proyecto
+gratuito en Firebase, activar Firestore, pegar las reglas de
+[`constelacion/firestore.rules`](constelacion/firestore.rules) y copiar la
+configuración web en `nube-config.js`. La primera vez que cada dispositivo se
+conecta sube las estrellas que ya tenía; después todo se sincroniza solo. El
+contador indica si el cielo está compartido o sin conexión.
+
+> Cualquiera con el link puede añadir o borrar estrellas en ese cielo (no hay
+> inicio de sesión). Las reglas solo permiten estrellas válidas en ese cielo.
 
 ## Vista previa del enlace
 

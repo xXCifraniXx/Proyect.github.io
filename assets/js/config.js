@@ -63,7 +63,7 @@ window.APP_CONFIG = {
     welcomeText: "Preparé esta página como una carta pequeña, bonita y hecha con amor, para que puedas sentirme cerca " +
         "incluso a la distancia.",
     welcomeButton: "Entrar a la carta 💗",
-    welcomeNote: "Actualización — Septiembre 2026",
+    welcomeNote: "Actualización — Noviembre 2026",
 
     // Portada
     heroEyebrow: "Hecho con cariño",
@@ -103,6 +103,7 @@ window.APP_CONFIG = {
     timelineEyebrow: "Cada mes juntos",
     timelineTitle: "Una foto por mes, desde que empezamos",
     timelineIntro: "Cada mes se suma una foto nueva a esta cinta. Desliza para verlas todas.",
+    timelineEmpty: "La foto de este mes está por llegar 💜",
 
     // Nuestro tiempo
     tiempoEyebrow: "Nuestro tiempo",
@@ -140,11 +141,11 @@ window.APP_CONFIG = {
     rosterEditorRestDays: "Días de descanso",
     rosterEditorReturnTime: "Hora de regreso",
     rosterEditorNote: "Elige el día en que baja y el calendario 14x7 se reacomoda solo desde esa fecha en adelante. El " +
-        "ajuste se guarda solo en este dispositivo; para dejarlo fijo en el link, edita rotacionMina en config.js.",
+        "ajuste se guarda solo en este dispositivo.",
     rosterEditorSave: "Guardar bajada",
-    rosterEditorReset: "Volver a lo de config.js",
+    rosterEditorReset: "Volver al calendario original",
     rosterEditorSavedMsg: "Guardado. El calendario ya usa la nueva bajada.",
-    rosterEditorResetMsg: "Listo. Vuelve a la configuración de config.js.",
+    rosterEditorResetMsg: "Listo. El calendario volvió a su versión original.",
     rosterEditorInvalidMsg: "Elige una fecha válida para la próxima bajada.",
     rosterEditorStorageError: "No se pudo guardar en este navegador.",
 
@@ -163,12 +164,14 @@ window.APP_CONFIG = {
     bovedaIntro: "Cada carta tiene su propio momento para abrirse. Antes de esa fecha solo verás cuánto falta.",
     bovedaLockedTitle: "Carta sellada",
     bovedaReadHint: "Toca para leer",
+    bovedaEmpty: "Pronto habrá cartas esperándote aquí 💌",
+    bovedaSelloError: "No se pudo abrir esta carta en este navegador. Prueba a abrir la página en otro.",
 
     // Constelación
     constelacionEyebrow: "Nuestro cielo",
     constelacionTitle: "Una constelación para los dos",
     constelacionIntro: "Un cielo en blanco donde cada toque crea una estrella con un recuerdo. Las estrellas se unen y " +
-        "forman una constelación. Podrás guardala como imagen",
+        "forman una constelación. Podrás guardarla como imagen.",
     constelacionBtn: "Abrir nuestra constelación ✦",
 
     // Minijuego
@@ -250,7 +253,7 @@ window.APP_CONFIG = {
       mes: "2026-09",
       titulo: "Septiembre",
       src: "assets/images/septiembre.webp",
-      texto: "Recién empieza, llena de emociones pero agradezco que siempre estes a mi lado!"
+      texto: "Recién empieza, llena de emociones pero agradezco que siempre estés a mi lado!"
     },
   ],
 
@@ -278,33 +281,38 @@ window.APP_CONFIG = {
      añade un botón dentro de la carta que lleva a esa sección de la página
      (destino = id de la sección: "constelacion", "juego", "cumple"...).
 
+     Texto de la carta: "mensajeSellado" (cifrado, recomendado) o "mensaje"
+     (texto normal, se puede leer mirando el código de la página antes de la
+     fecha). Para sellar, leer o corregir una carta usa
+     herramientas/sellar-carta.html.
+
+     "borrador: true" oculta una carta que todavía no tiene texto.
+
      La carta de cumpleaños NO se escribe aquí: se agrega sola desde
      "cumpleanos.carta" con la fecha del cumpleaños.
   ------------------------------------------------------------------------- */
   boveda: {
     cartas: [
       {
-        fecha: "2026-01-01T00:00:00",
+        fecha: "2026-03-08T00:00:00",
         icono: "💌",
         titulo: "Para cuando abras esto por primera vez",
-        mensaje: "Esta es la primera carta de La Bóveda. Cada cierto tiempo voy a dejar una nueva, con algo que quiera " +
-            "decirte en ese momento. Ábrelas cuando se desbloqueen y guarda las que más te gusten."
+        mensajeSellado: "v1.rQ2w+ouOXQH/rAEYlKzfrg==.hpjmeSlpDjgNT7tt.1H5Vv4UaayUI37yKM1+QZWJwvD0ehWURRdrWYI3t7FjDL62Yjiq+vQXY4pwKI71hXhQvqlNXWAABMRJkTBmnWJWhZiC7Qz5uMb6CRBAZ7JvhpNzdRH2/qUk+hX+t3UCxhNhQ0paNWzOym8U8aUf7xvrCTO6Wk9qg+LKaV+bn8RcBBzt9/rHnEwGJKZR8jhd/EgXaXpJ9mC3aqEEsFwkvoxTXqfC9r3IeV36UWTreL+T68bib9EeUzyOR6FkBMH9gCuPzBMB0Py5sfawfUQ=="
       },
       {
         fecha: "2026-09-08T00:00:00",
         icono: "💜",
         titulo: "Seis meses contigo",
-        mensaje: "Hoy cumplimos seis meses y quería que lo supieras aquí también. En medio mes construimos algo que se " +
-            "siente firme, tranquilo y verdadero. Gracias por elegirme cada día, por tu paciencia con la distancia y por" +
-            " hacer que todo sea más ligero. Te preparé un cielo en blanco para que armemos nuestra constelación cada vez" +
-            " que entres podremos crear constelaciones juntos unu",
+        mensajeSellado: "v1.oD5l7vKoHF95dIwPjgWieA==.7e4o0S8LR7CVgcCZ.LrGwJf1C8mb9d/uttl89BFcj6HqTwU/t2Oqsy8lmAHQkuMNvgV7AHV51IROoWHahGzpqfdJ13MQ+aVH3iHhlrU5tY4hBes8+wVl6xHU9ArRZoLgydeu0zKLKDEoTim9L4AIyb+6BMRe5wNnj25S46/v3mSdPWJgGUhTq0lFqfMBJ+XUr5NzXJO3rKA/mirsW6WrQccJ+sAB7tOzbPInfatCV0Raez/a04+nSk2kNnN7u1ok9X+hMcO7NNCCd1m1WyHd9EFp1CWydnAWx4MJG2EnguS6XULDcQNoSOEHJrDFZt0WiKa9FPqwBiVin9FQrtJ7kCHWDEKuOPzrVpSW1zarpietmj+ONci9WFAD/bCEKkEbVeUi2GLaZE69XgkM6qdt2aB7mmvHjQpSU5kMwgQdDcJHCT5NOJn3PIXyITDOKKZiwcuV8EovD8YWrdaWMXAEcv7BseOg3nnycIF9eMejk3bxMRC7gN7Ccq0wYAsUj0xuPJ0wsRAtYwBI20WtS8kMmWbNpVBE=",
         accion: { destino: "constelacion", etiqueta: "Ir a nuestra constelación ✦" }
       },
       {
+        // borrador: true = no aparece en la página. Quítalo cuando la carta tenga su texto.
+        borrador: true,
         fecha: "2026-12-24T00:00:00",
         icono: "🎄",
         titulo: "Feliz Navidad, mi vida",
-        mensaje: "."
+        mensaje: ""
       }
     ]
   },
@@ -335,7 +343,8 @@ window.APP_CONFIG = {
 
      "velas": cuántas velas dibuja el pastel (1 a 9).
      "textosHoy": textos que reemplazan a "textos" SOLO el día del cumpleaños.
-     El texto de la carta queda visible en este archivo del repositorio.
+     El texto de la carta va sellado en "carta.mensajeSellado" ({edad} también
+     funciona dentro del sello). Se sella con herramientas/sellar-carta.html.
   ------------------------------------------------------------------------- */
   cumpleanos: {
     activo: true,
@@ -346,23 +355,12 @@ window.APP_CONFIG = {
     carta: {
       icono: "🎂",
       titulo: "Feliz cumpleaños, mi amor",
-      mensaje: "Hoy cumples {edad} años y quería estar contigo, aunque la distancia diga que no. Aun así, quise que " +
-          "este día empezara contigo sintiendo lo especial que eres.\n" +
-          "\n" +
-          "Gracias por ser tan tú: por tu ternura, tu risa y tu paciencia, y por hacerme sentir en casa incluso estando " +
-          "lejos. Desde que llegaste, disfruto mucho los días y todo se siente más bonito.\n" +
-          "\n" +
-          "Deseo que este nuevo año te llene de salud, tranquilidad y de todo lo que sueñas, y que me dejes acompañarte " +
-          "en cada paso. Me fascina recordar cada instante que hemos construido juntos: desde los momentos más sencillos " +
-          "hasta los más especiales. Cada hora a tu lado se pasa volando, pero al mismo tiempo se queda grabada en mi corazón " +
-          "para siempre.\n" +
-          "\n" +
-          "Feliz cumpleaños con toda mi alma. ¡Que pases un día tan maravilloso como tú! 💜"
+      mensajeSellado: "v1.AGeP3x84cKMdT8bouJfrgA==.KUHduomlJs4e2VLW.EBN/1TDVh+2U8ABoC/ioM3iDiHH3036Y188qwKR6JSUp5Heyu7UyKshHf8FB9ZWMFsY4xTrLve+Kw6kZtRFz3sPwbq+i4OnqBJ+o6Ifb0NpgqP2+nhvzc/mYryyX90gHHQfdikbV1zIgf6Mk5Miw+0FdkJ18tBKUOfqlPKUrgdJZ+5O5aQzvUyQVuIIuzeoWinpVZ+9Q/wbdSKEMvCm1Avbsa0Inao06pIMU0Not91IsCik/GpXzwluL/d5pdcQ/1J8JZcADj1/dA7487XXUbyBMPAnOVzNEek5yCVJIbR/dBocuqlaE7OUK5aD4tt6wyZM7UBV5c5faayuvf9ZYicvHvFMOYdlcOUK+XeHYZD9yLNzyXu+uIFrC9dwd9OGMpNsJ60xGMm8NpRllwmkw8fMTnnSPPjpbSsMe8sx99W+kiT+6m+gky5m02RDFDEi+PNYg3DLl2okWvqsdHKJjZmNIAeaOT1whH+xkHxBtYWc2PIPXOORB1nveGcllTJBW8rfEt+Zu2/Z7begfKm4vuGMgdHmocxTgYcQte9cmfy7AV+tf6F1SazJjqNk2+LTsFFE7NexhHLt2hsm8g4bfPGg1Vec/IztOevORtYQBQ0b/RBST3j1RqA1K46ZOYV4sqBiUL06xz/xYC8n1VW1QNqPcwmSHBtbtJBge590WKrsldSLeygD7AvM1iRbNfeAfsqdEQrkKUeme2nT+as0v2iYUYXxs689NDG3ZyJW/34ThLmEcp55mJVRW+dk4EYdRB8qj8QlXTeZ+Okm1/jRqCLdB38I0olp7v7QfQeEGT8zz3+LP0dnLy2TU65RzG9CLDvDM/iwVkEyFoA1dwSr5P8yQFzIqByLkV0VStdQa8hzLM9sSr9MMiqxX6INxIkkfY1V5CdIth0INx8WE0LSGlIQv0iSYdu15+PP2jtHQgtP5LPtFoHP+882+WkZ4mD+NrInV+wekK7BqYuFdpyqNmQqrZEykBp9fRcnJ02V04dSZFhP/5L5FVfIy4XaPGtVL1nMwKF4TWKn3f44pnBmStWLXDCWDUxmC99UIz4unUUr/VpWLZ/U3KwCWbxPL"
     },
     textosHoy: {
       welcomeEyebrow: "Hoy es tu día 🎂",
       welcomeTitle: "¡Feliz cumpleaños, Anthu!",
-      welcomeText: "Hoy cumples {edad} años y actualice la página de fiesta para ti. Te amo 💜",
+      welcomeText: "Hoy cumples {edad} años y actualicé la página de fiesta para ti. Te amo 💜",
       welcomeButton: "Entrar a mi sorpresa 🎁",
       welcomeNote: "Con todo mi amor, Jorge",
       heroEyebrow: "Hoy es tu día",

@@ -103,6 +103,7 @@
       titulo: fill(cfg.carta.titulo || "", occ),
       mensaje: fill(cfg.carta.mensaje || "", occ),
       id: "cumple",
+      edad: occ.edad,
       fecha: occ.date.toISOString(),
       accion: { destino: "cumple", etiqueta: window.APP_CONFIG?.textos?.cumpleIrVelas || "Ir a soplar mis velas 🎂" }
     };

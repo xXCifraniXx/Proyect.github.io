@@ -193,22 +193,6 @@
     return { years: Math.max(0, years), months: Math.max(0, months), days: Math.max(0, days), totalDays };
   }
 
-  function dayNumber(date) {
-    return Math.floor(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86400000);
-  }
-
-  function dateFromDayNumber(value) {
-    const utc = new Date(value * 86400000);
-    return new Date(utc.getUTCFullYear(), utc.getUTCMonth(), utc.getUTCDate());
-  }
-
-  function applyTime(date, timeValue) {
-    const [hours = "0", minutes = "0"] = String(timeValue || "00:00").split(":");
-    const copy = new Date(date);
-    copy.setHours(Number(hours), Number(minutes), 0, 0);
-    return copy;
-  }
-
   function mod(value, total) {
     return ((value % total) + total) % total;
   }
@@ -334,7 +318,7 @@
         <article class="timeline-card is-empty">
           <span class="timeline-empty-icon">🖼️</span>
           <h3>${monthLabel(key)}</h3>
-          <p>Aún no tiene foto. Agrégala en <code>lineaTiempo</code> dentro de <code>config.js</code>.</p>
+          <p>${TEXTOS.timelineEmpty || "La foto de este mes está por llegar 💜"}</p>
         </article>
       `;
     }).join("");
@@ -415,48 +399,22 @@
 
   /* ---------------------------------------------------------------------------
      CONTADORES + CUENTA REGRESIVA DE REGRESO
+     Con la rotación de mina activa, la única cuenta regresiva es la del
+     calendario (sección Bajada). La tarjeta de "Tiempo" solo se usa cuando no
+     hay rotación y existe una fecha fija en fechas.regreso.
   --------------------------------------------------------------------------- */
-  function getRotationInfo(date = new Date()) {
-    const cfg = readMinaConfig();
-    if (cfg.activa === false || !cfg.salidaBase) return null;
-
-    const start = new Date(cfg.salidaBase);
-    if (Number.isNaN(start.getTime())) return null;
-
-    const daysMine = Number(cfg.diasMina || 14);
-    const daysHome = Number(cfg.diasDescanso || 7);
-    const cycle = daysMine + daysHome;
-    const currentDay = dayNumber(date);
-    const startDay = dayNumber(start);
-    const cycleDay = mod(currentDay - startDay, cycle);
-    const cycleStartDay = currentDay - cycleDay;
-    const returnDay = cycleStartDay + daysMine;
-    const nextDepartureDay = cycleStartDay + cycle;
-    const nextReturnDay = cycleDay <= daysMine ? returnDay : nextDepartureDay + daysMine;
-
-    let phase = "casa";
-    if (cycleDay === 0) phase = "subida";
-    else if (cycleDay > 0 && cycleDay < daysMine) phase = "mina";
-    else if (cycleDay === daysMine) phase = "bajada";
-
-    const nextReturnDate = applyTime(dateFromDayNumber(nextReturnDay), cfg.horaRegreso || "20:00");
-    const nextDepartureDate = applyTime(dateFromDayNumber(nextDepartureDay), cfg.horaSalida || "07:00");
-
-    return {
-      phase,
-      nextReturnDate,
-      nextDepartureDate,
-      countdownTarget: phase === "casa" ? nextDepartureDate : nextReturnDate
-    };
-  }
-
-  // Reasignada por setupCounters; la usa el editor de bajadas para refrescar
-  // la cuenta regresiva al instante en vez de esperar al siguiente segundo.
-  let refreshCounters = () => {};
-
   function setupCounters() {
     const startDate = new Date(CONFIG.fechas?.inicioRelacion || Date.now());
     const staticReturnDate = CONFIG.fechas?.regreso ? new Date(CONFIG.fechas.regreso) : null;
+    const useStaticReturn = !getRosterConfig().active
+      && staticReturnDate && !Number.isNaN(staticReturnDate.getTime());
+
+    if (useStaticReturn) {
+      safeText("#returnTitle", TEXTOS.returnTitle || "Para volver a verte");
+      safeText("#returnText", TEXTOS.returnText || "");
+    } else {
+      $("#returnCard")?.remove();
+    }
 
     const update = () => {
       const now = new Date();
@@ -466,34 +424,15 @@
       safeText("#daysTogether", together.days);
       safeText("#totalDaysTogether", together.totalDays);
 
-      const rotation = getRotationInfo(now);
-      const targetDate = rotation?.countdownTarget || staticReturnDate;
-
-      if (targetDate && !Number.isNaN(targetDate.getTime())) {
-        const parts = splitCountdown(targetDate, now);
+      if (useStaticReturn) {
+        const parts = splitCountdown(staticReturnDate, now);
         safeText("#returnDays", parts.days);
         safeText("#returnHours", parts.hours);
         safeText("#returnMinutes", parts.minutes);
         safeText("#returnSeconds", parts.seconds);
-
-        if (rotation) {
-          if (rotation.phase === "casa") {
-            safeText("#returnTitle", "Próxima subida");
-            safeText("#returnText", `Está en casa. La próxima subida sería el ${formatDateLong(rotation.nextDepartureDate)}.`);
-          } else if (rotation.phase === "bajada") {
-            safeText("#returnTitle", "Hoy es día de bajada");
-            safeText("#returnText", `Hoy regresa por la noche: ${formatDateLong(rotation.nextReturnDate)}.`);
-          } else {
-            safeText("#returnTitle", TEXTOS.returnTitle || "Para volver a verte");
-            safeText("#returnText", `Próxima bajada: ${formatDateLong(rotation.nextReturnDate)}.`);
-          }
-        }
-      } else {
-        $("#returnCard")?.remove();
       }
     };
 
-    refreshCounters = update;
     update();
     setInterval(update, 1000);
   }
@@ -620,9 +559,23 @@
     return roster;
   }
 
+  // Redibuja el calendario completo (al navegar, editar o cambiar de día).
   function refreshRoster() {
     const roster = renderRosterSummary();
     if (roster) renderCalendarMonths(roster);
+  }
+
+  // Cada segundo solo cambian los números de la cuenta regresiva; el
+  // calendario se vuelve a dibujar únicamente cuando empieza un día nuevo.
+  let renderedDayKey = dateKey(new Date());
+  function tickRoster() {
+    const today = dateKey(new Date());
+    if (today !== renderedDayKey) {
+      renderedDayKey = today;
+      refreshRoster();
+    } else {
+      renderRosterSummary();
+    }
   }
 
   function renderCalendarMonths(roster) {
@@ -679,7 +632,7 @@
     state.calendarCursor = new Date(baseForCursor.getFullYear(), baseForCursor.getMonth(), 1);
     renderCalendarMonths(roster);
 
-    setInterval(refreshRoster, 1000);
+    setInterval(tickRoster, 1000);
 
     $("#calendarPrev")?.addEventListener("click", () => {
       state.calendarCursor = new Date(state.calendarCursor.getFullYear(), state.calendarCursor.getMonth() - 1, 1);
@@ -762,7 +715,6 @@
 
       recenterToToday();
       refreshRoster();
-      refreshCounters();
       fillForm();
       flash(TEXTOS.rosterEditorSavedMsg || "Guardado.");
     });
@@ -771,7 +723,6 @@
       clearRosterOverride();
       recenterToToday();
       refreshRoster();
-      refreshCounters();
       fillForm();
       flash(TEXTOS.rosterEditorResetMsg || "Listo.");
     });
@@ -849,20 +800,45 @@
     $(`#${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function renderBoveda() {
+  // Texto de una carta ya desbloqueada. Si viene sellada (mensajeSellado),
+  // se descifra aquí; {edad} se reemplaza en la carta de cumpleaños.
+  async function mensajeDeCarta(carta) {
+    let texto = carta.mensaje || "";
+    if (carta.mensajeSellado) {
+      try {
+        texto = await window.Sello.abrir(carta.mensajeSellado);
+      } catch (_) {
+        texto = TEXTOS.bovedaSelloError || "No se pudo abrir esta carta en este navegador.";
+      }
+    }
+    return carta.edad != null ? texto.split("{edad}").join(carta.edad) : texto;
+  }
+
+  let bovedaRenderId = 0;
+  async function renderBoveda() {
     const grid = $("#bovedaGrid");
     if (!grid) return;
 
     // Las cartas de config.boveda + la de cumpleaños (que trae su propia fecha).
+    // Las marcadas como borrador no se muestran.
     const cartas = [...(CONFIG.boveda?.cartas || []), Cumple.carta()]
-      .filter(Boolean)
+      .filter((carta) => carta && !carta.borrador)
       .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
-    grid.innerHTML = "";
     const now = Cumple.now();
+    const renderId = ++bovedaRenderId;
+    // Solo se descifran las cartas cuya fecha ya llegó.
+    const mensajes = await Promise.all(cartas.map((carta) =>
+      (new Date(carta.fecha) > now ? null : mensajeDeCarta(carta))));
+    if (renderId !== bovedaRenderId) return;
+
+    grid.innerHTML = "";
 
     if (!cartas.length) {
-      grid.innerHTML = `<p class="boveda-empty">Aún no hay cartas. Agrega la primera en <code>boveda.cartas</code> dentro de <code>assets/js/config.js</code>.</p>`;
+      const empty = document.createElement("p");
+      empty.className = "boveda-empty";
+      empty.textContent = TEXTOS.bovedaEmpty || "Pronto habrá cartas esperándote aquí 💌";
+      grid.appendChild(empty);
       return;
     }
 
@@ -886,15 +862,16 @@
           <span class="boveda-date">Faltan ${partes.join(" ")}</span>
         `;
       } else {
-        const mensaje = carta.mensaje || "";
-        const preview = mensaje.slice(0, 90);
+        const mensaje = mensajes[index] || "";
         card.innerHTML = `
           <span class="boveda-icon">${carta.icono || "💌"}</span>
           <h3>${carta.titulo || "Una carta para ti"}</h3>
-          <p>${preview}${mensaje.length > 90 ? "…" : ""}</p>
+          <p></p>
           <span class="boveda-date">Desbloqueada el ${formatDateLong(fecha)}</span>
         `;
-        card.addEventListener("click", () => openBovedaModal(carta, fecha));
+        // textContent: el mensaje se inserta como texto, nunca como HTML.
+        card.querySelector("p").textContent = `${mensaje.slice(0, 90)}${mensaje.length > 90 ? "…" : ""}`;
+        card.addEventListener("click", () => openBovedaModal(carta, fecha, { mensaje }));
       }
 
       grid.appendChild(card);
@@ -903,13 +880,17 @@
 
   // opciones.sinAccion: abre la carta sin su botón (p. ej. desde el pastel,
   // donde el botón de "ir a las velas" no tendría sentido).
-  function openBovedaModal(carta, fecha, opciones = {}) {
+  // opciones.mensaje: texto ya descifrado (si no viene, se descifra aquí).
+  async function openBovedaModal(carta, fecha, opciones = {}) {
     const modal = $("#bovedaModal");
     if (!modal) return;
+    // Nunca se abre una carta antes de su fecha, venga de donde venga.
+    if (fecha > Cumple.now()) return;
+    const mensaje = opciones.mensaje ?? await mensajeDeCarta(carta);
     safeText("#bovedaModalIcon", carta.icono || "💌");
     safeText("#bovedaModalDate", `Desbloqueada el ${formatDateLong(fecha)}`);
     safeText("#bovedaModalTitle", carta.titulo || "Una carta para ti");
-    safeText("#bovedaModalMessage", carta.mensaje || "");
+    safeText("#bovedaModalMessage", mensaje);
 
     const action = $("#bovedaModalAction");
     if (action) {

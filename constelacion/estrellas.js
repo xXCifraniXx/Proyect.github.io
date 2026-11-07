@@ -8,6 +8,16 @@
   "use strict";
 
   var STORAGE_KEY = "constelacion-nosotros-v1";
+  // Si nube.js está configurado con Firebase, las estrellas se comparten entre
+  // los dos; localStorage queda como copia en este dispositivo.
+  var sync = function (op, payload) {
+    if (window.CieloSync && typeof window.CieloSync[op] === "function") window.CieloSync[op](payload);
+  };
+  var cloudState = "local";
+
+  function makeId(s) {
+    return "s" + Math.round(s.born || Date.now()).toString(36) + Math.random().toString(36).slice(2, 8);
+  }
   var HIT_RADIUS = 26;        // px de tolerancia para tocar una estrella existente
   var TAP_MOVE_MAX = 10;      // px: si el dedo se mueve más que esto, no es un toque
 
@@ -50,6 +60,7 @@
         return s && typeof s.x === "number" && typeof s.y === "number";
       }).map(function (s) {
         return {
+          id: s.id || makeId(s),
           x: s.x, y: s.y,
           label: (s.label || "").toString().slice(0, 60),
           born: s.born || Date.now(),
@@ -64,7 +75,7 @@
   function save() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(stars.map(function (s) {
-        return { x: s.x, y: s.y, label: s.label, born: s.born };
+        return { id: s.id, x: s.x, y: s.y, label: s.label, born: s.born };
       })));
     } catch (e) { /* modo privado, etc. */ }
     updateCounter();
@@ -72,9 +83,13 @@
 
   function updateCounter() {
     var n = stars.length;
-    counter.textContent = n === 0
+    var text = n === 0
       ? "El cielo está vacío. Empieza por la primera estrella."
       : n + (n === 1 ? " estrella en nuestro cielo" : " estrellas en nuestro cielo");
+    if (cloudState === "online") text += " · compartido ✦";
+    else if (cloudState === "offline") text += " · sin conexión, se enviará al volver";
+    else if (cloudState === "error") text += " · sin nube, guardado solo en este dispositivo";
+    counter.textContent = text;
     undoBtn.disabled = n === 0;
   }
 
@@ -307,15 +322,18 @@
   function commitStar() {
     if (!pendingPos) return;
     var label = composerInput.value.trim().slice(0, 60);
-    stars.push({
+    var star = {
       x: Math.max(0.02, Math.min(0.98, pendingPos.x)),
       y: Math.max(0.06, Math.min(0.96, pendingPos.y)),
       label: label,
       born: Date.now(),
       seed: Math.random() * 1000
-    });
+    };
+    star.id = makeId(star);
+    stars.push(star);
     labelTimer = 240;
     save();
+    sync("add", star);
     closeComposer();
   }
   composerSave.addEventListener("click", commitStar);
@@ -342,10 +360,12 @@
   }
   starPopDelete.addEventListener("click", function () {
     if (!activeStar) return;
-    var idx = stars.indexOf(activeStar);
+    var removed = activeStar;
+    var idx = stars.indexOf(removed);
     if (idx >= 0) stars.splice(idx, 1);
     hidePop();
     save();
+    sync("remove", removed);
   });
   document.addEventListener("pointerdown", function (e) {
     if (activeStar && !starPop.contains(e.target) && e.target !== canvas) hidePop();
@@ -353,16 +373,23 @@
 
   // ----- botones -----
   undoBtn.addEventListener("click", function () {
-    stars.pop();
+    var removed = stars.pop();
     hidePop();
     save();
+    if (removed) sync("remove", removed);
   });
   clearBtn.addEventListener("click", function () {
     if (stars.length === 0) return;
-    if (!window.confirm("¿Vaciar el cielo por completo? Esto no se puede deshacer.")) return;
+    var shared = cloudState === "online" || cloudState === "offline";
+    var question = shared
+      ? "¿Vaciar el cielo por completo? Se borra para los dos y no se puede deshacer."
+      : "¿Vaciar el cielo por completo? Esto no se puede deshacer.";
+    if (!window.confirm(question)) return;
+    var removedAll = stars;
     stars = [];
     hidePop();
     save();
+    sync("clear", removedAll);
   });
   downloadBtn.addEventListener("click", exportImage);
 
@@ -391,6 +418,42 @@
   }
 
   function fadeHint() { hint.classList.add("fade"); }
+
+  // ----- puente con la nube (lo usa nube.js) -----
+  window.Cielo = {
+    // Estrellas guardadas en este dispositivo (para subirlas la primera vez).
+    locales: function () {
+      return stars.map(function (s) { return { id: s.id, x: s.x, y: s.y, label: s.label, born: s.born }; });
+    },
+    // Reemplaza el cielo por la versión compartida, conservando el brillo de cada estrella.
+    reemplazar: function (list) {
+      var seeds = {};
+      stars.forEach(function (s) { seeds[s.id] = s.seed; });
+      stars = list.filter(function (s) {
+        return s && typeof s.x === "number" && typeof s.y === "number";
+      }).map(function (s) {
+        return {
+          id: s.id,
+          x: s.x, y: s.y,
+          label: (s.label || "").toString().slice(0, 60),
+          born: s.born || 0,
+          seed: seeds[s.id] != null ? seeds[s.id] : Math.random() * 1000
+        };
+      }).sort(function (a, b) { return a.born - b.born; });
+      if (activeStar) {
+        var activeId = activeStar.id;
+        var still = stars.filter(function (s) { return s.id === activeId; })[0];
+        if (still) activeStar = still;
+        else hidePop();
+      }
+      save();
+      if (stars.length > 0) fadeHint();
+    },
+    estado: function (value) {
+      cloudState = value;
+      updateCounter();
+    }
+  };
 
   // ----- arranque -----
   window.addEventListener("resize", resize);
