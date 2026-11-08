@@ -263,7 +263,7 @@ window.APP_CONFIG = {
       mes: "2026-10",
       titulo: "Octubre",
       src: "assets/images/octubre.webp",
-      texto: "Murallas de noche, manglares, un mapache curioso y tiempo con la familia."
+      texto: "Nuestro primer viaje juntos fuera del país: Colombia, tú y yo."
     },
     {
       mes: "2026-11",
