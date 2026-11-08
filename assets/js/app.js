@@ -1204,10 +1204,60 @@
   /* ---------------------------------------------------------------------------
      ARRANQUE
   --------------------------------------------------------------------------- */
+  // Cuánto sube la carta (y la solapa) por encima del sobre al abrirse, para
+  // dejar ese espacio arriba en pantallas angostas y que no tape el menú.
+  function updateLetterLift() {
+    const envelope = $("#envelope");
+    const paper = envelope?.querySelector(".letter-paper");
+    if (!envelope || !paper) return;
+    const h = paper.offsetHeight;
+    const paperTop = paper.offsetTop - h * 0.43;
+    const flapTop = -envelope.offsetHeight * 0.58;
+    const lift = Math.ceil(Math.max(-paperTop, -flapTop, 0)) + 16;
+    envelope.style.setProperty("--lift", `${lift}px`);
+  }
+
+  /* ---------------------------------------------------------------------------
+     MENÚ DE TRES LÍNEAS
+     En pantallas medianas y móviles los enlaces se esconden en un menú que se
+     abre con el botón; se cierra al elegir una opción, con Escape o tocando fuera.
+  --------------------------------------------------------------------------- */
+  function setupNavMenu() {
+    const toggle = $("#menuToggle");
+    const links = $("#navLinks");
+    if (!toggle || !links) return;
+
+    function setOpen(open) {
+      links.classList.toggle("is-open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+    }
+
+    toggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setOpen(!links.classList.contains("is-open"));
+    });
+    links.addEventListener("click", (event) => {
+      if (event.target.closest("a")) setOpen(false);
+    });
+    document.addEventListener("click", (event) => {
+      if (links.classList.contains("is-open") && !links.contains(event.target)) setOpen(false);
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && links.classList.contains("is-open")) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+  }
+
   function init() {
     bindTexts();
     createHearts();
     setupWelcomeAndLetter();
+    setupNavMenu();
+    updateLetterLift();
+    window.addEventListener("resize", updateLetterLift);
+    document.fonts?.ready.then(updateLetterLift);
     setupRevealAndProgress();
     setupMonthlyTimeline();
     setupMonthNote();

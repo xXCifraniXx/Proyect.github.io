@@ -402,10 +402,36 @@ code { color: var(--gold); }
 .roster-editor-status { color: var(--gold); font-size: .86rem; min-height: 1.2em; opacity: 0; transition: opacity .3s ease; }
 .roster-editor-status.is-visible { opacity: 1; }
 
+/* Menú de tres líneas (pantallas medianas y móviles) */
+.menu-toggle { display: none; }
+.nav-links a[hidden] { display: none; }
+
+@media (max-width: 1200px) {
+  .topbar { flex-wrap: nowrap; z-index: 20; }
+  .menu-toggle { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--stroke-strong); background: rgba(255, 255, 255, .08); color: var(--text); font-size: .92rem; cursor: pointer; }
+  .menu-toggle:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+  .menu-toggle-icon { position: relative; width: 18px; height: 12px; }
+  .menu-toggle-icon span { position: absolute; left: 0; width: 100%; height: 2px; border-radius: 2px; background: currentColor; transition: transform .25s ease, opacity .2s ease, top .25s ease; }
+  .menu-toggle-icon span:nth-child(1) { top: 0; }
+  .menu-toggle-icon span:nth-child(2) { top: 5px; }
+  .menu-toggle-icon span:nth-child(3) { top: 10px; }
+  .menu-toggle[aria-expanded="true"] .menu-toggle-icon span:nth-child(1) { top: 5px; transform: rotate(45deg); }
+  .menu-toggle[aria-expanded="true"] .menu-toggle-icon span:nth-child(2) { opacity: 0; }
+  .menu-toggle[aria-expanded="true"] .menu-toggle-icon span:nth-child(3) { top: 5px; transform: rotate(-45deg); }
+  .nav-links { position: absolute; top: calc(100% + 10px); left: 0; right: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; padding: 10px; border-radius: 22px; background: #2a1230; border: 1px solid var(--stroke-strong); box-shadow: var(--shadow); opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .2s ease, transform .2s ease, visibility 0s linear .2s; }
+  .nav-links.is-open { opacity: 1; visibility: visible; transform: none; transition: opacity .2s ease, transform .2s ease, visibility 0s linear 0s; }
+  .nav-links a { padding: 13px 14px; border-radius: 14px; border-color: transparent; background: rgba(255, 255, 255, .05); color: var(--text); font-size: .95rem; }
+  .nav-links a:hover { transform: none; }
+  .nav-links a:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+}
+
 /* Responsive */
 @media (max-width: 920px) {
   .hero-grid { grid-template-columns: 1fr; }
   .letter-stage { order: -1; }
+  /* Al abrirse, la solapa y la carta suben por encima del sobre: se deja ese espacio. */
+  .envelope { transition: margin-top .9s cubic-bezier(.2, .7, .15, 1); }
+  .envelope.open { margin-top: var(--lift, min(60vw, 230px)); }
   .hero-copy h1 { max-width: none; }
   .counter-grid { grid-template-columns: repeat(2, 1fr); }
   .return-card, .music-panel { grid-template-columns: 1fr; }
@@ -419,8 +445,6 @@ code { color: var(--gold); }
   .app-shell { width: min(var(--maxw), calc(100% - 18px)); }
   .hero { min-height: auto; padding: 18px; border-radius: 26px; }
   .topbar { margin-bottom: 18px; }
-  .nav-links { width: 100%; }
-  .nav-links a { flex: 1; text-align: center; padding: 8px 10px; font-size: .86rem; }
   .hero-copy h1 { font-size: clamp(2.35rem, 16vw, 3.6rem); }
   .btn, .hero-actions a { width: 100%; }
   .return-grid { grid-template-columns: repeat(2, 1fr); }
