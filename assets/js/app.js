@@ -280,13 +280,15 @@
 
   function renderMonthlyTimeline() {
     const track = $("#timelineTrack");
-    if (!track) return;
+    const rail = $("#timelineRail");
+    if (!track) return [];
 
     const startRaw = CONFIG.fechas?.inicioRelacion;
     const start = startRaw ? new Date(startRaw) : null;
     if (!start || Number.isNaN(start.getTime())) {
       track.innerHTML = "";
-      return;
+      if (rail) rail.innerHTML = "";
+      return [];
     }
 
     const now = new Date();
@@ -300,35 +302,161 @@
       cursor.setMonth(cursor.getMonth() + 1);
     }
 
-    track.innerHTML = months.map((key) => {
+    track.innerHTML = months.map((key, index) => {
       const item = configuredByMonth.get(key);
+      const tilt = index % 2 === 0 ? "tilt-left" : "tilt-right";
       if (item && item.src) {
         return `
-          <article class="timeline-card">
-            <img src="${item.src}" alt="${item.titulo || monthLabel(key)}" loading="lazy" />
-            <div class="timeline-body">
-              <span class="timeline-month">${monthLabel(key)}</span>
-              <h3>${item.titulo || ""}</h3>
-              <p>${item.texto || ""}</p>
+          <figure class="timeline-card ${tilt}" data-index="${index}">
+            <div class="timeline-photo">
+              <img src="${item.src}" alt="${item.titulo || monthLabel(key)}" loading="lazy" decoding="async" />
             </div>
-          </article>
+            <figcaption class="timeline-body">
+              <span class="timeline-month">${monthLabel(key)}</span>
+              <p>${item.texto || ""}</p>
+            </figcaption>
+          </figure>
         `;
       }
       return `
-        <article class="timeline-card is-empty">
-          <span class="timeline-empty-icon">🖼️</span>
-          <h3>${monthLabel(key)}</h3>
-          <p>${TEXTOS.timelineEmpty || "La foto de este mes está por llegar 💜"}</p>
-        </article>
+        <figure class="timeline-card is-empty ${tilt}" data-index="${index}">
+          <div class="timeline-photo">
+            <span class="timeline-empty-icon" aria-hidden="true">🖼️</span>
+            <p>${TEXTOS.timelineEmpty || "La foto de este mes está por llegar 💜"}</p>
+          </div>
+          <figcaption class="timeline-body">
+            <span class="timeline-month">${monthLabel(key)}</span>
+          </figcaption>
+        </figure>
       `;
     }).join("");
+
+    if (rail) {
+      rail.innerHTML = months.map((key, index) => {
+        const [year, month] = key.split("-").map(Number);
+        const short = new Date(year, month - 1, 1).toLocaleDateString("es-ES", { month: "short" }).replace(".", "");
+        return `<li><button type="button" data-index="${index}" aria-label="${monthLabel(key)}"><span>${short}</span></button></li>`;
+      }).join("");
+    }
+    return months;
   }
 
   function setupMonthlyTimeline() {
-    renderMonthlyTimeline();
+    const months = renderMonthlyTimeline();
     const viewport = $("#timelineViewport");
-    $("#timelinePrev")?.addEventListener("click", () => viewport?.scrollBy({ left: -230, behavior: "smooth" }));
-    $("#timelineNext")?.addEventListener("click", () => viewport?.scrollBy({ left: 230, behavior: "smooth" }));
+    const rail = $("#timelineRail");
+    const prev = $("#timelinePrev");
+    const next = $("#timelineNext");
+    if (!viewport || !months.length) return;
+
+    const cards = [...viewport.querySelectorAll(".timeline-card")];
+    const dots = rail ? [...rail.querySelectorAll("button")] : [];
+    let active = -1;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const offsetFor = (card) => card.offsetLeft - (viewport.clientWidth - card.offsetWidth) / 2;
+
+    function goTo(index, smooth = true) {
+      const card = cards[Math.max(0, Math.min(cards.length - 1, index))];
+      if (!card) return;
+      viewport.scrollTo({ left: offsetFor(card), behavior: smooth && !reduceMotion ? "smooth" : "auto" });
+    }
+
+    function setActive(index) {
+      if (index === active) return;
+      active = index;
+      cards.forEach((card, i) => card.classList.toggle("is-active", i === index));
+      dots.forEach((dot, i) => {
+        dot.classList.toggle("is-past", i < index);
+        if (i === index) dot.setAttribute("aria-current", "true");
+        else dot.removeAttribute("aria-current");
+      });
+      if (rail) rail.style.setProperty("--progress", cards.length > 1 ? index / (cards.length - 1) : 1);
+      if (prev) prev.disabled = index <= 0;
+      if (next) next.disabled = index >= cards.length - 1;
+    }
+
+    function nearest() {
+      const center = viewport.scrollLeft + viewport.clientWidth / 2;
+      let best = 0;
+      let bestDistance = Infinity;
+      cards.forEach((card, i) => {
+        const distance = Math.abs(card.offsetLeft + card.offsetWidth / 2 - center);
+        if (distance < bestDistance) { bestDistance = distance; best = i; }
+      });
+      return best;
+    }
+
+    let frame = 0;
+    viewport.addEventListener("scroll", () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => setActive(nearest()));
+    }, { passive: true });
+
+    prev?.addEventListener("click", () => goTo(active - 1));
+    next?.addEventListener("click", () => goTo(active + 1));
+    dots.forEach((dot, i) => dot.addEventListener("click", () => goTo(i)));
+    cards.forEach((card, i) => card.addEventListener("click", () => { if (i !== active) goTo(i); }));
+    viewport.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") { event.preventDefault(); goTo(active - 1); }
+      if (event.key === "ArrowRight") { event.preventDefault(); goTo(active + 1); }
+    });
+    window.addEventListener("resize", () => goTo(active, false));
+
+    // Empieza en el mes más reciente.
+    requestAnimationFrame(() => {
+      goTo(cards.length - 1, false);
+      setActive(cards.length - 1);
+    });
+  }
+
+  /* ---------------------------------------------------------------------------
+     MENSAJE DEL MES
+     Bloque aparte con el mensaje de cada mesiversario (config.mensajesMes).
+     Se ve desde su fecha hasta el mismo día del mes siguiente.
+  --------------------------------------------------------------------------- */
+  const NUMEROS_MESES = ["", "Un mes", "Dos meses", "Tres meses", "Cuatro meses", "Cinco meses", "Seis meses",
+    "Siete meses", "Ocho meses", "Nueve meses", "Diez meses", "Once meses", "Un año"];
+
+  function mesesEntre(start, end) {
+    let months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+    if (end.getDate() < start.getDate()) months -= 1;
+    return Math.max(0, months);
+  }
+
+  async function setupMonthNote() {
+    const section = $("#mensaje-mes");
+    if (!section) return;
+    const now = Cumple.now();
+
+    const nota = (CONFIG.mensajesMes || [])
+      .filter((item) => !item.borrador && item.fecha && (item.mensaje || item.mensajeSellado))
+      .map((item) => ({ ...item, inicio: new Date(item.fecha) }))
+      .filter((item) => !Number.isNaN(item.inicio.getTime()) && item.inicio <= now)
+      .sort((a, b) => b.inicio - a.inicio)[0];
+    if (!nota) return;
+
+    const fin = new Date(nota.inicio);
+    fin.setMonth(fin.getMonth() + 1);
+    if (now >= fin) return;
+
+    const start = new Date(CONFIG.fechas?.inicioRelacion || nota.inicio);
+    const meses = mesesEntre(start, nota.inicio);
+    const titulo = nota.titulo || NUMEROS_MESES[meses] || `${meses} meses`;
+    const texto = await mensajeDeCarta(nota);
+
+    safeText("#mesFecha", formatDateLong(nota.inicio));
+    safeText("#mesTitulo", titulo);
+    safeText("#mesFirma", TEXTOS.mesFirma || CONFIG.nombres?.autor || "");
+    const body = $("#mesMensaje");
+    body.replaceChildren(...texto.split(/\n\s*\n/).filter(Boolean).map((parrafo) => {
+      const p = document.createElement("p");
+      p.textContent = parrafo.trim();
+      return p;
+    }));
+
+    section.hidden = false;
+    $("#navMes")?.removeAttribute("hidden");
   }
 
   /* ---------------------------------------------------------------------------
@@ -1082,6 +1210,7 @@
     setupWelcomeAndLetter();
     setupRevealAndProgress();
     setupMonthlyTimeline();
+    setupMonthNote();
     setupCounters();
     setupRosterCalendar();
     setupSurprise();

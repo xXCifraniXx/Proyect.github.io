@@ -50,6 +50,7 @@ La Bóveda, minijuego) se generan solas desde las listas de `config.js`.
 | `textos` | Todas las frases del sitio. |
 | `lineaTiempo` | Una foto por mes. `mes` en formato `"AAAA-MM"`. Un mes sin entrada se muestra vacío. |
 | `musica.cancion` | Título, artista y ruta del mp3 (`assets/audio/...`). |
+| `mensajesMes` | Mensaje de cada mesiversario, en un bloque aparte debajo del inicio. |
 | `boveda.cartas` | Cartas que se desbloquean solas en su fecha. |
 | `juego.parejas` | Emojis del memory (cada uno se duplica para formar un par). |
 
@@ -118,10 +119,21 @@ cambio valga para siempre en el link, hay que actualizar `rotacionMina.salidaBas
 en `config.js` (por ejemplo: si baja el jueves 10, `salidaBase` es el jueves
 anterior a 14 días, el 27 del mes previo).
 
-### Añadir una carta permanente a la línea de tiempo
+### Mensaje del mes
 
-1. Copia la imagen a `assets/images/`.
+Cada entrada de `mensajesMes` tiene una `fecha` (normalmente el día 8) y el
+texto sellado en `mensajeSellado` (o `mensaje` sin sellar). El bloque aparece
+desde esa fecha hasta el mismo día del mes siguiente, con el título calculado
+solo ("Ocho meses", "Nueve meses"…) salvo que pongas `titulo`. Los párrafos se
+separan con una línea en blanco. `borrador: true` lo oculta.
+
+### Añadir la foto de un mes
+
+1. Copia la imagen a `assets/images/` (mejor en `.webp`, unos 1080 px de ancho).
 2. Añade un objeto en `lineaTiempo` con `mes`, `titulo`, `src` y `texto`.
+
+La galería abre en el mes más reciente; se recorre deslizando, con las flechas
+o tocando un mes en la línea de abajo.
 
 ### Cambiar la canción
 

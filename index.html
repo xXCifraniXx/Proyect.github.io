@@ -63,6 +63,7 @@
       <nav class="topbar" aria-label="Navegación principal">
         <a href="#inicio" class="brand" id="brandText"></a>
         <div class="nav-links">
+          <a href="#mensaje-mes" id="navMes" data-bind="textos.navMes" hidden></a>
           <a href="#carta" data-bind="textos.navCarta"></a>
           <a href="#linea-tiempo" data-bind="textos.navMeses"></a>
           <a href="#tiempo" data-bind="textos.navTiempo"></a>
@@ -105,6 +106,15 @@
     </header>
 
     <main>
+      <section class="section reveal month-note-section" id="mensaje-mes" aria-labelledby="mesTitulo" hidden>
+        <article class="month-note">
+          <p class="month-note-date" id="mesFecha"></p>
+          <h2 class="month-note-title" id="mesTitulo"></h2>
+          <div class="month-note-body" id="mesMensaje"></div>
+          <p class="month-note-sign" id="mesFirma"></p>
+        </article>
+      </section>
+
       <section class="section reveal" id="carta">
         <div class="section-head">
           <span class="eyebrow" data-bind="textos.cartaEyebrow"></span>
@@ -124,11 +134,14 @@
           <p data-bind="textos.timelineIntro"></p>
         </div>
         <div class="timeline-wrap glass-soft">
-          <button class="carousel-btn prev" id="timelinePrev" type="button" aria-label="Mes anterior">‹</button>
-          <div class="timeline-viewport" id="timelineViewport">
+          <div class="timeline-viewport" id="timelineViewport" tabindex="0" aria-label="Fotos por mes">
             <div class="timeline-track" id="timelineTrack"></div>
           </div>
-          <button class="carousel-btn next" id="timelineNext" type="button" aria-label="Mes siguiente">›</button>
+          <div class="timeline-nav">
+            <button class="carousel-btn prev" id="timelinePrev" type="button" aria-label="Mes anterior">‹</button>
+            <ol class="timeline-rail" id="timelineRail" aria-label="Elegir mes"></ol>
+            <button class="carousel-btn next" id="timelineNext" type="button" aria-label="Mes siguiente">›</button>
+          </div>
         </div>
       </section>
 

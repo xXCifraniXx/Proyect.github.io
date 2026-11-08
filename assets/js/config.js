@@ -48,6 +48,7 @@ window.APP_CONFIG = {
   ------------------------------------------------------------------------- */
   textos: {
     // Navegación
+    navMes: "Este mes",
     navCarta: "Carta",
     navMeses: "Meses",
     navTiempo: "Tiempo",
@@ -102,8 +103,11 @@ window.APP_CONFIG = {
     // Línea de tiempo mensual
     timelineEyebrow: "Cada mes juntos",
     timelineTitle: "Una foto por mes, desde que empezamos",
-    timelineIntro: "Cada mes se suma una foto nueva a esta cinta. Desliza para verlas todas.",
+    timelineIntro: "Cada mes se suma una foto nueva. Desliza o toca un mes para verla.",
     timelineEmpty: "La foto de este mes está por llegar 💜",
+
+    // Mensaje del mes (el texto de cada mes va en "mensajesMes")
+    mesFirma: "Jorge",
 
     // Nuestro tiempo
     tiempoEyebrow: "Nuestro tiempo",
@@ -255,6 +259,34 @@ window.APP_CONFIG = {
       src: "assets/images/septiembre.webp",
       texto: "Recién empieza, llena de emociones pero agradezco que siempre estés a mi lado!"
     },
+    {
+      mes: "2026-10",
+      titulo: "Octubre",
+      src: "assets/images/octubre.webp",
+      texto: "Murallas de noche, manglares, un mapache curioso y tiempo con la familia."
+    },
+    {
+      mes: "2026-11",
+      titulo: "Noviembre",
+      src: "assets/images/noviembre.webp",
+      texto: "Ocho meses y todavía jugamos como niños."
+    },
+  ],
+
+  /* -------------------------------------------------------------------------
+     MENSAJE DEL MES
+     Un bloque aparte (debajo del inicio) con el mensaje de cada "mesiversario".
+     Se muestra el último cuya fecha ya llegó; antes de esa fecha no se ve.
+     El texto va sellado igual que en La Bóveda (herramientas/sellar-carta.html).
+     Si no pones "titulo", se calcula solo: "Ocho meses", "Nueve meses"…
+     "borrador: true" lo oculta hasta que tenga texto.
+  ------------------------------------------------------------------------- */
+  mensajesMes: [
+    {
+      fecha: "2026-11-08T00:00:00",
+      borrador: true,
+      mensajeSellado: ""
+    }
   ],
 
   /* -------------------------------------------------------------------------
