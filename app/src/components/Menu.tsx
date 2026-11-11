@@ -1,24 +1,40 @@
 import { useEffect, useRef, useState } from "react";
-import { NOMBRES, TEXTOS } from "../contenido.js";
+import { NOMBRES, TEXTOS } from "../lib/contenido.ts";
+
+/** Qué enlaces opcionales se muestran (dependen de la fecha). */
+export interface EnlacesVisibles {
+  mes?: boolean;
+  cumple?: boolean;
+}
+
+interface MenuProps {
+  visibles?: EnlacesVisibles;
+}
+
+interface Enlace {
+  href: string;
+  texto: string | undefined;
+  visible?: boolean;
+}
 
 /*
   MENÚ
   En pantallas grandes son botones en una fila; en medianas y móviles se
   esconden en un menú de tres líneas (lo decide el CSS). Se cierra al elegir
   una opción, con Escape o tocando fuera.
-  "visibles" dice qué enlaces opcionales se muestran: { mes, cumple }.
 */
-export default function Menu({ visibles = {} }) {
+export default function Menu({ visibles = {} }: MenuProps) {
   const [abierto, setAbierto] = useState(false);
-  const panel = useRef(null);
-  const boton = useRef(null);
+  const panel = useRef<HTMLDivElement>(null);
+  const boton = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!abierto) return undefined;
-    const alTocarFuera = (event) => {
-      if (!panel.current?.contains(event.target) && !boton.current?.contains(event.target)) setAbierto(false);
+    const alTocarFuera = (event: MouseEvent) => {
+      const destino = event.target as Node;
+      if (!panel.current?.contains(destino) && !boton.current?.contains(destino)) setAbierto(false);
     };
-    const alPulsarTecla = (event) => {
+    const alPulsarTecla = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setAbierto(false);
         boton.current?.focus();
@@ -32,7 +48,7 @@ export default function Menu({ visibles = {} }) {
     };
   }, [abierto]);
 
-  const enlaces = [
+  const enlaces: Enlace[] = [
     { href: "#mensaje-mes", texto: TEXTOS.navMes, visible: !!visibles.mes },
     { href: "#carta", texto: TEXTOS.navCarta },
     { href: "#linea-tiempo", texto: TEXTOS.navMeses },
@@ -43,7 +59,7 @@ export default function Menu({ visibles = {} }) {
     { href: "#boveda", texto: TEXTOS.navBoveda },
     { href: "#constelacion", texto: TEXTOS.navConstelacion },
     { href: "#juego", texto: TEXTOS.navJuego }
-  ].filter((enlace) => enlace.visible !== false);
+  ];
 
   return (
     <nav className="topbar" aria-label="Navegación principal">
@@ -60,9 +76,11 @@ export default function Menu({ visibles = {} }) {
         <span>Menú</span>
       </button>
       <div ref={panel} className={`nav-links${abierto ? " is-open" : ""}`} id="navLinks">
-        {enlaces.map((enlace) => (
-          <a key={enlace.href} href={enlace.href} onClick={() => setAbierto(false)}>{enlace.texto}</a>
-        ))}
+        {enlaces
+          .filter((enlace) => enlace.visible !== false)
+          .map((enlace) => (
+            <a key={enlace.href} href={enlace.href} onClick={() => setAbierto(false)}>{enlace.texto}</a>
+          ))}
       </div>
     </nav>
   );

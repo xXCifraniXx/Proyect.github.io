@@ -1,5 +1,5 @@
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
-import { TEXTOS } from "../contenido.js";
+import { useCallback, useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
+import { TEXTOS } from "../lib/contenido.ts";
 
 /*
   SOBRE CON LA CARTA
@@ -10,8 +10,8 @@ import { TEXTOS } from "../contenido.js";
 */
 export default function Sobre() {
   const [abierto, setAbierto] = useState(false);
-  const sobre = useRef(null);
-  const papel = useRef(null);
+  const sobre = useRef<HTMLDivElement>(null);
+  const papel = useRef<HTMLElement>(null);
 
   const medir = useCallback(() => {
     const env = sobre.current;
@@ -28,13 +28,13 @@ export default function Sobre() {
   useLayoutEffect(() => {
     medir();
     window.addEventListener("resize", medir);
-    document.fonts?.ready.then(medir);
+    void document.fonts?.ready.then(medir);
     return () => window.removeEventListener("resize", medir);
   }, [medir]);
 
   const alternar = () => setAbierto((valor) => !valor);
 
-  const alPulsarTecla = (event) => {
+  const alPulsarTecla = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       alternar();

@@ -1,28 +1,18 @@
-import { useEffect, useState } from "react";
-import { CONFIG } from "../contenido.js";
-import { estadoCumple } from "../lib/cumple.js";
+import { useState, type CSSProperties } from "react";
+import { CONFIG } from "../lib/contenido.ts";
+import { estadoCumple } from "../lib/cumple.ts";
 
-// Barra fina arriba que se llena a medida que se baja por la página.
-export function ProgresoScroll() {
-  const [avance, setAvance] = useState(0);
-
-  useEffect(() => {
-    const actualizar = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      setAvance(max > 0 ? (window.scrollY / max) * 100 : 0);
-    };
-    window.addEventListener("scroll", actualizar, { passive: true });
-    actualizar();
-    return () => window.removeEventListener("scroll", actualizar);
-  }, []);
-
-  return <div className="scroll-progress" style={{ width: `${avance}%` }} aria-hidden="true" />;
+interface Corazon {
+  id: number;
+  figura: string;
+  // "--drift" es una variable CSS; CSSProperties no la conoce por nombre.
+  estilo: CSSProperties & { "--drift": string };
 }
 
-// Luces de fondo y corazones que flotan (globos y confeti el día del cumpleaños).
-export function Fondo() {
+/** Luces de fondo y corazones que flotan (globos y confeti el día del cumpleaños). */
+export default function Fondo() {
   // useState con función: los corazones se sortean una sola vez, no en cada render.
-  const [corazones] = useState(() => {
+  const [corazones] = useState<Corazon[]>(() => {
     const total = CONFIG.opciones?.corazones || 18;
     const figuras = estadoCumple() === "hoy" ? ["🎈", "✨", "❤", "🎉", "♡"] : ["♡", "❤", "❤"];
     return Array.from({ length: total }, (_, i) => ({

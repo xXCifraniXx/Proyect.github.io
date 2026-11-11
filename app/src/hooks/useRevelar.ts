@@ -3,10 +3,10 @@ import { useEffect, useRef } from "react";
 /*
   Hace aparecer un bloque (clase "show") la primera vez que entra en pantalla,
   igual que las secciones .reveal del sitio actual.
-  Uso:  const ref = useRevelar();  <section ref={ref} className="reveal">
+  Uso:  const ref = useRevelar<HTMLElement>();  <section ref={ref} className="reveal">
 */
-export function useRevelar() {
-  const ref = useRef(null);
+export function useRevelar<T extends HTMLElement = HTMLElement>() {
+  const ref = useRef<T>(null);
 
   useEffect(() => {
     const el = ref.current;

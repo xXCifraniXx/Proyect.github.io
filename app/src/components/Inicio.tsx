@@ -1,12 +1,16 @@
-import { TEXTOS } from "../contenido.js";
-import { useRevelar } from "../hooks/useRevelar.js";
-import { estadoCumple } from "../lib/cumple.js";
-import Menu from "./Menu.jsx";
-import Sobre from "./Sobre.jsx";
+import { useRevelar } from "../hooks/useRevelar.ts";
+import { TEXTOS } from "../lib/contenido.ts";
+import { estadoCumple } from "../lib/cumple.ts";
+import Menu, { type EnlacesVisibles } from "./Menu.tsx";
+import Sobre from "./Sobre.tsx";
 
-// Portada: menú, saludo, botones y el sobre con la carta.
-export default function Inicio({ visibles }) {
-  const ref = useRevelar();
+interface InicioProps {
+  visibles: EnlacesVisibles;
+}
+
+/** Portada: menú, saludo, botones y el sobre con la carta. */
+export default function Inicio({ visibles }: InicioProps) {
+  const ref = useRevelar<HTMLElement>();
   // El día del cumpleaños el segundo botón lleva directo a las velas.
   const destinoSecundario = estadoCumple() === "hoy" ? "#cumple" : "#boveda";
 

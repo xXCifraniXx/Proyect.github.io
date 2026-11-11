@@ -1,7 +1,7 @@
 import { cpSync, createReadStream, existsSync, statSync } from "node:fs";
 import { extname, join, resolve } from "node:path";
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 
 /*
   CONFIGURACIÓN DE VITE
@@ -17,7 +17,7 @@ const raiz = resolve(import.meta.dirname, "..");
 const BASE = "/Proyect.github.io/";
 const MEDIOS = ["images", "audio"];
 
-const TIPOS = {
+const TIPOS: Record<string, string> = {
   ".webp": "image/webp",
   ".jpg": "image/jpeg",
   ".png": "image/png",
@@ -27,20 +27,19 @@ const TIPOS = {
 
 // En desarrollo sirve assets/images y assets/audio del sitio actual; al
 // compilar los copia dentro de dist/assets.
-function mediosDelSitio() {
+function mediosDelSitio(): Plugin {
   return {
     name: "medios-del-sitio",
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        const ruta = decodeURIComponent((req.url || "").split("?")[0]);
+        const ruta = decodeURIComponent((req.url ?? "").split("?")[0]);
         const prefijo = `${BASE}assets/`;
         if (!ruta.startsWith(prefijo)) return next();
         const relativa = ruta.slice(prefijo.length);
-        const carpeta = relativa.split("/")[0];
-        if (!MEDIOS.includes(carpeta)) return next();
+        if (!MEDIOS.includes(relativa.split("/")[0])) return next();
         const archivo = resolve(raiz, "assets", relativa);
         if (!archivo.startsWith(join(raiz, "assets")) || !existsSync(archivo) || !statSync(archivo).isFile()) return next();
-        res.setHeader("Content-Type", TIPOS[extname(archivo).toLowerCase()] || "application/octet-stream");
+        res.setHeader("Content-Type", TIPOS[extname(archivo).toLowerCase()] ?? "application/octet-stream");
         createReadStream(archivo).pipe(res);
       });
     },

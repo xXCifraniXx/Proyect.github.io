@@ -1,8 +1,13 @@
 import { useState } from "react";
-import { TEXTOS } from "../contenido.js";
+import { TEXTOS } from "../lib/contenido.ts";
 
-// Pantalla de bienvenida: se oculta al pulsar el botón y avisa con onEntrar.
-export default function Bienvenida({ onEntrar }) {
+interface BienvenidaProps {
+  /** Se llama cuando ella pulsa el botón para entrar. */
+  onEntrar?: () => void;
+}
+
+/** Pantalla de bienvenida: se oculta al pulsar el botón. */
+export default function Bienvenida({ onEntrar }: BienvenidaProps) {
   const [oculta, setOculta] = useState(false);
 
   const entrar = () => {
