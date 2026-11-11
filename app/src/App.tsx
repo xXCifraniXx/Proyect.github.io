@@ -1,6 +1,10 @@
+import { useState } from "react";
 import Bienvenida from "./components/Bienvenida.tsx";
+import CartaSorpresa from "./components/CartaSorpresa.tsx";
 import Fondo from "./components/Fondo.tsx";
+import Galeria from "./components/Galeria.tsx";
 import Inicio from "./components/Inicio.tsx";
+import MensajeDelMes from "./components/MensajeDelMes.tsx";
 import type { EnlacesVisibles } from "./components/Menu.tsx";
 import ProgresoScroll from "./components/ProgresoScroll.tsx";
 import { estadoCumple } from "./lib/cumple.ts";
@@ -12,9 +16,11 @@ import { mensajeMesVigente } from "./lib/mensajeMes.ts";
   src/components). Durante la migración se van sumando las secciones una a una.
 */
 export default function App() {
+  // Se calcula una vez al abrir la página.
+  const [nota] = useState(mensajeMesVigente);
   const cumple = estadoCumple();
   const visibles: EnlacesVisibles = {
-    mes: mensajeMesVigente() !== null,
+    mes: nota !== null,
     cumple: cumple === "hoy" || cumple === "despues"
   };
 
@@ -25,7 +31,11 @@ export default function App() {
       <Bienvenida />
       <div className="app-shell">
         <Inicio visibles={visibles} />
-        <main />
+        <main>
+          {nota && <MensajeDelMes nota={nota} />}
+          <CartaSorpresa />
+          <Galeria />
+        </main>
       </div>
     </>
   );

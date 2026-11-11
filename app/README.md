@@ -36,7 +36,7 @@ src/
 ├── App.tsx             La página: junta todas las secciones
 ├── components/         Un componente por archivo (Bienvenida.tsx, Menu.tsx…)
 ├── hooks/              Lógica de React reutilizable (useRevelar.ts)
-├── lib/                Cálculos sin pantalla (contenido, cumpleaños, mensaje del mes)
+├── lib/                Cálculos sin pantalla (contenido, fechas, sello de cartas, cumpleaños…)
 └── types/              Tipos de TypeScript (config.ts describe el contenido de config.js)
 ```
 
@@ -47,7 +47,7 @@ nueva en `config.js`, súmala en `src/types/config.ts`.
 ## Avance de la migración
 
 - [x] Fase 1: bienvenida, fondo, menú de tres líneas y carta del sobre (en TypeScript)
-- [ ] Mensaje del mes y galería de fotos
+- [x] Fase 2: mensaje del mes (cartas selladas en TypeScript), sección Carta y galería de fotos
 - [ ] Tiempo juntos, calendario de bajadas (con Firebase)
 - [ ] Música y cumpleaños
 - [ ] La Bóveda (cartas selladas)
