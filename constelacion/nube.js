@@ -1,6 +1,6 @@
 /*
   SINCRONIZACIÓN DE LA CONSTELACIÓN CON FIREBASE (Firestore + inicio de sesión)
-  Solo se activa si nube-config.js tiene la configuración de Firebase.
+  Solo se activa si assets/js/nube-config.js tiene la configuración de Firebase.
   estrellas.js dibuja y guarda en el dispositivo; este archivo:
     - escucha el cielo compartido y se lo pasa a estrellas.js en tiempo real;
     - deja crear y borrar estrellas solo a las cuentas de "miembros"

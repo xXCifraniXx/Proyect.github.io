@@ -20,7 +20,7 @@ window.APP_CONFIG = {
     // Fecha real desde la que están juntos.
     inicioRelacion: "2026-03-08T00:00:00",
     // Fecha de regreso. Deja null si no quieres cuenta regresiva.
-    regreso: "2026-05-28T21:00:00"
+    regreso: null
   },
 
   // Turno 14 x 7 (sección "Bajada"). Deja activa: false para ocultarla.
@@ -144,11 +144,14 @@ window.APP_CONFIG = {
     rosterEditorMineDays: "Días en mina",
     rosterEditorRestDays: "Días de descanso",
     rosterEditorReturnTime: "Hora de regreso",
-    rosterEditorNote: "Elige el día en que baja y el calendario 14x7 se reacomoda solo desde esa fecha en adelante. El " +
-        "ajuste se guarda solo en este dispositivo.",
+    rosterEditorNote: "Elige el día en que baja y el calendario 14x7 se reacomoda solo desde esa fecha en adelante. " +
+        "Con sesión iniciada el cambio se ve en los dos celulares; sin sesión, solo en este dispositivo.",
     rosterEditorSave: "Guardar bajada",
     rosterEditorReset: "Volver al calendario original",
-    rosterEditorSavedMsg: "Guardado. El calendario ya usa la nueva bajada.",
+    rosterEditorSavedMsg: "Guardado solo en este dispositivo. Inicia sesión para que lo vean los dos.",
+    rosterEditorSavedSharedMsg: "Guardado para los dos. El calendario ya usa la nueva bajada.",
+    rosterEditorCloudError: "No se pudo guardar para los dos. Revisa la conexión e inténtalo otra vez.",
+    rosterEditorResetNeedsLogin: "Inicia sesión para volver al calendario original para los dos.",
     rosterEditorResetMsg: "Listo. El calendario volvió a su versión original.",
     rosterEditorInvalidMsg: "Elige una fecha válida para la próxima bajada.",
     rosterEditorStorageError: "No se pudo guardar en este navegador.",

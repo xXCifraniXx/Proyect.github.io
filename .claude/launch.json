@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "static",
-      "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "4173"],
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["herramientas/servidor-local.js", "4173"],
       "port": 4173
     }
   ]

@@ -16,18 +16,23 @@ Proyect.github.io/
 │   ├── js/sello.js             Cifrado de las cartas de La Bóveda
 │   ├── js/cumple.js            Cumpleaños: estados, pastel con velas, cuenta regresiva
 │   ├── js/confetti.js          Confeti en canvas (reutilizable)
-│   ├── images/                 Fotos de la línea de tiempo
+│   ├── js/nube-config.js       ← configuración de Firebase (las dos páginas)
+│   ├── js/nube-bajadas.js      Bajadas de mina compartidas con Firebase
+│   ├── images/                 Fotos de la línea de tiempo, icono e imagen para compartir
 │   └── audio/                  Canción
+├── firestore.rules             Reglas para pegar en Firebase
 ├── herramientas/
-│   └── sellar-carta.html       Sellar / abrir cartas de La Bóveda (para ti)
+│   ├── sellar-carta.html       Sellar / abrir cartas de La Bóveda (para ti)
+│   └── servidor-local.js       Ver el sitio en tu equipo: node herramientas/servidor-local.js
 └── constelacion/               Mini-experiencia aparte (lienzo de estrellas)
     ├── index.html
     ├── estrellas.css
     ├── estrellas.js
-    ├── nube.js                 Cielo compartido con Firebase (opcional)
-    ├── nube-config.js          ← configuración de Firebase
-    └── firestore.rules         Reglas para pegar en Firebase
+    └── nube.js                 Cielo compartido con Firebase
 ```
+
+Para verlo en tu equipo: `node herramientas/servidor-local.js` y abre
+http://localhost:4173 (solo necesita Node).
 
 ## Cómo funciona la plantilla
 
@@ -113,11 +118,16 @@ mina"**. Se elige el día de la próxima bajada (y, si cambia, días en mina /
 descanso / hora de regreso) y el calendario 14×7, el estado y la cuenta
 regresiva se recalculan al instante desde esa fecha en adelante.
 
-Ese ajuste se guarda en `localStorage` **solo en ese navegador/dispositivo**
-(clave `roster-override-v1`); "Volver a lo de config.js" lo borra. Para que un
-cambio valga para siempre en el link, hay que actualizar `rotacionMina.salidaBase`
-en `config.js` (por ejemplo: si baja el jueves 10, `salidaBase` es el jueves
-anterior a 14 días, el 27 del mes previo).
+**Con sesión iniciada** (botón del mismo panel, cuenta de Google de uno de los
+dos) el ajuste se guarda en Firebase y el calendario cambia en los dos
+celulares al instante. **Sin sesión** se guarda solo en ese dispositivo
+(`localStorage`, clave `roster-override-v1`). Si hay un ajuste compartido,
+manda sobre el del dispositivo. "Volver al calendario original" lo borra (el
+compartido, solo con sesión).
+
+Para que un cambio valga para siempre aunque no haya ajuste, hay que actualizar
+`rotacionMina.salidaBase` en `config.js` (por ejemplo: si baja el jueves 10,
+`salidaBase` es el jueves anterior a 14 días, el 27 del mes previo).
 
 ### Mensaje del mes
 
@@ -150,17 +160,17 @@ puede exportar como imagen PNG.
 **Cielo compartido (Firebase).** Sin configurar, cada dispositivo guarda su
 propio cielo en `localStorage`. Para que los dos vean y creen las mismas
 estrellas en tiempo real, sigue los pasos de
-[`constelacion/nube-config.js`](constelacion/nube-config.js): crear un proyecto
+[`assets/js/nube-config.js`](assets/js/nube-config.js): crear un proyecto
 gratuito en Firebase, activar Firestore, pegar las reglas de
-[`constelacion/firestore.rules`](constelacion/firestore.rules) y copiar la
-configuración web en `nube-config.js`. La primera vez que cada dispositivo se
+[`firestore.rules`](firestore.rules) y copiar la configuración web en
+`nube-config.js`. La primera vez que cada dispositivo se
 conecta sube las estrellas que ya tenía; después todo se sincroniza solo. El
 contador indica si el cielo está compartido o sin conexión.
 
 **Quién puede cambiarlo.** Cualquiera con el link puede mirar el cielo, pero
 solo ustedes dos pueden poner o quitar estrellas, tras pulsar **Iniciar
 sesión** (Google). Las cuentas permitidas se identifican por su UID, en
-`miembros` de `nube-config.js` y en `firestore.rules` (hay que ponerlo en los
+`miembros` de `assets/js/nube-config.js` y en `firestore.rules` (hay que ponerlo en los
 dos sitios y volver a publicar las reglas). Para sumar a alguien: que entre una
 vez con "Iniciar sesión", copia su UID en Firebase → Authentication → Usuarios
 y agrégalo. Todo esto funciona en el plan gratuito (Spark).

@@ -398,6 +398,9 @@ code { color: var(--gold); }
 .roster-editor-field input { min-height: 44px; color: var(--text); color-scheme: dark; background: rgba(255, 255, 255, .08); border: 1px solid var(--stroke); border-radius: 12px; padding: 0 12px; outline: none; }
 .roster-editor-field input:focus { border-color: var(--rose); }
 .roster-editor-note { color: var(--muted-2); font-size: .84rem; line-height: 1.6; }
+.roster-editor-account { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 14px; border-radius: 14px; background: rgba(255, 255, 255, .06); border: 1px solid var(--stroke); color: var(--muted); font-size: .88rem; line-height: 1.5; }
+.roster-editor-account[hidden] { display: none; }
+.roster-editor-account .btn { min-height: 40px; padding: 8px 16px; width: auto; }
 .roster-editor-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 .roster-editor-status { color: var(--gold); font-size: .86rem; min-height: 1.2em; opacity: 0; transition: opacity .3s ease; }
 .roster-editor-status.is-visible { opacity: 1; }

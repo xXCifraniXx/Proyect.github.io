@@ -26,7 +26,9 @@
 
   const state = {
     isPlaying: false,
-    calendarCursor: null
+    calendarCursor: null,
+    // Ajuste de bajadas guardado en Firebase (lo llena nube-bajadas.js).
+    sharedRoster: undefined
   };
 
   function safeText(id, value) {
@@ -468,7 +470,18 @@
   --------------------------------------------------------------------------- */
   const ROSTER_OVERRIDE_KEY = "roster-override-v1";
 
+  function validRosterOverride(data) {
+    return data && typeof data === "object" && data.proximaBajada ? data : null;
+  }
+
+  // Primero el ajuste compartido (Firebase); si no hay, el de este dispositivo.
   function readRosterOverride() {
+    const shared = validRosterOverride(state.sharedRoster);
+    if (shared) return shared;
+    return readLocalRosterOverride();
+  }
+
+  function readLocalRosterOverride() {
     try {
       const raw = localStorage.getItem(ROSTER_OVERRIDE_KEY);
       const data = raw ? JSON.parse(raw) : null;
@@ -820,7 +833,7 @@
       state.calendarCursor = new Date(today.getFullYear(), today.getMonth(), 1);
     };
 
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
       const proximaBajada = nextDownInput?.value;
       const parsed = proximaBajada ? new Date(`${proximaBajada}T00:00:00`) : null;
@@ -829,14 +842,33 @@
         return;
       }
 
-      const saved = writeRosterOverride({
+      const ajuste = {
         proximaBajada,
-        diasMina: Math.max(1, Number(mineDaysInput?.value) || 14),
-        diasDescanso: Math.max(1, Number(restDaysInput?.value) || 7),
+        diasMina: Math.min(60, Math.max(1, Math.round(Number(mineDaysInput?.value) || 14))),
+        diasDescanso: Math.min(60, Math.max(1, Math.round(Number(restDaysInput?.value) || 7))),
         horaRegreso: returnTimeInput?.value || "21:00"
-      });
+      };
 
-      if (!saved) {
+      // Con sesión de uno de los dos se guarda en Firebase y lo ven ambos.
+      const nube = window.BajadasNube;
+      if (nube && nube.puedeGuardar()) {
+        try {
+          await nube.guardar(ajuste);
+          clearRosterOverride();
+          state.sharedRoster = ajuste;
+        } catch (error) {
+          console.warn("[bajadas] no se pudo guardar en la nube:", error);
+          flash(TEXTOS.rosterEditorCloudError || "No se pudo guardar para los dos. Revisa la conexión.");
+          return;
+        }
+        recenterToToday();
+        refreshRoster();
+        fillForm();
+        flash(TEXTOS.rosterEditorSavedSharedMsg || TEXTOS.rosterEditorSavedMsg || "Guardado.");
+        return;
+      }
+
+      if (!writeRosterOverride(ajuste)) {
         flash(TEXTOS.rosterEditorStorageError || "No se pudo guardar en este navegador.");
         return;
       }
@@ -847,12 +879,36 @@
       flash(TEXTOS.rosterEditorSavedMsg || "Guardado.");
     });
 
-    resetBtn?.addEventListener("click", () => {
+    resetBtn?.addEventListener("click", async () => {
+      const nube = window.BajadasNube;
+      if (validRosterOverride(state.sharedRoster)) {
+        if (!(nube && nube.puedeGuardar())) {
+          flash(TEXTOS.rosterEditorResetNeedsLogin || "Inicia sesión para volver al calendario original para los dos.");
+          return;
+        }
+        try {
+          await nube.borrar();
+          state.sharedRoster = null;
+        } catch (error) {
+          console.warn("[bajadas] no se pudo borrar en la nube:", error);
+          flash(TEXTOS.rosterEditorCloudError || "No se pudo guardar para los dos. Revisa la conexión.");
+          return;
+        }
+      }
       clearRosterOverride();
       recenterToToday();
       refreshRoster();
       fillForm();
       flash(TEXTOS.rosterEditorResetMsg || "Listo.");
+    });
+
+    // Cuando llega (o cambia) el ajuste compartido desde Firebase.
+    window.addEventListener("bajadas:nube", (event) => {
+      const before = JSON.stringify(validRosterOverride(state.sharedRoster));
+      state.sharedRoster = event.detail ? event.detail.ajuste : null;
+      if (JSON.stringify(validRosterOverride(state.sharedRoster)) === before) return;
+      refreshRoster();
+      fillForm();
     });
 
     fillForm();
