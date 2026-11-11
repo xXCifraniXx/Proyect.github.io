@@ -15,3 +15,6 @@ node_modules/
 
 # Ajustes locales del asistente
 .claude/settings.local.json
+
+# Compilado de la versión React
+app/dist/
