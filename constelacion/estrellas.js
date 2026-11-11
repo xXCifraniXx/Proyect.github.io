@@ -15,6 +15,30 @@
   };
   var cloudState = "local";
 
+  // Con la nube activa, solo quien inició sesión como uno de los dos puede
+  // cambiar el cielo (nube.js decide). Sin nube, se edita libremente.
+  function puedeEditar(silencioso) {
+    var c = window.CIELO_CONFIG;
+    if (!(c && c.firebase && c.firebase.apiKey)) return true;
+    if (cloudState === "error") return true;
+    var nube = window.CieloSync;
+    if (nube && typeof nube.puedeEditar === "function") {
+      if (nube.puedeEditar()) return true;
+      if (!silencioso && typeof nube.avisarSesion === "function") nube.avisarSesion();
+      return false;
+    }
+    if (!silencioso) aviso("Conectando con el cielo compartido…");
+    return false;
+  }
+
+  var avisoTimer = null;
+  function aviso(texto) {
+    hint.textContent = texto;
+    hint.classList.remove("fade");
+    clearTimeout(avisoTimer);
+    avisoTimer = setTimeout(fadeHint, 6000);
+  }
+
   function makeId(s) {
     return "s" + Math.round(s.born || Date.now()).toString(36) + Math.random().toString(36).slice(2, 8);
   }
@@ -297,6 +321,7 @@
       return;
     }
     hidePop();
+    if (!puedeEditar()) return;
     pendingPos = screenToNorm(e.clientX, e.clientY);
     openComposer();
   });
@@ -347,6 +372,7 @@
   function openPop(star) {
     activeStar = star;
     starPopLabel.textContent = star.label || "estrella sin nombre";
+    starPopDelete.hidden = !puedeEditar(true);
     starPop.hidden = false;
     positionPop(star);
   }
@@ -359,7 +385,7 @@
     starPop.hidden = true;
   }
   starPopDelete.addEventListener("click", function () {
-    if (!activeStar) return;
+    if (!activeStar || !puedeEditar()) return;
     var removed = activeStar;
     var idx = stars.indexOf(removed);
     if (idx >= 0) stars.splice(idx, 1);
@@ -373,13 +399,14 @@
 
   // ----- botones -----
   undoBtn.addEventListener("click", function () {
+    if (!puedeEditar()) return;
     var removed = stars.pop();
     hidePop();
     save();
     if (removed) sync("remove", removed);
   });
   clearBtn.addEventListener("click", function () {
-    if (stars.length === 0) return;
+    if (stars.length === 0 || !puedeEditar()) return;
     var shared = cloudState === "online" || cloudState === "offline";
     var question = shared
       ? "¿Vaciar el cielo por completo? Se borra para los dos y no se puede deshacer."
@@ -449,6 +476,7 @@
       save();
       if (stars.length > 0) fadeHint();
     },
+    aviso: aviso,
     estado: function (value) {
       cloudState = value;
       updateCounter();

@@ -157,8 +157,13 @@ configuración web en `nube-config.js`. La primera vez que cada dispositivo se
 conecta sube las estrellas que ya tenía; después todo se sincroniza solo. El
 contador indica si el cielo está compartido o sin conexión.
 
-> Cualquiera con el link puede añadir o borrar estrellas en ese cielo (no hay
-> inicio de sesión). Las reglas solo permiten estrellas válidas en ese cielo.
+**Quién puede cambiarlo.** Cualquiera con el link puede mirar el cielo, pero
+solo ustedes dos pueden poner o quitar estrellas, tras pulsar **Iniciar
+sesión** (Google). Las cuentas permitidas se identifican por su UID, en
+`miembros` de `nube-config.js` y en `firestore.rules` (hay que ponerlo en los
+dos sitios y volver a publicar las reglas). Para sumar a alguien: que entre una
+vez con "Iniciar sesión", copia su UID en Firebase → Authentication → Usuarios
+y agrégalo. Todo esto funciona en el plan gratuito (Spark).
 
 ## Vista previa del enlace
 

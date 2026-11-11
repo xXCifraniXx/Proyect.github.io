@@ -17,9 +17,19 @@
 
   "cieloId" es el nombre del cielo de los dos. Si lo cambias, cámbialo
   también en firestore.rules.
+
+  QUIÉN PUEDE CAMBIAR EL CIELO
+  Cualquiera con el link puede mirarlo; poner o quitar estrellas solo pueden
+  las cuentas de Google cuyo UID esté en "miembros" (y en firestore.rules).
+  Para sumar a alguien: que entre una vez con "Iniciar sesión", copia su UID
+  de Firebase → Authentication → Usuarios y pégalo en los dos sitios.
 */
 window.CIELO_CONFIG = {
   cieloId: "nosotros-7f3k9q2m",
+  // UID de las cuentas que pueden poner y quitar estrellas (iguales que en firestore.rules).
+  miembros: [
+    "Wi4gXbDEYTgsft4wiuhOvDLWhjo1" // Jorge
+  ],
   // Proyecto de Firebase "Anthuanete" (app web "jya08").
   firebase: {
     apiKey: "AIzaSyCNP0nIW55Q6bMlBfB4l24V3atesR_N5gI",
