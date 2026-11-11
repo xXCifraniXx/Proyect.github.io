@@ -28,7 +28,8 @@ window.CIELO_CONFIG = {
   cieloId: "nosotros-7f3k9q2m",
   // UID de las cuentas que pueden poner y quitar estrellas (iguales que en firestore.rules).
   miembros: [
-    "Wi4gXbDEYTgsft4wiuhOvDLWhjo1" // Jorge
+    "Wi4gXbDEYTgsft4wiuhOvDLWhjo1", // Jorge
+    "YDRuDgow9kck52TJY4P6ie8sbpe2" // Anthuanete
   ],
   // Proyecto de Firebase "Anthuanete" (app web "jya08").
   firebase: {

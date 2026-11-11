@@ -13,7 +13,8 @@ service cloud.firestore {
     function esMiembro() {
       return request.auth != null
         && request.auth.uid in [
-          "Wi4gXbDEYTgsft4wiuhOvDLWhjo1" // Jorge
+          "Wi4gXbDEYTgsft4wiuhOvDLWhjo1", // Jorge
+          "YDRuDgow9kck52TJY4P6ie8sbpe2" // Anthuanete
         ];
     }
 
