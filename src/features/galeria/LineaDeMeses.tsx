@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { nombreMes, nombreMesCorto } from "../../lib/fechas.ts";
+import { TEXTOS } from "../../lib/contenido.ts";
 
 interface LineaDeMesesProps {
   meses: string[];
@@ -17,7 +18,7 @@ export default function LineaDeMeses({ meses, activo, onElegir }: LineaDeMesesPr
   const estilo = { "--progress": progreso } as CSSProperties;
 
   return (
-    <ol className="timeline-rail" aria-label="Elegir mes" style={estilo}>
+    <ol className="timeline-rail" aria-label={TEXTOS.ariaElegirMes} style={estilo}>
       {meses.map((clave, i) => (
         <li key={clave}>
           <button

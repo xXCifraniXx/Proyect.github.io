@@ -95,7 +95,7 @@ export default function Pastel({ dia, velas }: PastelProps) {
       <div
         className={clsx("cake", restaurado && "is-restored")}
         role="group"
-        aria-label="Pastel de cumpleaños"
+        aria-label={TEXTOS.ariaPastel}
         style={estilo}
       >
         <div className="cake-glow" />

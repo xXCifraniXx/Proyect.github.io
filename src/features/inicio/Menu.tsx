@@ -63,7 +63,7 @@ export default function Menu({ visibles = {} }: MenuProps) {
   ];
 
   return (
-    <nav className="topbar" aria-label="Navegación principal">
+    <nav className="topbar" aria-label={TEXTOS.ariaNavegacion}>
       <a href="#inicio" className="brand">
         Para {NOMBRES.novia}
       </a>
@@ -80,7 +80,7 @@ export default function Menu({ visibles = {} }: MenuProps) {
           <span />
           <span />
         </span>
-        <span>Menú</span>
+        <span>{TEXTOS.menuBoton}</span>
       </button>
       <div ref={panel} className={clsx("nav-links", abierto && "is-open")} id="navLinks">
         {enlaces

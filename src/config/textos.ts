@@ -1,12 +1,11 @@
-import type { Textos } from "../types/config.ts";
-
 /* -------------------------------------------------------------------------
    TEXTOS
    Cada clave es una frase de la página (los componentes la leen por su
    nombre, por ejemplo TEXTOS.heroTitle). Cambiar el texto aquí lo cambia en
-   la página, sin tocar los componentes.
+   la página, sin tocar los componentes. Si un componente usa una clave que
+   no está aquí, TypeScript avisa.
 ------------------------------------------------------------------------- */
-export const textos: Textos = {
+export const textos = {
   // Navegación
   navMes: "Este mes",
   navCarta: "Carta",
@@ -180,5 +179,93 @@ export const textos: Textos = {
   // Cierre
   finalEyebrow: "Para terminar",
   finalPhrase: "Te amo hoy, mañana y siempre.",
-  finalSign: "Con amor, Jorge ❤️"
-};
+  finalSign: "Con amor, Jorge ❤️",
+
+  // ----- Textos que antes estaban escritos dentro de los componentes -----
+  // {fecha}, {nombre}, {correo}, {tiempo} y {n} se reemplazan solos.
+
+  // Accesibilidad (lo leen los lectores de pantalla) y botones
+  ariaBienvenida: "Pantalla de bienvenida",
+  ariaNavegacion: "Navegación principal",
+  menuBoton: "Menú",
+  ariaSobre: "Carta interactiva",
+  ariaSobreBoton: "Abrir o cerrar la carta",
+  ariaGaleria: "Fotos por mes",
+  ariaMesAnterior: "Mes anterior",
+  ariaMesSiguiente: "Mes siguiente",
+  ariaElegirMes: "Elegir mes",
+  ariaCalendario: "Calendario de rotación",
+  ariaLeyendaCalendario: "Leyenda del calendario",
+  ariaPastel: "Pastel de cumpleaños",
+  ariaCartaOculta: "Carta oculta",
+  ariaCartaAbierta: "Carta abierta",
+  ariaCerrarCarta: "Cerrar carta",
+
+  // Cartas (La Bóveda y la ventana de carta)
+  cartaSinTitulo: "Una carta para ti",
+  cartaIcono: "💌",
+  cartaIrAhi: "Ir ahí",
+  bovedaSeAbre: "Se abre el {fecha}",
+  bovedaFaltan: "Faltan {tiempo}",
+  bovedaDesbloqueada: "Desbloqueada el {fecha}",
+
+  // Música
+  musicaSinTitulo: "Nuestra canción",
+  musicaError: "No se pudo reproducir el audio en este navegador.",
+
+  // Rotación de mina (sección Bajada)
+  faseAntesTitulo: "Próxima subida programada",
+  faseAntesTexto: "La rotación empezará el {fecha}.",
+  faseMinaTitulo: "Ahora estás en mina 😿",
+  faseMinaTexto: "La próxima bajada será el {fecha} por la noche. Falta cada vez menos para volver a verte.",
+  faseDescansoTitulo: "Estás en tus días de bajada 😼",
+  faseDescansoTexto: "La próxima subida será el {fecha}. Estos días son para descansar y guardar recuerdos bonitos 💜.",
+  faseEtiquetaSubida: "Próxima subida",
+  faseEtiquetaBajada: "Próxima bajada",
+  diaSube: "Sube",
+  diaMina: "Mina",
+  diaBajada: "Bajada",
+  diaDescanso: "Descanso",
+
+  // Sesión de Google
+  sesionEntrar: "Iniciar sesión",
+  sesionSalir: "Salir",
+  sesionPideEntrar: "Inicia sesión para que el cambio se vea en los dos celulares.",
+  sesionMiembro: "Con sesión de {nombre}: los cambios se guardan para los dos.",
+  sesionNoMiembro: "Con {correo} los cambios se guardan solo en este dispositivo.",
+  sesionEstaCuenta: "esta cuenta",
+  sesionVentanaBloqueada:
+    "El navegador bloqueó la ventana de Google. Permite las ventanas emergentes e inténtalo otra vez.",
+  sesionError: "No se pudo iniciar sesión. Inténtalo otra vez en un momento.",
+
+  // Página del cielo (constelacion/)
+  cieloVolver: "← Volver a la carta",
+  cieloTitulo: "Constelación de nosotros",
+  cieloEntrarTitle: "Entrar con Google para poner estrellas",
+  cieloSalirCon: "Salir ({nombre})",
+  cieloCerrarSesion: "Cerrar sesión",
+  cieloDeshacer: "↶ Deshacer",
+  cieloDeshacerTitle: "Quitar la última estrella",
+  cieloGuardarImagen: "⤓ Guardar imagen",
+  cieloGuardarImagenTitle: "Descargar como imagen",
+  cieloVaciar: "✦ Vaciar cielo",
+  cieloVaciarTitle: "Borrar todo el cielo",
+  cieloPista: "Toca cualquier parte del cielo para poner una estrella y escribir un recuerdo.",
+  cieloConectando: "Conectando con el cielo compartido…",
+  cieloSoloMirar: "Con {correo} puedes mirar el cielo, pero no cambiarlo.",
+  cieloPideEntrar: "Inicia sesión con Google para poner o quitar estrellas ✦",
+  cieloSinPermiso: "Esta cuenta no puede cambiar el cielo. Entra con la cuenta de uno de los dos.",
+  cieloErrorGuardar: "No se pudo guardar en el cielo compartido. Revisa la conexión.",
+  cieloVaciarConfirmarNube: "¿Vaciar el cielo por completo? Se borra para los dos y no se puede deshacer.",
+  cieloVaciarConfirmar: "¿Vaciar el cielo por completo? Esto no se puede deshacer.",
+  cieloVacio: "El cielo está vacío. Empieza por la primera estrella.",
+  cieloUnaEstrella: "{n} estrella en nuestro cielo",
+  cieloEstrellas: "{n} estrellas en nuestro cielo",
+  cieloCompartido: " · compartido ✦",
+  cieloSinConexion: " · sin conexión, se enviará al volver",
+  cieloSinNube: " · sin nube, guardado solo en este dispositivo",
+  cieloPlaceholder: "un recuerdo, una palabra, una fecha…",
+  ariaLienzoCielo: "Lienzo de la constelación",
+  ariaQuitarEstrella: "Quitar esta estrella",
+  estrellaSinNombre: "estrella sin nombre"
+} satisfies Record<string, string>;

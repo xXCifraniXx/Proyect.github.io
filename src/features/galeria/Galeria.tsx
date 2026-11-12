@@ -98,7 +98,7 @@ export default function Galeria() {
           ref={visor}
           className="timeline-viewport"
           tabIndex={0}
-          aria-label="Fotos por mes"
+          aria-label={TEXTOS.ariaGaleria}
           onScroll={alDeslizar}
           onKeyDown={alPulsarTecla}
         >
@@ -122,7 +122,7 @@ export default function Galeria() {
           <button
             className="carousel-btn prev"
             type="button"
-            aria-label="Mes anterior"
+            aria-label={TEXTOS.ariaMesAnterior}
             disabled={activo <= 0}
             onClick={() => irA(activo - 1)}
           >
@@ -132,7 +132,7 @@ export default function Galeria() {
           <button
             className="carousel-btn next"
             type="button"
-            aria-label="Mes siguiente"
+            aria-label={TEXTOS.ariaMesSiguiente}
             disabled={activo >= meses.length - 1}
             onClick={() => irA(activo + 1)}
           >

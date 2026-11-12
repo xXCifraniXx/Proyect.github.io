@@ -19,7 +19,7 @@ export default function Boveda() {
       <CabeceraSeccion etiqueta={TEXTOS.bovedaEyebrow} titulo={TEXTOS.bovedaTitle} intro={TEXTOS.bovedaIntro} />
       <div className="boveda-grid">
         {CARTAS_BOVEDA.length === 0 ? (
-          <p className="boveda-empty">{TEXTOS.bovedaEmpty || "Pronto habrá cartas esperándote aquí 💌"}</p>
+          <p className="boveda-empty">{TEXTOS.bovedaEmpty}</p>
         ) : (
           CARTAS_BOVEDA.map((item, i) => <TarjetaBoveda key={item.id} item={item} ahora={ahora} indice={i} />)
         )}

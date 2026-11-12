@@ -106,7 +106,7 @@ export function textosConCumple(base: Textos): Textos {
   const occ = ocurrencia();
   if (!occ) return base;
   const merged = occ.estado === "hoy" ? { ...base, ...(config()?.textosHoy ?? {}) } : base;
-  return Object.fromEntries(Object.entries(merged).map(([key, value]) => [key, fill(value, occ)]));
+  return Object.fromEntries(Object.entries(merged).map(([key, value]) => [key, fill(value, occ)])) as Textos;
 }
 
 /** Carta que se suma a La Bóveda, con la fecha del cumpleaños de este año. */

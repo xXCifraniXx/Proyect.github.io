@@ -1,5 +1,7 @@
 import { clsx } from "clsx";
 import type { Sesion } from "../sesion/index.ts";
+import { textos } from "../../config/textos.ts";
+import { rellenar } from "../../lib/rellenar.ts";
 
 interface BarraCieloProps {
   /** null si el cielo no usa Firebase (entonces no hay botón de sesión). */
@@ -28,35 +30,39 @@ export default function BarraCielo({
     <header className="topbar">
       <div className="title-wrap">
         <a className="back-link" href="../index.html">
-          ← Volver a la carta
+          {textos.cieloVolver}
         </a>
-        <h1>Constelación de nosotros</h1>
+        <h1>{textos.cieloTitulo}</h1>
       </div>
       <div className="actions">
         {sesion?.lista && (
           <button
             type="button"
             className={clsx("chip", !usuario && resaltarSesion && "primary")}
-            title={usuario ? (usuario.email ?? "") : "Entrar con Google para poner estrellas"}
+            title={usuario ? (usuario.email ?? "") : textos.cieloEntrarTitle}
             onClick={() => void (usuario ? sesion.salir() : sesion.entrar())}
           >
-            {usuario ? (nombre ? `Salir (${nombre})` : "Cerrar sesión") : "Iniciar sesión"}
+            {usuario
+              ? nombre
+                ? rellenar(textos.cieloSalirCon, { nombre })
+                : textos.cieloCerrarSesion
+              : textos.sesionEntrar}
           </button>
         )}
         <button
           type="button"
           className="chip"
-          title="Quitar la última estrella"
+          title={textos.cieloDeshacerTitle}
           disabled={!puedeDeshacer}
           onClick={onDeshacer}
         >
-          ↶ Deshacer
+          {textos.cieloDeshacer}
         </button>
-        <button type="button" className="chip" title="Descargar como imagen" onClick={onDescargar}>
-          ⤓ Guardar imagen
+        <button type="button" className="chip" title={textos.cieloGuardarImagenTitle} onClick={onDescargar}>
+          {textos.cieloGuardarImagen}
         </button>
-        <button type="button" className="chip danger" title="Borrar todo el cielo" onClick={onVaciar}>
-          ✦ Vaciar cielo
+        <button type="button" className="chip danger" title={textos.cieloVaciarTitle} onClick={onVaciar}>
+          {textos.cieloVaciar}
         </button>
       </div>
     </header>

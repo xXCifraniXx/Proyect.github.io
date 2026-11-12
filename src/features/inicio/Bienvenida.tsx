@@ -17,7 +17,7 @@ export default function Bienvenida({ onEntrar }: BienvenidaProps) {
   };
 
   return (
-    <section className={clsx("welcome", oculta && "hide")} id="welcome" aria-label="Pantalla de bienvenida">
+    <section className={clsx("welcome", oculta && "hide")} id="welcome" aria-label={TEXTOS.ariaBienvenida}>
       <div className="welcome-card glass reveal-now">
         <span className="eyebrow">{TEXTOS.welcomeEyebrow}</span>
         <h1>{TEXTOS.welcomeTitle}</h1>

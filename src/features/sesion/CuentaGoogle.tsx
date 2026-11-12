@@ -1,4 +1,6 @@
 import type { Sesion } from "./useSesion.ts";
+import { TEXTOS } from "../../lib/contenido.ts";
+import { rellenar } from "../../lib/rellenar.ts";
 
 interface CuentaGoogleProps {
   sesion: Sesion;
@@ -10,15 +12,15 @@ export default function CuentaGoogle({ sesion }: CuentaGoogleProps) {
   const { usuario, miembro } = sesion;
   const nombre = (usuario?.displayName || usuario?.email || "").split(" ")[0];
 
-  let texto = "Inicia sesión para que el cambio se vea en los dos celulares.";
-  if (usuario && miembro) texto = `Con sesión de ${nombre}: los cambios se guardan para los dos.`;
-  else if (usuario) texto = `Con ${usuario.email || "esta cuenta"} los cambios se guardan solo en este dispositivo.`;
+  let texto = TEXTOS.sesionPideEntrar;
+  if (usuario && miembro) texto = rellenar(TEXTOS.sesionMiembro, { nombre });
+  else if (usuario) texto = rellenar(TEXTOS.sesionNoMiembro, { correo: usuario.email || TEXTOS.sesionEstaCuenta });
 
   return (
     <div className="roster-editor-account">
       <span>{sesion.error ?? texto}</span>
       <button type="button" className="btn btn-ghost" onClick={() => void (usuario ? sesion.salir() : sesion.entrar())}>
-        {usuario ? "Salir" : "Iniciar sesión"}
+        {usuario ? TEXTOS.sesionSalir : TEXTOS.sesionEntrar}
       </button>
     </div>
   );

@@ -3,6 +3,8 @@ import { useEffect, useRef, type MouseEvent } from "react";
 import { useTextoCarta } from "../../hooks/useTextoCarta.ts";
 import type { CartaAbierta } from "./boveda.ts";
 import { formatoFechaLarga } from "../../lib/fechas.ts";
+import { TEXTOS } from "../../lib/contenido.ts";
+import { rellenar } from "../../lib/rellenar.ts";
 
 interface VentanaCartaProps {
   /** La carta a mostrar, o null si la ventana está cerrada. */
@@ -47,23 +49,31 @@ export default function VentanaCarta({ abierta, onCerrar }: VentanaCartaProps) {
       aria-hidden={!abierta}
       role="dialog"
       aria-modal="true"
-      aria-label="Carta abierta"
+      aria-label={TEXTOS.ariaCartaAbierta}
       onClick={(e) => {
         if (e.target === e.currentTarget) onCerrar();
       }}
     >
       {abierta && (
         <div className="lightbox-card boveda-modal-card">
-          <button ref={cerrar} className="lightbox-close" type="button" aria-label="Cerrar carta" onClick={onCerrar}>
+          <button
+            ref={cerrar}
+            className="lightbox-close"
+            type="button"
+            aria-label={TEXTOS.ariaCerrarCarta}
+            onClick={onCerrar}
+          >
             ×
           </button>
-          <span className="boveda-modal-icon">{abierta.carta.icono || "💌"}</span>
-          <span className="boveda-modal-date">Desbloqueada el {formatoFechaLarga(abierta.fecha)}</span>
-          <h3>{abierta.carta.titulo || "Una carta para ti"}</h3>
+          <span className="boveda-modal-icon">{abierta.carta.icono || TEXTOS.cartaIcono}</span>
+          <span className="boveda-modal-date">
+            {rellenar(TEXTOS.bovedaDesbloqueada, { fecha: formatoFechaLarga(abierta.fecha) })}
+          </span>
+          <h3>{abierta.carta.titulo || TEXTOS.cartaSinTitulo}</h3>
           <p>{texto}</p>
           {accion && (
             <a className="btn btn-primary" href={`#${accion.destino}`} onClick={irA}>
-              {accion.etiqueta || "Ir ahí"}
+              {accion.etiqueta || TEXTOS.cartaIrAhi}
             </a>
           )}
         </div>

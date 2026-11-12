@@ -3,6 +3,8 @@ import { useTextoCarta } from "../../hooks/useTextoCarta.ts";
 import type { CartaBoveda } from "./boveda.ts";
 import { useVentanaCarta } from "./ventanaCarta.ts";
 import { formatoFechaLarga } from "../../lib/fechas.ts";
+import { TEXTOS } from "../../lib/contenido.ts";
+import { rellenar } from "../../lib/rellenar.ts";
 
 interface TarjetaBovedaAbiertaProps {
   item: CartaBoveda;
@@ -34,10 +36,12 @@ export default function TarjetaBovedaAbierta({ item, estilo }: TarjetaBovedaAbie
         }
       }}
     >
-      <span className="boveda-icon">{item.carta.icono || "💌"}</span>
-      <h3>{item.carta.titulo || "Una carta para ti"}</h3>
+      <span className="boveda-icon">{item.carta.icono || TEXTOS.cartaIcono}</span>
+      <h3>{item.carta.titulo || TEXTOS.cartaSinTitulo}</h3>
       <p>{adelanto}</p>
-      <span className="boveda-date">Desbloqueada el {formatoFechaLarga(item.fecha)}</span>
+      <span className="boveda-date">
+        {rellenar(TEXTOS.bovedaDesbloqueada, { fecha: formatoFechaLarga(item.fecha) })}
+      </span>
     </article>
   );
 }

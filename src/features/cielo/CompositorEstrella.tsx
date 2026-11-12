@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { MAX_ETIQUETA } from "./estrellas.ts";
+import { textos } from "../../config/textos.ts";
 
 interface CompositorEstrellaProps {
   onGuardar: (etiqueta: string) => void;
@@ -15,7 +16,7 @@ export default function CompositorEstrella({ onGuardar, onCancelar }: Compositor
       <input
         type="text"
         maxLength={MAX_ETIQUETA}
-        placeholder="un recuerdo, una palabra, una fecha…"
+        placeholder={textos.cieloPlaceholder}
         autoComplete="off"
         autoFocus
         value={texto}

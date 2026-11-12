@@ -31,7 +31,7 @@ export default function TarjetaMes({ clave, foto, inclinacion, activa, onElegir,
             <span className="timeline-empty-icon" aria-hidden="true">
               🖼️
             </span>
-            <p>{TEXTOS.timelineEmpty || "La foto de este mes está por llegar 💜"}</p>
+            <p>{TEXTOS.timelineEmpty}</p>
           </>
         )}
       </div>

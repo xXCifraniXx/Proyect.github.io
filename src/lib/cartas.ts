@@ -15,7 +15,7 @@ export async function textoDeCarta(carta: CartaConEdad): Promise<string> {
     try {
       texto = await abrirSello(carta.mensajeSellado);
     } catch {
-      texto = TEXTOS.bovedaSelloError || "No se pudo abrir esta carta en este navegador.";
+      texto = TEXTOS.bovedaSelloError;
     }
   }
   return carta.edad != null ? texto.split("{edad}").join(String(carta.edad)) : texto;

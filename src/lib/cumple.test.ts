@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { Config } from "../types/config.ts";
+import type { Config, Textos } from "../types/config.ts";
 
 // El contenido real se reemplaza por uno de prueba que cada test puede cambiar.
 const prueba = vi.hoisted(() => ({ CONFIG: {} as Config }));
@@ -18,7 +18,7 @@ const CONFIG_PRUEBA: Config = {
     carta: { fecha: "", titulo: "Tus {edad} años", mensajeSellado: "v1.a.b.c" },
     textosHoy: { welcomeTitle: "¡Feliz cumpleaños! Cumples {edad}" }
   }
-} as Config;
+} as unknown as Config;
 
 const en = (fecha: string) => vi.setSystemTime(new Date(fecha));
 
@@ -67,12 +67,13 @@ describe("ocurrencia", () => {
 describe("textosConCumple", () => {
   it("el día del cumpleaños usa textosHoy y reemplaza {edad}", () => {
     en("2026-10-11T10:00:00");
-    expect(textosConCumple({ welcomeTitle: "Hola" }).welcomeTitle).toBe("¡Feliz cumpleaños! Cumples 27");
+    expect(textosConCumple({ welcomeTitle: "Hola" } as Textos).welcomeTitle).toBe("¡Feliz cumpleaños! Cumples 27");
   });
 
   it("fuera del cumpleaños deja los textos como están", () => {
     en("2027-02-01T10:00:00");
-    const base = { welcomeTitle: "Hola {edad}" };
+    // Solo importa una frase; el resto de las claves no hace falta en la prueba.
+    const base = { welcomeTitle: "Hola {edad}" } as Textos;
     expect(textosConCumple(base)).toBe(base);
   });
 });

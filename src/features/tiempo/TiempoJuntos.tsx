@@ -40,7 +40,7 @@ export default function TiempoJuntos() {
         <div className="return-card glass-soft">
           <div>
             <span className="eyebrow small">{TEXTOS.countdownEyebrow}</span>
-            <h3>{TEXTOS.returnTitle || "Para volver a verte"}</h3>
+            <h3>{TEXTOS.returnTitle}</h3>
             <p>{TEXTOS.returnText}</p>
           </div>
           <CuentaRegresiva objetivo={REGRESO} ahora={ahora} className="return-grid" />

@@ -7,6 +7,8 @@
   patrón se repite desde esa fecha en adelante.
 */
 import type { RotacionMina } from "../../types/config.ts";
+import { textos } from "../../config/textos.ts";
+import { rellenar } from "../../lib/rellenar.ts";
 import { claveDia, diasCalendario, fechaSinAnio, inicioDelDia, pad2, sumarDias } from "../../lib/fechas.ts";
 
 /** Lo que se guarda al ajustar las bajadas desde la página. */
@@ -157,24 +159,24 @@ export function faseActual(rot: Rotacion, ahora: Date): Fase | null {
 
   if (ahora < c.inicio) {
     return {
-      titulo: "Próxima subida programada",
-      texto: `La rotación empezará el ${fechaSinAnio(c.inicio)}.`,
-      etiqueta: "Próxima subida",
+      titulo: textos.faseAntesTitulo,
+      texto: rellenar(textos.faseAntesTexto, { fecha: fechaSinAnio(c.inicio) }),
+      etiqueta: textos.faseEtiquetaSubida,
       objetivo: c.inicio
     };
   }
   if (ahora < c.bajada) {
     return {
-      titulo: "Ahora estás en mina 😿",
-      texto: `La próxima bajada será el ${fechaSinAnio(c.bajada)} por la noche. Falta cada vez menos para volver a verte.`,
-      etiqueta: "Próxima bajada",
+      titulo: textos.faseMinaTitulo,
+      texto: rellenar(textos.faseMinaTexto, { fecha: fechaSinAnio(c.bajada) }),
+      etiqueta: textos.faseEtiquetaBajada,
       objetivo: c.bajada
     };
   }
   return {
-    titulo: "Estás en tus días de bajada 😼",
-    texto: `La próxima subida será el ${fechaSinAnio(c.siguienteInicio)}. Estos días son para descansar y guardar recuerdos bonitos 💜.`,
-    etiqueta: "Próxima subida",
+    titulo: textos.faseDescansoTitulo,
+    texto: rellenar(textos.faseDescansoTexto, { fecha: fechaSinAnio(c.siguienteInicio) }),
+    etiqueta: textos.faseEtiquetaSubida,
     objetivo: c.siguienteInicio
   };
 }
@@ -184,8 +186,8 @@ export function tipoDeDia(rot: Rotacion, dia: Date): { tipo: TipoDia; etiqueta: 
   const diff = diasCalendario(rot.baseDia, dia);
   if (diff < 0) return { tipo: "none", etiqueta: "" };
   const indice = ((diff % rot.diasCiclo) + rot.diasCiclo) % rot.diasCiclo;
-  if (indice === 0) return { tipo: "departure mine", etiqueta: "Sube" };
-  if (indice < rot.diasMina) return { tipo: "mine", etiqueta: "Mina" };
-  if (indice === rot.diasMina) return { tipo: "return", etiqueta: "Bajada" };
-  return { tipo: "rest", etiqueta: "Descanso" };
+  if (indice === 0) return { tipo: "departure mine", etiqueta: textos.diaSube };
+  if (indice < rot.diasMina) return { tipo: "mine", etiqueta: textos.diaMina };
+  if (indice === rot.diasMina) return { tipo: "return", etiqueta: textos.diaBajada };
+  return { tipo: "rest", etiqueta: textos.diaDescanso };
 }

@@ -5,13 +5,14 @@
   los textos vigentes (con los del cumpleaños, si toca) y los nombres.
 */
 import { CONFIG } from "../config/index.ts";
+import { textos } from "../config/textos.ts";
 import type { Textos } from "../types/config.ts";
 import { textosConCumple } from "./cumple.ts";
 
 export { CONFIG };
 
 // Textos vigentes: el día del cumpleaños algunos se reemplazan (ver cumple.ts).
-export const TEXTOS: Textos = textosConCumple(CONFIG.textos ?? {});
+export const TEXTOS: Textos = textosConCumple(CONFIG.textos ?? textos);
 
 export const NOMBRES = {
   novia: CONFIG.nombres?.novia || "Anthuanete",

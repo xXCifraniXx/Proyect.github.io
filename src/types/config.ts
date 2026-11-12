@@ -5,8 +5,13 @@
   conozca.
 */
 
-/** Todas las frases del sitio, por clave (welcomeTitle, navCarta…). */
-export type Textos = Record<string, string>;
+import type { textos } from "../config/textos.ts";
+
+/** Nombre de cada frase del sitio (welcomeTitle, navCarta…), sacado de src/config/textos.ts. */
+export type ClaveTexto = keyof typeof textos;
+
+/** Todas las frases del sitio, por clave. */
+export type Textos = Record<ClaveTexto, string>;
 
 export interface Nombres {
   novia?: string;
@@ -79,7 +84,7 @@ export interface Cumpleanos {
   velas?: number;
   carta?: Omit<Carta, "fecha">;
   /** Frases que reemplazan a las normales el día del cumpleaños. */
-  textosHoy?: Textos;
+  textosHoy?: Partial<Textos>;
 }
 
 export interface Opciones {

@@ -1,4 +1,5 @@
 import { clsx } from "clsx";
+import { TEXTOS } from "../../lib/contenido.ts";
 interface CartaMemoriaProps {
   simbolo: string;
   volteada: boolean;
@@ -10,7 +11,12 @@ interface CartaMemoriaProps {
 export default function CartaMemoria({ simbolo, volteada, emparejada, onVoltear }: CartaMemoriaProps) {
   const clases = clsx("memory-card", volteada && "is-flipped", emparejada && "is-matched");
   return (
-    <button className={clases} type="button" aria-label={volteada ? simbolo : "Carta oculta"} onClick={onVoltear}>
+    <button
+      className={clases}
+      type="button"
+      aria-label={volteada ? simbolo : TEXTOS.ariaCartaOculta}
+      onClick={onVoltear}
+    >
       <span className="memory-card-inner">
         <span className="memory-face memory-front">✦</span>
         <span className="memory-face memory-back">{simbolo}</span>

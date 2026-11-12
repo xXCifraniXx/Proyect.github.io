@@ -51,7 +51,7 @@ export default function EditorBajadas({
 
   const guardar = (ajuste: AjusteBajadas) => {
     if (Number.isNaN(new Date(`${ajuste.proximaBajada}T00:00:00`).getTime())) {
-      avisar(TEXTOS.rosterEditorInvalidMsg || "Elige una fecha válida.");
+      avisar(TEXTOS.rosterEditorInvalidMsg);
       return;
     }
     void ejecutar(() => onGuardar(ajuste));

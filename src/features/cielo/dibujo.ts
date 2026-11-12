@@ -5,6 +5,7 @@
   animado y la imagen que se descarga.
 */
 import type { Estrella } from "./estrellas.ts";
+import { textos } from "../../config/textos.ts";
 
 /** Estrellitas de fondo (no se guardan). */
 export interface Polvo {
@@ -174,7 +175,7 @@ export function descargarImagen(estrellas: Estrella[], ancho: number, alto: numb
   ctx.fillStyle = "rgba(255,248,251,0.85)";
   ctx.textAlign = "left";
   ctx.textBaseline = "alphabetic";
-  ctx.fillText("Constelación de nosotros", 20, alto - 20);
+  ctx.fillText(textos.cieloTitulo, 20, alto - 20);
 
   const enlace = document.createElement("a");
   enlace.download = "constelacion-de-nosotros.png";

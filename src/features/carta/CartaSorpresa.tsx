@@ -12,7 +12,7 @@ export default function CartaSorpresa() {
       <CabeceraSeccion etiqueta={TEXTOS.cartaEyebrow} titulo={TEXTOS.cartaTitle} intro={TEXTOS.cartaIntro} />
       <div className="surprise-card glass-soft">
         <button className="btn btn-primary" type="button" aria-expanded={visible} onClick={() => setVisible((v) => !v)}>
-          {visible ? TEXTOS.surpriseClose || "Ocultar mensaje 💌" : TEXTOS.surpriseOpen || "Ver mensaje sorpresa 💗"}
+          {visible ? TEXTOS.surpriseClose : TEXTOS.surpriseOpen}
         </button>
         <p className={clsx("surprise-message", visible && "show")}>{TEXTOS.surpriseMessage}</p>
       </div>

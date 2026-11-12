@@ -1,6 +1,7 @@
 import { useEffect, useRef, type PointerEvent, type RefObject } from "react";
 import { crearPolvo, dibujarConstelacion, dibujarFondo, dibujarPolvo, type Polvo } from "./dibujo.ts";
 import type { Estrella } from "./estrellas.ts";
+import { textos } from "../../config/textos.ts";
 
 const RADIO_TOQUE = 26; // px de tolerancia para tocar una estrella existente
 const MOVIMIENTO_MAX = 10; // px: si el dedo se mueve más que esto, no es un toque
@@ -165,7 +166,7 @@ export default function LienzoCielo({
     <canvas
       ref={lienzo}
       id="sky"
-      aria-label="Lienzo de la constelación"
+      aria-label={textos.ariaLienzoCielo}
       onPointerDown={alBajar}
       onPointerMove={alMover}
       onPointerUp={alSoltar}

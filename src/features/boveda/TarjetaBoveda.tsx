@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import type { CartaBoveda } from "./boveda.ts";
 import { TEXTOS } from "../../lib/contenido.ts";
 import { formatoFechaLarga, tiempoEntre } from "../../lib/fechas.ts";
+import { rellenar } from "../../lib/rellenar.ts";
 import TarjetaBovedaAbierta from "./TarjetaBovedaAbierta.tsx";
 
 interface TarjetaBovedaProps {
@@ -24,9 +25,9 @@ export default function TarjetaBoveda({ item, ahora, indice }: TarjetaBovedaProp
   return (
     <article className="boveda-card glass-soft is-locked" style={estilo}>
       <span className="boveda-icon">🔒</span>
-      <h3>{TEXTOS.bovedaLockedTitle || "Carta sellada"}</h3>
-      <p className="boveda-lock-note">Se abre el {formatoFechaLarga(item.fecha)}</p>
-      <span className="boveda-date">Faltan {partes.join(" ")}</span>
+      <h3>{TEXTOS.bovedaLockedTitle}</h3>
+      <p className="boveda-lock-note">{rellenar(TEXTOS.bovedaSeAbre, { fecha: formatoFechaLarga(item.fecha) })}</p>
+      <span className="boveda-date">{rellenar(TEXTOS.bovedaFaltan, { tiempo: partes.join(" ") })}</span>
     </article>
   );
 }
