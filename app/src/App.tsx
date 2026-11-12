@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Bajadas from "./components/Bajadas.tsx";
 import Bienvenida from "./components/Bienvenida.tsx";
+import Boveda from "./components/Boveda.tsx";
 import CartaSorpresa from "./components/CartaSorpresa.tsx";
 import Cumpleanos from "./components/Cumpleanos.tsx";
 import Fondo from "./components/Fondo.tsx";
@@ -11,8 +12,10 @@ import type { EnlacesVisibles } from "./components/Menu.tsx";
 import Musica from "./components/Musica.tsx";
 import ProgresoScroll from "./components/ProgresoScroll.tsx";
 import TiempoJuntos from "./components/TiempoJuntos.tsx";
+import VentanaCarta from "./components/VentanaCarta.tsx";
+import { CARTA_CUMPLE, type CartaAbierta, type CartaBoveda } from "./lib/boveda.ts";
 import { celebrar } from "./lib/confeti.ts";
-import { ocurrencia } from "./lib/cumple.ts";
+import { ahora, ocurrencia } from "./lib/cumple.ts";
 import { mensajeMesVigente } from "./lib/mensajeMes.ts";
 
 /*
@@ -36,7 +39,21 @@ export default function App() {
     if (esHoy) setTimeout(celebrar, 300);
   };
 
-  const seccionCumple = cumple && <Cumpleanos ocurrencia={cumple} />;
+  // Una sola ventana de carta para La Bóveda y el pastel de cumpleaños.
+  const [abierta, setAbierta] = useState<CartaAbierta | null>(null);
+  const abrirCarta = useCallback((carta: CartaAbierta) => {
+    // Nunca se abre una carta antes de su fecha, venga de donde venga.
+    if (carta.fecha > ahora()) return;
+    setAbierta(carta);
+  }, []);
+  const cerrarCarta = useCallback(() => setAbierta(null), []);
+  const abrirDesdeBoveda = useCallback((item: CartaBoveda, texto: string) => abrirCarta({ ...item, texto }), [abrirCarta]);
+  // Desde el pastel se abre sin el botón "Ir a soplar mis velas", que ya no tendría sentido.
+  // (Copia local: así TypeScript sabe que dentro de la función no es null.)
+  const cartaCumple = CARTA_CUMPLE;
+  const abrirCartaCumple = cartaCumple ? () => abrirCarta({ ...cartaCumple, sinAccion: true }) : undefined;
+
+  const seccionCumple = cumple && <Cumpleanos ocurrencia={cumple} onAbrirCarta={abrirCartaCumple} />;
 
   return (
     <>
@@ -54,9 +71,11 @@ export default function App() {
           <TiempoJuntos />
           <Bajadas />
           <Musica />
+          <Boveda onAbrir={abrirDesdeBoveda} />
           {!esHoy && seccionCumple}
         </main>
       </div>
+      <VentanaCarta abierta={abierta} onCerrar={cerrarCarta} />
     </>
   );
 }

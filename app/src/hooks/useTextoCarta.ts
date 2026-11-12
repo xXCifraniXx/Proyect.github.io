@@ -6,17 +6,19 @@ import { textoDeCarta, type CartaConEdad } from "../lib/cartas.ts";
  * Devuelve null mientras se abre el sello (o si no hay carta).
  */
 export function useTextoCarta(carta: CartaConEdad | null): string | null {
-  const [texto, setTexto] = useState<string | null>(null);
+  // Se guarda de qué carta es el texto: si cambia la carta, no se muestra
+  // ni por un instante el texto de la anterior.
+  const [resultado, setResultado] = useState<{ carta: CartaConEdad; texto: string } | null>(null);
 
   useEffect(() => {
     if (!carta) return undefined;
     // Si la carta cambia antes de terminar, se ignora el resultado viejo.
     let vigente = true;
-    void textoDeCarta(carta).then((resultado) => {
-      if (vigente) setTexto(resultado);
+    void textoDeCarta(carta).then((texto) => {
+      if (vigente) setResultado({ carta, texto });
     });
     return () => { vigente = false; };
   }, [carta]);
 
-  return carta ? texto : null;
+  return carta && resultado?.carta === carta ? resultado.texto : null;
 }

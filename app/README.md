@@ -58,8 +58,7 @@ nueva en `config.js`, súmala en `src/types/config.ts`.
 - [x] Fase 2: mensaje del mes (cartas selladas en TypeScript), sección Carta y galería de fotos
 - [x] Fase 3: tiempo juntos, calendario de bajadas y ajuste compartido con Firebase (npm)
 - [x] Fase 4: música, cumpleaños (antes, hoy y después) y confeti
-- [ ] Al pasar La Bóveda: conectar "Abrir mi carta" del pastel con la carta de cumpleaños
-- [ ] La Bóveda (cartas selladas)
+- [x] Fase 5: La Bóveda (cartas selladas, ventana de carta compartida con el pastel)
 - [ ] Constelación (con Firebase)
 - [ ] Minijuego y cierre
 - [ ] Publicar con GitHub Actions en el mismo link
