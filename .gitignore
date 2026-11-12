@@ -10,14 +10,14 @@ Thumbs.db
 # Logs
 *.log
 
-# Dependencias (no se usan en el sitio publicado)
+# Dependencias
 node_modules/
 
 # Ajustes locales del asistente
 .claude/settings.local.json
 
-# Compilado de la versión React
-app/dist/
+# Sitio compilado (lo genera npm run build)
+dist/
 
 # Instrucciones locales para Claude Code (nunca se suben)
 CLAUDE.md

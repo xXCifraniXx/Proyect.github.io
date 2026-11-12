@@ -2,15 +2,9 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "static",
-      "runtimeExecutable": "node",
-      "runtimeArgs": ["herramientas/servidor-local.js", "4173"],
-      "port": 4173
-    },
-    {
-      "name": "react",
+      "name": "dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "app", "run", "dev"],
+      "runtimeArgs": ["run", "dev"],
       "port": 5173,
       "url": "http://localhost:5173"
     }

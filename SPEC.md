@@ -76,7 +76,8 @@ Las secciones aparecen suavemente la primera vez que entran en pantalla.
 ### 1.5 Herramienta (`herramientas/sellar-carta.html`)
 
 Página para Jorge: **sellar** un texto y **abrir** un sello existente, con el
-mismo formato que la página (2.2).
+mismo formato que la página (2.2). Usa el mismo `src/lib/sello.ts` que el
+sitio y se publica en la misma ruta.
 
 ---
 
@@ -149,7 +150,7 @@ mina y de descanso (1–60) y hora de regreso.
 **Cifrado** (debe seguir siendo compatible):
 
 - AES-GCM de 256 bits; clave derivada con PBKDF2-SHA-256, **150.000**
-  iteraciones, desde la constante `CLAVE` de `sello.js` / `sello.ts`, que
+  iteraciones, desde la constante `CLAVE` de `src/lib/sello.ts`, que
   **no se cambia**.
 - Sal aleatoria de 16 bytes y IV de 12 bytes.
 - Formato: `"v1.<sal>.<iv>.<datos>"`, en base64.
@@ -337,9 +338,10 @@ del cumpleaños, de La Bóveda y del mensaje del mes.
 
 ## 3. Contrato de datos
 
-Hoy en `assets/js/config.js` (`window.APP_CONFIG`) y
-`assets/js/nube-config.js` (`window.CIELO_CONFIG`). Tipos en
-`app/src/types/config.ts`. Las fechas son `"AAAA-MM-DDTHH:MM:SS"` en hora
+El contenido está en `src/config/` (`textos.ts`, `meses.ts`, `boveda.ts`,
+`cumpleanos.ts`, `general.ts`), unido en `CONFIG` por `src/config/index.ts`;
+Firebase en `src/config/firebase.ts` (`NUBE`). Las fotos y la canción, en
+`public/assets/`. Tipos en `src/types/config.ts`. Las fechas son `"AAAA-MM-DDTHH:MM:SS"` en hora
 local.
 
 ```ts
