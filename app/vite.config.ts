@@ -26,8 +26,12 @@ const TIPOS: Record<string, string> = {
   ".mp3": "audio/mpeg"
 };
 
+// Archivos del sitio actual que se publican tal cual, en la misma ruta: la
+// herramienta para sellar cartas (SPEC.md 1.5) y el sello.js que usa.
+const COPIAS_TAL_CUAL = ["herramientas/sellar-carta.html", "assets/js/sello.js"];
+
 // En desarrollo sirve assets/images y assets/audio del sitio actual; al
-// compilar los copia dentro de dist/assets.
+// compilar los copia dentro de dist/assets, junto con COPIAS_TAL_CUAL.
 function mediosDelSitio(): Plugin {
   return {
     name: "medios-del-sitio",
@@ -50,6 +54,9 @@ function mediosDelSitio(): Plugin {
         cpSync(resolve(raiz, "assets", carpeta), resolve(import.meta.dirname, "dist", "assets", carpeta), {
           recursive: true
         });
+      }
+      for (const archivo of COPIAS_TAL_CUAL) {
+        cpSync(resolve(raiz, archivo), resolve(import.meta.dirname, "dist", archivo));
       }
     }
   };

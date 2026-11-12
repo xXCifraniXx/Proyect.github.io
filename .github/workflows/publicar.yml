@@ -1,0 +1,67 @@
+# PUBLICAR
+# Cada vez que algo llega a main: revisa (calidad.yml), compila la versión
+# React y la publica en GitHub Pages, en el mismo link de siempre
+# (https://xxcifranixx.github.io/Proyect.github.io/).
+#
+# Requiere en GitHub: Settings → Pages → Source = "GitHub Actions".
+# También se puede lanzar a mano desde la pestaña Actions.
+name: Publicar
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Una publicación a la vez; si llegan dos seguidas, la segunda espera.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  calidad:
+    uses: ./.github/workflows/calidad.yml
+
+  compilar:
+    name: Compilar
+    needs: calidad
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Compilar
+        run: npm run build
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: app/dist
+
+  publicar:
+    name: Publicar en GitHub Pages
+    needs: compilar
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.publicacion.outputs.page_url }}
+    steps:
+      - id: publicacion
+        uses: actions/deploy-pages@v5
