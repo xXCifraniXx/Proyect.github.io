@@ -57,7 +57,14 @@ export default defineConfig({
   build: {
     // Firestore (con actualizaciones en vivo) pesa ~580 kB; se carga aparte y
     // solo cuando una sección lo usa, así que no afecta la primera carga.
-    chunkSizeWarningLimit: 700
+    chunkSizeWarningLimit: 700,
+    // Dos páginas: la carta (index.html) y el cielo (constelacion/index.html).
+    rollupOptions: {
+      input: {
+        principal: resolve(import.meta.dirname, "index.html"),
+        constelacion: resolve(import.meta.dirname, "constelacion/index.html")
+      }
+    }
   },
   server: {
     port: 5173,

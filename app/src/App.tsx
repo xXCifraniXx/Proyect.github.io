@@ -3,6 +3,7 @@ import Bajadas from "./components/Bajadas.tsx";
 import Bienvenida from "./components/Bienvenida.tsx";
 import Boveda from "./components/Boveda.tsx";
 import CartaSorpresa from "./components/CartaSorpresa.tsx";
+import Constelacion from "./components/Constelacion.tsx";
 import Cumpleanos from "./components/Cumpleanos.tsx";
 import Fondo from "./components/Fondo.tsx";
 import Galeria from "./components/Galeria.tsx";
@@ -73,6 +74,7 @@ export default function App() {
           <Musica />
           <Boveda onAbrir={abrirDesdeBoveda} />
           {!esHoy && seccionCumple}
+          <Constelacion />
         </main>
       </div>
       <VentanaCarta abierta={abierta} onCerrar={cerrarCarta} />

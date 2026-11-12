@@ -22,7 +22,7 @@ Solo revisar los tipos: `npm run typecheck`.
 Para no duplicar nada durante la migración, lee directamente:
 
 - `../assets/js/config.js` — todo el contenido (textos, fechas, fotos, cartas).
-- `../assets/css/styles.css` — los estilos.
+- `../assets/css/styles.css` y `../constelacion/estrellas.css` — los estilos.
 - `../assets/js/nube-config.js` — el proyecto de Firebase y quiénes pueden cambiar cosas.
 - `../assets/images` y `../assets/audio` — fotos y canción (Vite las sirve en
   desarrollo y las copia a `dist/` al compilar; ver `vite.config.ts`).
@@ -40,11 +40,14 @@ Un componente por archivo `.tsx`, con el mismo nombre que el componente.
 
 ```text
 src/
-├── main.tsx            Arranque: estilos, título y <App />
+├── main.tsx            Arranque de la página principal
+├── constelacion/main.tsx  Arranque de la página del cielo (constelacion/index.html)
 ├── App.tsx             La página: junta todas las secciones
 ├── components/         Un componente por archivo (Bienvenida.tsx, Menu.tsx…)
+│   └── cielo/          Componentes de la página del cielo
 ├── hooks/              Lógica de React reutilizable (useAhora, useSesion, useAjusteCompartido…)
 ├── lib/                Cálculos sin pantalla (contenido, fechas, sello de cartas, cumpleaños…)
+│   └── cielo/          Estrellas, dibujo del cielo y subida inicial
 └── types/              Tipos de TypeScript (config.ts describe el contenido de config.js)
 ```
 
@@ -59,6 +62,6 @@ nueva en `config.js`, súmala en `src/types/config.ts`.
 - [x] Fase 3: tiempo juntos, calendario de bajadas y ajuste compartido con Firebase (npm)
 - [x] Fase 4: música, cumpleaños (antes, hoy y después) y confeti
 - [x] Fase 5: La Bóveda (cartas selladas, ventana de carta compartida con el pastel)
-- [ ] Constelación (con Firebase)
+- [x] Fase 6: sección Constelación y la página del cielo (constelacion/index.html) con Firebase y sesión
 - [ ] Minijuego y cierre
 - [ ] Publicar con GitHub Actions en el mismo link
