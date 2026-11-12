@@ -63,5 +63,5 @@ nueva en `config.js`, súmala en `src/types/config.ts`.
 - [x] Fase 4: música, cumpleaños (antes, hoy y después) y confeti
 - [x] Fase 5: La Bóveda (cartas selladas, ventana de carta compartida con el pastel)
 - [x] Fase 6: sección Constelación y la página del cielo (constelacion/index.html) con Firebase y sesión
-- [ ] Minijuego y cierre
+- [x] Fase 7: minijuego y cierre (la página completa coincide texto por texto con el sitio actual)
 - [ ] Publicar con GitHub Actions en el mismo link

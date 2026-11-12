@@ -3,12 +3,14 @@ import Bajadas from "./components/Bajadas.tsx";
 import Bienvenida from "./components/Bienvenida.tsx";
 import Boveda from "./components/Boveda.tsx";
 import CartaSorpresa from "./components/CartaSorpresa.tsx";
+import Cierre from "./components/Cierre.tsx";
 import Constelacion from "./components/Constelacion.tsx";
 import Cumpleanos from "./components/Cumpleanos.tsx";
 import Fondo from "./components/Fondo.tsx";
 import Galeria from "./components/Galeria.tsx";
 import Inicio from "./components/Inicio.tsx";
 import MensajeDelMes from "./components/MensajeDelMes.tsx";
+import Minijuego from "./components/Minijuego.tsx";
 import type { EnlacesVisibles } from "./components/Menu.tsx";
 import Musica from "./components/Musica.tsx";
 import ProgresoScroll from "./components/ProgresoScroll.tsx";
@@ -22,7 +24,7 @@ import { mensajeMesVigente } from "./lib/mensajeMes.ts";
 /*
   PÁGINA PRINCIPAL
   Cada parte del sitio es un componente (un archivo por componente en
-  src/components). Durante la migración se van sumando las secciones una a una.
+  src/components), en el mismo orden que la página.
 */
 export default function App() {
   // Se calculan una vez al abrir la página.
@@ -75,6 +77,8 @@ export default function App() {
           <Boveda onAbrir={abrirDesdeBoveda} />
           {!esHoy && seccionCumple}
           <Constelacion />
+          <Minijuego />
+          <Cierre />
         </main>
       </div>
       <VentanaCarta abierta={abierta} onCerrar={cerrarCarta} />
