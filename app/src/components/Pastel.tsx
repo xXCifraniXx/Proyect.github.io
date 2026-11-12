@@ -16,14 +16,20 @@ interface PastelProps {
 // En la vista previa (?cumple=…) no se guarda nada.
 function leerHecho(clave: string): boolean {
   if (PREVIEW) return false;
-  try { return localStorage.getItem(clave) === "1"; } catch { return false; }
+  try {
+    return localStorage.getItem(clave) === "1";
+  } catch {
+    return false;
+  }
 }
 function guardarHecho(clave: string, hecho: boolean) {
   if (PREVIEW) return;
   try {
     if (hecho) localStorage.setItem(clave, "1");
     else localStorage.removeItem(clave);
-  } catch { /* modo privado */ }
+  } catch {
+    /* modo privado */
+  }
 }
 
 /*
@@ -80,12 +86,25 @@ export default function Pastel({ dia, velas, onAbrirCarta }: PastelProps) {
 
   return (
     <div className="cumple-stage">
-      <div className={`cake${restaurado ? " is-restored" : ""}`} role="group" aria-label="Pastel de cumpleaños" style={estilo}>
+      <div
+        className={`cake${restaurado ? " is-restored" : ""}`}
+        role="group"
+        aria-label="Pastel de cumpleaños"
+        style={estilo}
+      >
         <div className="cake-glow" />
         <div className="cake-candles">
           {apagadas.map((apagada, i) => (
-            <button key={i} className={`candle${apagada ? " is-out" : ""}`} type="button" aria-label={`Apagar la vela ${i + 1}`} onClick={() => apagar(i)}>
-              <span className="flame" /><span className="smoke" /><span className="wick" />
+            <button
+              key={i}
+              className={`candle${apagada ? " is-out" : ""}`}
+              type="button"
+              aria-label={`Apagar la vela ${i + 1}`}
+              onClick={() => apagar(i)}
+            >
+              <span className="flame" />
+              <span className="smoke" />
+              <span className="wick" />
             </button>
           ))}
         </div>
@@ -95,14 +114,24 @@ export default function Pastel({ dia, velas, onAbrirCarta }: PastelProps) {
         <div className="cake-plate" />
       </div>
 
-      {!terminado && <button className="btn btn-primary" type="button" onClick={soplar}>{TEXTOS.cumpleBtnSoplar}</button>}
+      {!terminado && (
+        <button className="btn btn-primary" type="button" onClick={soplar}>
+          {TEXTOS.cumpleBtnSoplar}
+        </button>
+      )}
 
       {terminado && (
         <div className="cumple-wish">
           <p>{TEXTOS.cumpleDeseo}</p>
           <div className="cumple-wish-actions">
-            {onAbrirCarta && <button className="btn btn-primary" type="button" onClick={onAbrirCarta}>{TEXTOS.cumpleBtnCarta}</button>}
-            <button className="btn btn-ghost" type="button" onClick={encender}>{TEXTOS.cumpleBtnEncender}</button>
+            {onAbrirCarta && (
+              <button className="btn btn-primary" type="button" onClick={onAbrirCarta}>
+                {TEXTOS.cumpleBtnCarta}
+              </button>
+            )}
+            <button className="btn btn-ghost" type="button" onClick={encender}>
+              {TEXTOS.cumpleBtnEncender}
+            </button>
           </div>
         </div>
       )}

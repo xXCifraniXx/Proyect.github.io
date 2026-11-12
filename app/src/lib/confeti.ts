@@ -61,7 +61,14 @@ function asegurarLienzo(): CanvasRenderingContext2D | null {
   if (ctx) return ctx;
   lienzo = document.createElement("canvas");
   lienzo.setAttribute("aria-hidden", "true");
-  Object.assign(lienzo.style, { position: "fixed", inset: "0", width: "100%", height: "100%", pointerEvents: "none", zIndex: "95" });
+  Object.assign(lienzo.style, {
+    position: "fixed",
+    inset: "0",
+    width: "100%",
+    height: "100%",
+    pointerEvents: "none",
+    zIndex: "95"
+  });
   document.body.appendChild(lienzo);
   ctx = lienzo.getContext("2d");
   ajustarTamano();
@@ -137,7 +144,14 @@ function arrancar() {
   }
 }
 
-export function lanzarConfeti({ x = 0.5, y = 1, count = 120, spread = 70, angle = -90, power = 900 }: OpcionesConfeti = {}) {
+export function lanzarConfeti({
+  x = 0.5,
+  y = 1,
+  count = 120,
+  spread = 70,
+  angle = -90,
+  power = 900
+}: OpcionesConfeti = {}) {
   if (reducirMovimiento() || !asegurarLienzo()) return;
   const base = (angle * Math.PI) / 180;
   const mitad = (spread * Math.PI) / 360;
@@ -156,10 +170,13 @@ export function celebrar() {
   setTimeout(() => lanzarConfeti({ x: 0.5, y: 1, count: 90, angle: -90, spread: 80, power: 1000 }), 350);
   // Lluvia suave desde arriba.
   for (let i = 0; i < 70; i += 1) {
-    setTimeout(() => {
-      if (!asegurarLienzo()) return;
-      piezas.push(nuevaPieza(Math.random() * window.innerWidth, -10, Math.PI / 2, 60 + Math.random() * 120));
-      arrancar();
-    }, 400 + i * 22);
+    setTimeout(
+      () => {
+        if (!asegurarLienzo()) return;
+        piezas.push(nuevaPieza(Math.random() * window.innerWidth, -10, Math.PI / 2, 60 + Math.random() * 120));
+        arrancar();
+      },
+      400 + i * 22
+    );
   }
 }

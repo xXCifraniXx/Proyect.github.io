@@ -5,8 +5,21 @@ import { formatoFechaLarga, mesesEntre } from "../lib/fechas.ts";
 import type { NotaDelMes } from "../lib/mensajeMes.ts";
 import Seccion from "./Seccion.tsx";
 
-const NUMEROS_MESES = ["", "Un mes", "Dos meses", "Tres meses", "Cuatro meses", "Cinco meses", "Seis meses",
-  "Siete meses", "Ocho meses", "Nueve meses", "Diez meses", "Once meses", "Un año"];
+const NUMEROS_MESES = [
+  "",
+  "Un mes",
+  "Dos meses",
+  "Tres meses",
+  "Cuatro meses",
+  "Cinco meses",
+  "Seis meses",
+  "Siete meses",
+  "Ocho meses",
+  "Nueve meses",
+  "Diez meses",
+  "Once meses",
+  "Un año"
+];
 
 interface MensajeDelMesProps {
   /** El mensaje que toca hoy (lo elige App con mensajeMesVigente). */
@@ -30,7 +43,9 @@ export default function MensajeDelMes({ nota }: MensajeDelMesProps) {
     <Seccion id="mensaje-mes" className="month-note-section" ariaLabelledby="mesTitulo">
       <article className="month-note">
         <p className="month-note-date">{formatoFechaLarga(nota.inicio)}</p>
-        <h2 className="month-note-title" id="mesTitulo">{titulo}</h2>
+        <h2 className="month-note-title" id="mesTitulo">
+          {titulo}
+        </h2>
         <div className="month-note-body">
           {texto && enParrafos(texto).map((parrafo, i) => <p key={i}>{parrafo}</p>)}
         </div>

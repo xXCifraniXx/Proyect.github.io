@@ -50,7 +50,10 @@ export default function App() {
     setAbierta(carta);
   }, []);
   const cerrarCarta = useCallback(() => setAbierta(null), []);
-  const abrirDesdeBoveda = useCallback((item: CartaBoveda, texto: string) => abrirCarta({ ...item, texto }), [abrirCarta]);
+  const abrirDesdeBoveda = useCallback(
+    (item: CartaBoveda, texto: string) => abrirCarta({ ...item, texto }),
+    [abrirCarta]
+  );
   // Desde el pastel se abre sin el botón "Ir a soplar mis velas", que ya no tendría sentido.
   // (Copia local: así TypeScript sabe que dentro de la función no es null.)
   const cartaCumple = CARTA_CUMPLE;

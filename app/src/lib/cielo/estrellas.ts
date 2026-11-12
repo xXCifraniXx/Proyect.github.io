@@ -47,7 +47,13 @@ export function normalizar(lista: unknown[], ordenar = false): Estrella[] {
   return ordenar ? estrellas.sort((a, b) => a.born - b.born) : estrellas;
 }
 
-export const paraGuardar = (s: EstrellaGuardada): EstrellaGuardada => ({ id: s.id, x: s.x, y: s.y, label: s.label, born: s.born });
+export const paraGuardar = (s: EstrellaGuardada): EstrellaGuardada => ({
+  id: s.id,
+  x: s.x,
+  y: s.y,
+  label: s.label,
+  born: s.born
+});
 
 export function leerLocales(): Estrella[] {
   try {
@@ -62,7 +68,9 @@ export function leerLocales(): Estrella[] {
 export function guardarLocales(estrellas: EstrellaGuardada[]): void {
   try {
     localStorage.setItem(CLAVE_LOCAL, JSON.stringify(estrellas.map(paraGuardar)));
-  } catch { /* modo privado */ }
+  } catch {
+    /* modo privado */
+  }
 }
 
 /** Crea una estrella en una posición (0..1), sin pegarla a los bordes. */

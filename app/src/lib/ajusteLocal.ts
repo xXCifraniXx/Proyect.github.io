@@ -27,5 +27,9 @@ export function guardarAjusteLocal(ajuste: AjusteBajadas): boolean {
 }
 
 export function borrarAjusteLocal(): void {
-  try { localStorage.removeItem(CLAVE); } catch { /* modo privado */ }
+  try {
+    localStorage.removeItem(CLAVE);
+  } catch {
+    /* modo privado */
+  }
 }

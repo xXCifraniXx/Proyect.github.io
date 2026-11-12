@@ -15,7 +15,11 @@ export default function BurbujaEstrella({ estrella, puedeQuitar, onQuitar, ref }
   return (
     <div ref={ref} className="star-pop">
       <span>{estrella.label || "estrella sin nombre"}</span>
-      {puedeQuitar && <button type="button" aria-label="Quitar esta estrella" onClick={onQuitar}>×</button>}
+      {puedeQuitar && (
+        <button type="button" aria-label="Quitar esta estrella" onClick={onQuitar}>
+          ×
+        </button>
+      )}
     </div>
   );
 }

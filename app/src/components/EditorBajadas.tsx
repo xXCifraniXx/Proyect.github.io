@@ -17,7 +17,15 @@ interface EditorBajadasProps {
 }
 
 /** Panel plegable "Ajustar bajadas de mina" con su mensaje de estado. */
-export default function EditorBajadas({ inicial, minimo, hayAjuste, editada, sesion, onGuardar, onRestablecer }: EditorBajadasProps) {
+export default function EditorBajadas({
+  inicial,
+  minimo,
+  hayAjuste,
+  editada,
+  sesion,
+  onGuardar,
+  onRestablecer
+}: EditorBajadasProps) {
   const [mensaje, setMensaje] = useState("");
   const [visible, setVisible] = useState(false);
   const [ocupado, setOcupado] = useState(false);
@@ -51,7 +59,9 @@ export default function EditorBajadas({ inicial, minimo, hayAjuste, editada, ses
 
   return (
     <details className={`roster-editor glass-soft${editada ? " is-edited" : ""}`}>
-      <summary><span>{TEXTOS.rosterEditorTitle}</span></summary>
+      <summary>
+        <span>{TEXTOS.rosterEditorTitle}</span>
+      </summary>
       <FormularioBajadas
         key={JSON.stringify(inicial)}
         inicial={inicial}
@@ -63,7 +73,9 @@ export default function EditorBajadas({ inicial, minimo, hayAjuste, editada, ses
       >
         <CuentaGoogle sesion={sesion} />
       </FormularioBajadas>
-      <p className={`roster-editor-status${visible ? " is-visible" : ""}`} role="status" aria-live="polite">{mensaje}</p>
+      <p className={`roster-editor-status${visible ? " is-visible" : ""}`} role="status" aria-live="polite">
+        {mensaje}
+      </p>
     </details>
   );
 }

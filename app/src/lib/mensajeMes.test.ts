@@ -5,7 +5,11 @@ import { mensajeMesVigente } from "./mensajeMes.ts";
 const nota = (fecha: string, extra: Partial<Carta> = {}): Carta =>
   ({ fecha, titulo: fecha, mensajeSellado: "v1.a.b.c", ...extra }) as Carta;
 
-const LISTA = [nota("2026-10-08T00:00:00"), nota("2026-11-08T00:00:00"), nota("2026-12-08T00:00:00", { borrador: true })];
+const LISTA = [
+  nota("2026-10-08T00:00:00"),
+  nota("2026-11-08T00:00:00"),
+  nota("2026-12-08T00:00:00", { borrador: true })
+];
 
 const en = (fecha: string) => vi.setSystemTime(new Date(fecha));
 

@@ -47,9 +47,11 @@ export function useSesion(): Sesion {
     } catch (e) {
       const code = (e as { code?: string }).code;
       if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") return;
-      setError(code === "auth/popup-blocked"
-        ? "El navegador bloqueó la ventana de Google. Permite las ventanas emergentes e inténtalo otra vez."
-        : "No se pudo iniciar sesión. Inténtalo otra vez en un momento.");
+      setError(
+        code === "auth/popup-blocked"
+          ? "El navegador bloqueó la ventana de Google. Permite las ventanas emergentes e inténtalo otra vez."
+          : "No se pudo iniciar sesión. Inténtalo otra vez en un momento."
+      );
     }
   }, []);
 

@@ -35,23 +35,30 @@ export function useCieloCompartido(): CieloCompartido {
     let vigente = true;
     let respondioServidor = false;
 
-    void cargarFirebase().then(async ({ db }) => {
-      const { collection, onSnapshot } = await import("firebase/firestore");
-      if (!vigente) return;
-      cancelar = onSnapshot(collection(db, ...RUTA), { includeMetadataChanges: true }, (snap) => {
-        if (!snap.metadata.fromCache) respondioServidor = true;
-        // Mientras no haya respondido el servidor, no se toca el cielo local.
-        if (!respondioServidor) return;
-        setRemotas(snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<EstrellaGuardada, "id">) })));
-        setEstado(snap.metadata.fromCache ? "offline" : "online");
-      }, (error) => {
+    void cargarFirebase()
+      .then(async ({ db }) => {
+        const { collection, onSnapshot } = await import("firebase/firestore");
+        if (!vigente) return;
+        cancelar = onSnapshot(
+          collection(db, ...RUTA),
+          { includeMetadataChanges: true },
+          (snap) => {
+            if (!snap.metadata.fromCache) respondioServidor = true;
+            // Mientras no haya respondido el servidor, no se toca el cielo local.
+            if (!respondioServidor) return;
+            setRemotas(snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<EstrellaGuardada, "id">) })));
+            setEstado(snap.metadata.fromCache ? "offline" : "online");
+          },
+          (error) => {
+            console.warn("[constelación] sin nube:", error);
+            setEstado("error");
+          }
+        );
+      })
+      .catch((error: unknown) => {
         console.warn("[constelación] sin nube:", error);
         setEstado("error");
       });
-    }).catch((error: unknown) => {
-      console.warn("[constelación] sin nube:", error);
-      setEstado("error");
-    });
 
     return () => {
       vigente = false;

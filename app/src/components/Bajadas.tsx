@@ -31,18 +31,19 @@ export default function Bajadas() {
   const ajuste = esAjusteValido(compartido.ajuste) ? compartido.ajuste : local;
   const hoy = claveDia(ahora);
 
-  const rotacion = useMemo(
-    () => armarRotacion(CONFIG.rotacionMina ?? {}, ajuste, CONFIG.fechas?.regreso),
-    [ajuste]
-  );
+  const rotacion = useMemo(() => armarRotacion(CONFIG.rotacionMina ?? {}, ajuste, CONFIG.fechas?.regreso), [ajuste]);
 
-  const [cursor, setCursor] = useState(() => primeroDeMes(
-    CONFIG.opciones?.calendarioDesdeHoy === false ? rotacion.baseDia : ahora
-  ));
+  const [cursor, setCursor] = useState(() =>
+    primeroDeMes(CONFIG.opciones?.calendarioDesdeHoy === false ? rotacion.baseDia : ahora)
+  );
 
   // Los meses a dibujar solo cambian con el cursor o la rotación.
   const meses = useMemo(
-    () => Array.from({ length: rotacion.mesesAMostrar }, (_, i) => new Date(cursor.getFullYear(), cursor.getMonth() + i, 1)),
+    () =>
+      Array.from(
+        { length: rotacion.mesesAMostrar },
+        (_, i) => new Date(cursor.getFullYear(), cursor.getMonth() + i, 1)
+      ),
     [cursor, rotacion.mesesAMostrar]
   );
 
@@ -52,9 +53,10 @@ export default function Bajadas() {
   const moverMes = (paso: number) => setCursor((c) => new Date(c.getFullYear(), c.getMonth() + paso, 1));
   const irAHoy = () => setCursor(primeroDeMes(new Date()));
 
-  const etiquetaRango = meses.length === 1
-    ? mesYAnio(meses[0])
-    : `${mesYAnio(meses[0]).split(" ")[0]} - ${mesYAnio(meses[meses.length - 1])}`;
+  const etiquetaRango =
+    meses.length === 1
+      ? mesYAnio(meses[0])
+      : `${mesYAnio(meses[0]).split(" ")[0]} - ${mesYAnio(meses[meses.length - 1])}`;
 
   const inicial: AjusteBajadas = {
     proximaBajada: claveDia(proximaBajada(rotacion, ahora) ?? ahora),
@@ -114,14 +116,22 @@ export default function Bajadas() {
       {fase && <EstadoRotacion fase={fase} ahora={ahora} />}
 
       <div className="calendar-toolbar glass-soft">
-        <button className="round-btn" type="button" aria-label="Mes anterior" onClick={() => moverMes(-1)}>‹</button>
+        <button className="round-btn" type="button" aria-label="Mes anterior" onClick={() => moverMes(-1)}>
+          ‹
+        </button>
         <strong>{etiquetaRango}</strong>
-        <button className="round-btn" type="button" aria-label="Mes siguiente" onClick={() => moverMes(1)}>›</button>
-        <button className="today-btn" type="button" onClick={irAHoy}>{TEXTOS.calendarTodayBtn}</button>
+        <button className="round-btn" type="button" aria-label="Mes siguiente" onClick={() => moverMes(1)}>
+          ›
+        </button>
+        <button className="today-btn" type="button" onClick={irAHoy}>
+          {TEXTOS.calendarTodayBtn}
+        </button>
       </div>
 
       <div className="calendar-months" aria-label="Calendario de rotación">
-        {meses.map((mes) => <MesCalendario key={claveDia(mes)} mes={mes} rotacion={rotacion} hoy={hoy} />)}
+        {meses.map((mes) => (
+          <MesCalendario key={claveDia(mes)} mes={mes} rotacion={rotacion} hoy={hoy} />
+        ))}
       </div>
 
       <EditorBajadas

@@ -26,8 +26,12 @@ export default function CompositorEstrella({ onGuardar, onCancelar }: Compositor
         }}
       />
       <div className="composer-row">
-        <button type="button" className="chip ghost" onClick={onCancelar}>Cancelar</button>
-        <button type="button" className="chip primary" onClick={() => onGuardar(texto)}>Añadir estrella ✦</button>
+        <button type="button" className="chip ghost" onClick={onCancelar}>
+          Cancelar
+        </button>
+        <button type="button" className="chip primary" onClick={() => onGuardar(texto)}>
+          Añadir estrella ✦
+        </button>
       </div>
     </div>
   );

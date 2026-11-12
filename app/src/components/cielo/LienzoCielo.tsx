@@ -2,7 +2,7 @@ import { useEffect, useRef, type PointerEvent, type RefObject } from "react";
 import { crearPolvo, dibujarConstelacion, dibujarFondo, dibujarPolvo, type Polvo } from "../../lib/cielo/dibujo.ts";
 import type { Estrella } from "../../lib/cielo/estrellas.ts";
 
-const RADIO_TOQUE = 26;   // px de tolerancia para tocar una estrella existente
+const RADIO_TOQUE = 26; // px de tolerancia para tocar una estrella existente
 const MOVIMIENTO_MAX = 10; // px: si el dedo se mueve más que esto, no es un toque
 
 interface LienzoCieloProps {
@@ -25,7 +25,15 @@ interface LienzoCieloProps {
   fuera de React: el bucle lee los datos más recientes desde refs, así no se
   reinicia cada vez que cambia una estrella.
 */
-export default function LienzoCielo({ estrellas, etiquetaHasta, activaId, burbuja, pausado, onTocarVacio, onTocarEstrella }: LienzoCieloProps) {
+export default function LienzoCielo({
+  estrellas,
+  etiquetaHasta,
+  activaId,
+  burbuja,
+  pausado,
+  onTocarVacio,
+  onTocarEstrella
+}: LienzoCieloProps) {
   const lienzo = useRef<HTMLCanvasElement>(null);
 
   // Datos que lee el bucle de dibujo.
@@ -35,7 +43,16 @@ export default function LienzoCielo({ estrellas, etiquetaHasta, activaId, burbuj
   }, [estrellas, etiquetaHasta, activaId]);
 
   // Tamaño, polvo y desplazamiento (parallax), también fuera de React.
-  const vista = useRef({ w: 0, h: 0, px: 0, py: 0, objetivoX: 0, objetivoY: 0, polvo: [] as Polvo[], encima: null as string | null });
+  const vista = useRef({
+    w: 0,
+    h: 0,
+    px: 0,
+    py: 0,
+    objetivoX: 0,
+    objetivoY: 0,
+    polvo: [] as Polvo[],
+    encima: null as string | null
+  });
 
   useEffect(() => {
     const canvas = lienzo.current;
@@ -72,7 +89,16 @@ export default function LienzoCielo({ estrellas, etiquetaHasta, activaId, burbuj
       ctx.clearRect(0, 0, v.w, v.h);
       dibujarFondo(ctx, v.w, v.h);
       dibujarPolvo(ctx, v.polvo, v.w, v.h, v.px, v.py, t);
-      dibujarConstelacion(ctx, lista, v.w, v.h, v.px, v.py, t, (s, i) => (verUltima && i === ultima) || s.id === v.encima);
+      dibujarConstelacion(
+        ctx,
+        lista,
+        v.w,
+        v.h,
+        v.px,
+        v.py,
+        t,
+        (s, i) => (verUltima && i === ultima) || s.id === v.encima
+      );
 
       // La burbuja sigue a su estrella mientras el cielo se mueve.
       const estrella = activa ? lista.find((s) => s.id === activa) : undefined;
@@ -143,7 +169,9 @@ export default function LienzoCielo({ estrellas, etiquetaHasta, activaId, burbuj
       onPointerDown={alBajar}
       onPointerMove={alMover}
       onPointerUp={alSoltar}
-      onPointerCancel={() => { toque.current = null; }}
+      onPointerCancel={() => {
+        toque.current = null;
+      }}
     />
   );
 }

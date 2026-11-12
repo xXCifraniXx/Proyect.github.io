@@ -54,12 +54,18 @@ export interface Fase {
 export type TipoDia = "none" | "departure mine" | "mine" | "return" | "rest";
 
 export function esAjusteValido(dato: unknown): dato is AjusteBajadas {
-  return !!dato && typeof dato === "object" && typeof (dato as AjusteBajadas).proximaBajada === "string"
-    && (dato as AjusteBajadas).proximaBajada.length > 0;
+  return (
+    !!dato &&
+    typeof dato === "object" &&
+    typeof (dato as AjusteBajadas).proximaBajada === "string" &&
+    (dato as AjusteBajadas).proximaBajada.length > 0
+  );
 }
 
 function leerHora(valor: string | undefined, horaPorDefecto = 21, minutoPorDefecto = 0): Hora {
-  const [hour, minute] = String(valor ?? "").split(":").map(Number);
+  const [hour, minute] = String(valor ?? "")
+    .split(":")
+    .map(Number);
   return {
     hour: Number.isFinite(hour) ? hour : horaPorDefecto,
     minute: Number.isFinite(minute) ? minute : minutoPorDefecto
@@ -73,7 +79,11 @@ function conHora(fecha: Date, hora: Hora): Date {
 }
 
 /** Junta config.rotacionMina con el ajuste vigente (si hay). */
-export function armarRotacion(fuente: RotacionMina, ajuste: AjusteBajadas | null, regresoFijo?: string | null): Rotacion {
+export function armarRotacion(
+  fuente: RotacionMina,
+  ajuste: AjusteBajadas | null,
+  regresoFijo?: string | null
+): Rotacion {
   let activa = fuente.activa !== false;
   let salidaBase = fuente.salidaBase;
   let diasMina = Math.max(1, Number(fuente.diasMina || 14));
@@ -123,7 +133,8 @@ export function ciclo(rot: Rotacion, numero: number): Ciclo {
   };
 }
 
-const cicloInicial = (rot: Rotacion, ahora: Date) => Math.max(0, Math.floor(diasCalendario(rot.baseDia, ahora) / rot.diasCiclo));
+const cicloInicial = (rot: Rotacion, ahora: Date) =>
+  Math.max(0, Math.floor(diasCalendario(rot.baseDia, ahora) / rot.diasCiclo));
 
 /** Próxima fecha de bajada a partir de "ahora". */
 export function proximaBajada(rot: Rotacion, ahora: Date): Date | null {

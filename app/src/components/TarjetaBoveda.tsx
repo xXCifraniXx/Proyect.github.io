@@ -19,7 +19,9 @@ export default function TarjetaBoveda({ item, ahora, indice, onAbrir }: TarjetaB
   if (item.fecha <= ahora) return <TarjetaBovedaAbierta item={item} estilo={estilo} onAbrir={onAbrir} />;
 
   const falta = tiempoEntre(ahora, item.fecha);
-  const partes = [falta.years && `${falta.years} a`, falta.months && `${falta.months} m`, `${falta.days} d`].filter(Boolean);
+  const partes = [falta.years && `${falta.years} a`, falta.months && `${falta.months} m`, `${falta.days} d`].filter(
+    Boolean
+  );
   return (
     <article className="boveda-card glass-soft is-locked" style={estilo}>
       <span className="boveda-icon">🔒</span>

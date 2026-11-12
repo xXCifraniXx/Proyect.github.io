@@ -68,7 +68,12 @@ describe("días y cuenta regresiva", () => {
 
   it("partirCuenta separa días, horas, minutos y segundos, y no baja de cero", () => {
     const desde = new Date("2026-11-12T10:00:00");
-    expect(partirCuenta(new Date("2026-11-13T21:30:15"), desde)).toEqual({ days: 1, hours: 11, minutes: 30, seconds: 15 });
+    expect(partirCuenta(new Date("2026-11-13T21:30:15"), desde)).toEqual({
+      days: 1,
+      hours: 11,
+      minutes: 30,
+      seconds: 15
+    });
     expect(partirCuenta(desde, new Date("2026-11-13T00:00:00"))).toEqual({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   });
 });

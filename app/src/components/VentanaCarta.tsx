@@ -47,17 +47,23 @@ export default function VentanaCarta({ abierta, onCerrar }: VentanaCartaProps) {
       role="dialog"
       aria-modal="true"
       aria-label="Carta abierta"
-      onClick={(e) => { if (e.target === e.currentTarget) onCerrar(); }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onCerrar();
+      }}
     >
       {abierta && (
         <div className="lightbox-card boveda-modal-card">
-          <button ref={cerrar} className="lightbox-close" type="button" aria-label="Cerrar carta" onClick={onCerrar}>×</button>
+          <button ref={cerrar} className="lightbox-close" type="button" aria-label="Cerrar carta" onClick={onCerrar}>
+            ×
+          </button>
           <span className="boveda-modal-icon">{abierta.carta.icono || "💌"}</span>
           <span className="boveda-modal-date">Desbloqueada el {formatoFechaLarga(abierta.fecha)}</span>
           <h3>{abierta.carta.titulo || "Una carta para ti"}</h3>
           <p>{texto}</p>
           {accion && (
-            <a className="btn btn-primary" href={`#${accion.destino}`} onClick={irA}>{accion.etiqueta || "Ir ahí"}</a>
+            <a className="btn btn-primary" href={`#${accion.destino}`} onClick={irA}>
+              {accion.etiqueta || "Ir ahí"}
+            </a>
           )}
         </div>
       )}

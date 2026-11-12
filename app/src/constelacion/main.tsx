@@ -14,7 +14,7 @@ import { nubeActiva } from "../lib/firebase.ts";
 if (nubeActiva) apartarPendientes();
 
 const raiz = document.getElementById("cielo");
-if (!raiz) throw new Error("Falta <div id=\"cielo\"> en constelacion/index.html");
+if (!raiz) throw new Error('Falta <div id="cielo"> en constelacion/index.html');
 
 createRoot(raiz).render(
   <StrictMode>

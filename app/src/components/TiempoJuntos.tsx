@@ -12,8 +12,8 @@ const INICIO = new Date(CONFIG.fechas?.inicioRelacion ?? Date.now());
 // Con la rotación de mina activa, la cuenta regresiva vive en la sección
 // Bajada; esta tarjeta solo se usa si no hay rotación y hay una fecha fija.
 const REGRESO = CONFIG.fechas?.regreso ? new Date(CONFIG.fechas.regreso) : null;
-const MOSTRAR_REGRESO = !armarRotacion(CONFIG.rotacionMina ?? {}, leerAjusteLocal()).activa
-  && !!REGRESO && !Number.isNaN(REGRESO.getTime());
+const MOSTRAR_REGRESO =
+  !armarRotacion(CONFIG.rotacionMina ?? {}, leerAjusteLocal()).activa && !!REGRESO && !Number.isNaN(REGRESO.getTime());
 
 /** Sección "Tiempo": años, meses y días juntos, que se actualizan solos. */
 export default function TiempoJuntos() {

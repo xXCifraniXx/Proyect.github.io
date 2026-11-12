@@ -10,7 +10,7 @@ document.title = `Para ${NOMBRES.novia} | Una carta de ${NOMBRES.autor}`;
 if (estadoCumple() === "hoy") document.body.classList.add("is-birthday");
 
 const raiz = document.getElementById("root");
-if (!raiz) throw new Error("Falta <div id=\"root\"> en index.html");
+if (!raiz) throw new Error('Falta <div id="root"> en index.html');
 
 createRoot(raiz).render(
   <StrictMode>

@@ -46,7 +46,15 @@ export function dibujarFondo(ctx: CanvasRenderingContext2D, w: number, h: number
   nebulosa(ctx, w * 0.55, h * 0.9, m * 0.55, "rgba(243,217,159,0.10)");
 }
 
-export function dibujarPolvo(ctx: CanvasRenderingContext2D, polvo: Polvo[], w: number, h: number, offX: number, offY: number, t: number) {
+export function dibujarPolvo(
+  ctx: CanvasRenderingContext2D,
+  polvo: Polvo[],
+  w: number,
+  h: number,
+  offX: number,
+  offY: number,
+  t: number
+) {
   for (const d of polvo) {
     const brillo = 0.6 + 0.4 * Math.sin(t * 0.001 + d.tw);
     ctx.beginPath();

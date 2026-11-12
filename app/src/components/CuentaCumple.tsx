@@ -20,7 +20,9 @@ export default function CuentaCumple({ objetivo }: CuentaCumpleProps) {
 
   return (
     <div className="cumple-locked">
-      <span className="cumple-gift" aria-hidden="true">🎁</span>
+      <span className="cumple-gift" aria-hidden="true">
+        🎁
+      </span>
       <span className="cumple-locked-label">{TEXTOS.cumpleAntesLabel}</span>
       <CuentaRegresiva objetivo={objetivo} ahora={ahora} className="return-grid" />
     </div>

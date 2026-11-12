@@ -23,8 +23,12 @@ export default function Inicio({ visibles }: InicioProps) {
           <h1>{TEXTOS.heroTitle}</h1>
           <p className="lead">{TEXTOS.heroIntro}</p>
           <div className="hero-actions">
-            <a className="btn btn-primary" href="#carta">{TEXTOS.heroCtaCarta}</a>
-            <a className="btn btn-secondary" href={destinoSecundario}>{TEXTOS.heroCtaBoveda}</a>
+            <a className="btn btn-primary" href="#carta">
+              {TEXTOS.heroCtaCarta}
+            </a>
+            <a className="btn btn-secondary" href={destinoSecundario}>
+              {TEXTOS.heroCtaBoveda}
+            </a>
           </div>
         </div>
         <Sobre />

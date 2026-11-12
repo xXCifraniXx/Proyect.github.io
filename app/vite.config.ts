@@ -39,14 +39,17 @@ function mediosDelSitio(): Plugin {
         const relativa = ruta.slice(prefijo.length);
         if (!MEDIOS.includes(relativa.split("/")[0])) return next();
         const archivo = resolve(raiz, "assets", relativa);
-        if (!archivo.startsWith(join(raiz, "assets")) || !existsSync(archivo) || !statSync(archivo).isFile()) return next();
+        if (!archivo.startsWith(join(raiz, "assets")) || !existsSync(archivo) || !statSync(archivo).isFile())
+          return next();
         res.setHeader("Content-Type", TIPOS[extname(archivo).toLowerCase()] ?? "application/octet-stream");
         createReadStream(archivo).pipe(res);
       });
     },
     closeBundle() {
       for (const carpeta of MEDIOS) {
-        cpSync(resolve(raiz, "assets", carpeta), resolve(import.meta.dirname, "dist", "assets", carpeta), { recursive: true });
+        cpSync(resolve(raiz, "assets", carpeta), resolve(import.meta.dirname, "dist", "assets", carpeta), {
+          recursive: true
+        });
       }
     }
   };

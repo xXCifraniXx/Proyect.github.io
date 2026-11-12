@@ -7,10 +7,16 @@ import Seccion from "./Seccion.tsx";
 export default function Constelacion() {
   return (
     <Seccion id="constelacion">
-      <CabeceraSeccion etiqueta={TEXTOS.constelacionEyebrow} titulo={TEXTOS.constelacionTitle} intro={TEXTOS.constelacionIntro} />
+      <CabeceraSeccion
+        etiqueta={TEXTOS.constelacionEyebrow}
+        titulo={TEXTOS.constelacionTitle}
+        intro={TEXTOS.constelacionIntro}
+      />
       <div className="constelacion-card glass-soft">
         <CieloDecorativo />
-        <a className="btn btn-primary" href="constelacion/index.html">{TEXTOS.constelacionBtn}</a>
+        <a className="btn btn-primary" href="constelacion/index.html">
+          {TEXTOS.constelacionBtn}
+        </a>
       </div>
     </Seccion>
   );

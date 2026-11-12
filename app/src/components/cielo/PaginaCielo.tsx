@@ -69,7 +69,8 @@ export default function PaginaCielo() {
   const puedeEditar = (): boolean => {
     if (editable) return true;
     if (conectando) avisar("Conectando con el cielo compartido…");
-    else if (sesion.usuario) avisar(`Con ${sesion.usuario.email || "esta cuenta"} puedes mirar el cielo, pero no cambiarlo.`);
+    else if (sesion.usuario)
+      avisar(`Con ${sesion.usuario.email || "esta cuenta"} puedes mirar el cielo, pero no cambiarlo.`);
     else {
       avisar("Inicia sesión con Google para poner o quitar estrellas ✦");
       setResaltarSesion(true);
@@ -79,9 +80,11 @@ export default function PaginaCielo() {
 
   const siFalla = (error: unknown) => {
     console.warn("[constelación] no se pudo guardar:", error);
-    avisar((error as { code?: string }).code === "permission-denied"
-      ? "Esta cuenta no puede cambiar el cielo. Entra con la cuenta de uno de los dos."
-      : "No se pudo guardar en el cielo compartido. Revisa la conexión.");
+    avisar(
+      (error as { code?: string }).code === "permission-denied"
+        ? "Esta cuenta no puede cambiar el cielo. Entra con la cuenta de uno de los dos."
+        : "No se pudo guardar en el cielo compartido. Revisa la conexión."
+    );
   };
 
   // ----- acciones -----
@@ -148,9 +151,10 @@ export default function PaginaCielo() {
 
   // ----- contador -----
   const n = estrellas.length;
-  let contador = n === 0
-    ? "El cielo está vacío. Empieza por la primera estrella."
-    : `${n} ${n === 1 ? "estrella en nuestro cielo" : "estrellas en nuestro cielo"}`;
+  let contador =
+    n === 0
+      ? "El cielo está vacío. Empieza por la primera estrella."
+      : `${n} ${n === 1 ? "estrella en nuestro cielo" : "estrellas en nuestro cielo"}`;
   if (nube.estado === "online") contador += " · compartido ✦";
   else if (nube.estado === "offline") contador += " · sin conexión, se enviará al volver";
   else if (nube.estado === "error") contador += " · sin nube, guardado solo en este dispositivo";
@@ -177,9 +181,16 @@ export default function PaginaCielo() {
       <p className={`hint${pistaVisible ? "" : " fade"}`}>{pista.texto}</p>
       {nuevaEn && <CompositorEstrella onGuardar={anadir} onCancelar={() => setNuevaEn(null)} />}
       {activa && (
-        <BurbujaEstrella ref={burbuja} estrella={activa} puedeQuitar={editable} onQuitar={() => quitarEstrella(activa)} />
+        <BurbujaEstrella
+          ref={burbuja}
+          estrella={activa}
+          puedeQuitar={editable}
+          onQuitar={() => quitarEstrella(activa)}
+        />
       )}
-      <footer className="counter" aria-live="polite">{contador}</footer>
+      <footer className="counter" aria-live="polite">
+        {contador}
+      </footer>
     </>
   );
 }

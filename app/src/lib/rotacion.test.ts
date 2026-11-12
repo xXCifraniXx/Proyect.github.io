@@ -106,6 +106,8 @@ describe("esAjusteValido", () => {
     expect(esAjusteValido(null)).toBe(false);
     expect(esAjusteValido({})).toBe(false);
     expect(esAjusteValido({ proximaBajada: "" })).toBe(false);
-    expect(esAjusteValido({ proximaBajada: "2026-11-14", diasMina: 14, diasDescanso: 7, horaRegreso: "21:00" })).toBe(true);
+    expect(esAjusteValido({ proximaBajada: "2026-11-14", diasMina: 14, diasDescanso: 7, horaRegreso: "21:00" })).toBe(
+      true
+    );
   });
 });

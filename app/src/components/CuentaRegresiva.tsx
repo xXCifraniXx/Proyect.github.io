@@ -13,10 +13,22 @@ export default function CuentaRegresiva({ objetivo, ahora, className }: CuentaRe
   const partes = partirCuenta(objetivo, ahora);
   return (
     <div className={className}>
-      <div><strong>{partes.days}</strong><span>{TEXTOS.labelCountdownDays}</span></div>
-      <div><strong>{partes.hours}</strong><span>{TEXTOS.labelCountdownHours}</span></div>
-      <div><strong>{partes.minutes}</strong><span>{TEXTOS.labelCountdownMinutes}</span></div>
-      <div><strong>{partes.seconds}</strong><span>{TEXTOS.labelCountdownSeconds}</span></div>
+      <div>
+        <strong>{partes.days}</strong>
+        <span>{TEXTOS.labelCountdownDays}</span>
+      </div>
+      <div>
+        <strong>{partes.hours}</strong>
+        <span>{TEXTOS.labelCountdownHours}</span>
+      </div>
+      <div>
+        <strong>{partes.minutes}</strong>
+        <span>{TEXTOS.labelCountdownMinutes}</span>
+      </div>
+      <div>
+        <strong>{partes.seconds}</strong>
+        <span>{TEXTOS.labelCountdownSeconds}</span>
+      </div>
     </div>
   );
 }

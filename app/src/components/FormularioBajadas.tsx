@@ -21,7 +21,15 @@ interface FormularioBajadasProps {
   Bajadas le cambia la "key" cuando llegan valores nuevos (por ejemplo, de la
   nube), y React lo vuelve a crear con esos valores.
 */
-export default function FormularioBajadas({ inicial, minimo, hayAjuste, ocupado, onGuardar, onRestablecer, children }: FormularioBajadasProps) {
+export default function FormularioBajadas({
+  inicial,
+  minimo,
+  hayAjuste,
+  ocupado,
+  onGuardar,
+  onRestablecer,
+  children
+}: FormularioBajadasProps) {
   const [proximaBajada, setProximaBajada] = useState(inicial.proximaBajada);
   const [diasMina, setDiasMina] = useState(String(inicial.diasMina));
   const [diasDescanso, setDiasDescanso] = useState(String(inicial.diasDescanso));
@@ -29,7 +37,8 @@ export default function FormularioBajadas({ inicial, minimo, hayAjuste, ocupado,
 
   const enviar = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const limitar = (valor: string, porDefecto: number) => Math.min(60, Math.max(1, Math.round(Number(valor) || porDefecto)));
+    const limitar = (valor: string, porDefecto: number) =>
+      Math.min(60, Math.max(1, Math.round(Number(valor) || porDefecto)));
     onGuardar({
       proximaBajada,
       diasMina: limitar(diasMina, 14),
@@ -42,16 +51,36 @@ export default function FormularioBajadas({ inicial, minimo, hayAjuste, ocupado,
     <form className="roster-editor-form" noValidate onSubmit={enviar}>
       <label className="roster-editor-field">
         <span>{TEXTOS.rosterEditorNextDown}</span>
-        <input type="date" required min={minimo} value={proximaBajada} onChange={(e) => setProximaBajada(e.target.value)} />
+        <input
+          type="date"
+          required
+          min={minimo}
+          value={proximaBajada}
+          onChange={(e) => setProximaBajada(e.target.value)}
+        />
       </label>
       <div className="roster-editor-grid">
         <label className="roster-editor-field">
           <span>{TEXTOS.rosterEditorMineDays}</span>
-          <input type="number" min={1} max={60} inputMode="numeric" value={diasMina} onChange={(e) => setDiasMina(e.target.value)} />
+          <input
+            type="number"
+            min={1}
+            max={60}
+            inputMode="numeric"
+            value={diasMina}
+            onChange={(e) => setDiasMina(e.target.value)}
+          />
         </label>
         <label className="roster-editor-field">
           <span>{TEXTOS.rosterEditorRestDays}</span>
-          <input type="number" min={1} max={60} inputMode="numeric" value={diasDescanso} onChange={(e) => setDiasDescanso(e.target.value)} />
+          <input
+            type="number"
+            min={1}
+            max={60}
+            inputMode="numeric"
+            value={diasDescanso}
+            onChange={(e) => setDiasDescanso(e.target.value)}
+          />
         </label>
         <label className="roster-editor-field">
           <span>{TEXTOS.rosterEditorReturnTime}</span>
@@ -61,9 +90,13 @@ export default function FormularioBajadas({ inicial, minimo, hayAjuste, ocupado,
       {children}
       <p className="roster-editor-note">{TEXTOS.rosterEditorNote}</p>
       <div className="roster-editor-actions">
-        <button type="submit" className="btn btn-primary" disabled={ocupado}>{TEXTOS.rosterEditorSave}</button>
+        <button type="submit" className="btn btn-primary" disabled={ocupado}>
+          {TEXTOS.rosterEditorSave}
+        </button>
         {hayAjuste && (
-          <button type="button" className="btn btn-ghost" disabled={ocupado} onClick={onRestablecer}>{TEXTOS.rosterEditorReset}</button>
+          <button type="button" className="btn btn-ghost" disabled={ocupado} onClick={onRestablecer}>
+            {TEXTOS.rosterEditorReset}
+          </button>
         )}
       </div>
     </form>

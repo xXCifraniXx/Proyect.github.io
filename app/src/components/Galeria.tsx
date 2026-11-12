@@ -34,13 +34,16 @@ export default function Galeria() {
 
   const reducirMovimiento = useMemo(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches, []);
 
-  const irA = useCallback((indice: number, suave = true) => {
-    const el = visor.current;
-    const tarjeta = tarjetas.current[Math.max(0, Math.min(meses.length - 1, indice))];
-    if (!el || !tarjeta) return;
-    const izquierda = tarjeta.offsetLeft - (el.clientWidth - tarjeta.offsetWidth) / 2;
-    el.scrollTo({ left: izquierda, behavior: suave && !reducirMovimiento ? "smooth" : "auto" });
-  }, [meses.length, reducirMovimiento]);
+  const irA = useCallback(
+    (indice: number, suave = true) => {
+      const el = visor.current;
+      const tarjeta = tarjetas.current[Math.max(0, Math.min(meses.length - 1, indice))];
+      if (!el || !tarjeta) return;
+      const izquierda = tarjeta.offsetLeft - (el.clientWidth - tarjeta.offsetWidth) / 2;
+      el.scrollTo({ left: izquierda, behavior: suave && !reducirMovimiento ? "smooth" : "auto" });
+    },
+    [meses.length, reducirMovimiento]
+  );
 
   // Al aparecer, sin animación, en el último mes.
   useLayoutEffect(() => {
@@ -67,15 +70,24 @@ export default function Galeria() {
       tarjetas.current.forEach((tarjeta, i) => {
         if (!tarjeta) return;
         const d = Math.abs(tarjeta.offsetLeft + tarjeta.offsetWidth / 2 - centro);
-        if (d < distancia) { distancia = d; mejor = i; }
+        if (d < distancia) {
+          distancia = d;
+          mejor = i;
+        }
       });
       setActivo(mejor);
     });
   };
 
   const alPulsarTecla = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "ArrowLeft") { event.preventDefault(); irA(activo - 1); }
-    if (event.key === "ArrowRight") { event.preventDefault(); irA(activo + 1); }
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      irA(activo - 1);
+    }
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      irA(activo + 1);
+    }
   };
 
   return (
@@ -94,7 +106,9 @@ export default function Galeria() {
             {meses.map((clave, i) => (
               <TarjetaMes
                 key={clave}
-                ref={(el) => { tarjetas.current[i] = el; }}
+                ref={(el) => {
+                  tarjetas.current[i] = el;
+                }}
                 clave={clave}
                 foto={fotos.get(clave)}
                 inclinacion={i % 2 === 0 ? "tilt-left" : "tilt-right"}
@@ -105,9 +119,25 @@ export default function Galeria() {
           </div>
         </div>
         <div className="timeline-nav">
-          <button className="carousel-btn prev" type="button" aria-label="Mes anterior" disabled={activo <= 0} onClick={() => irA(activo - 1)}>‹</button>
+          <button
+            className="carousel-btn prev"
+            type="button"
+            aria-label="Mes anterior"
+            disabled={activo <= 0}
+            onClick={() => irA(activo - 1)}
+          >
+            ‹
+          </button>
           <LineaDeMeses meses={meses} activo={activo} onElegir={irA} />
-          <button className="carousel-btn next" type="button" aria-label="Mes siguiente" disabled={activo >= meses.length - 1} onClick={() => irA(activo + 1)}>›</button>
+          <button
+            className="carousel-btn next"
+            type="button"
+            aria-label="Mes siguiente"
+            disabled={activo >= meses.length - 1}
+            onClick={() => irA(activo + 1)}
+          >
+            ›
+          </button>
         </div>
       </div>
     </Seccion>

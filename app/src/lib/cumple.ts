@@ -56,9 +56,11 @@ function occurrenceAt(current: Date): Ocurrencia | null {
   const all = [year - 1, year, year + 1].map((y) => ({ year: y, date: new Date(y, b.month, b.day) }));
   const past = all.filter((o) => o.date <= current).pop();
   const next = all.find((o) => o.date > current);
-  const make = (o: { year: number; date: Date }, estado: Ocurrencia["estado"]): Ocurrencia => (
-    { date: o.date, edad: o.year - b.year, estado }
-  );
+  const make = (o: { year: number; date: Date }, estado: Ocurrencia["estado"]): Ocurrencia => ({
+    date: o.date,
+    edad: o.year - b.year,
+    estado
+  });
 
   if (past) {
     const endOfDay = new Date(past.date.getFullYear(), past.date.getMonth(), past.date.getDate() + 1);

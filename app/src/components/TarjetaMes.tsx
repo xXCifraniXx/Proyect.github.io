@@ -18,7 +18,9 @@ interface TarjetaMesProps {
 
 /** Una foto impresa de la galería (o el hueco de un mes sin foto). */
 export default function TarjetaMes({ clave, foto, inclinacion, activa, onElegir, ref }: TarjetaMesProps) {
-  const clases = ["timeline-card", inclinacion, !foto?.src && "is-empty", activa && "is-active"].filter(Boolean).join(" ");
+  const clases = ["timeline-card", inclinacion, !foto?.src && "is-empty", activa && "is-active"]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <figure ref={ref} className={clases} onClick={activa ? undefined : onElegir}>
@@ -27,7 +29,9 @@ export default function TarjetaMes({ clave, foto, inclinacion, activa, onElegir,
           <img src={foto.src} alt={foto.titulo || nombreMes(clave)} loading="lazy" decoding="async" />
         ) : (
           <>
-            <span className="timeline-empty-icon" aria-hidden="true">🖼️</span>
+            <span className="timeline-empty-icon" aria-hidden="true">
+              🖼️
+            </span>
             <p>{TEXTOS.timelineEmpty || "La foto de este mes está por llegar 💜"}</p>
           </>
         )}

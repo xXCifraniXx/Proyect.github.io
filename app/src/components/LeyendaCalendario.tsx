@@ -13,7 +13,9 @@ export default function LeyendaCalendario() {
   return (
     <div className="calendar-legend" aria-label="Leyenda del calendario">
       {ITEMS.map((item) => (
-        <span key={item.clase}><i className={`legend-dot ${item.clase}`} /> <span>{item.texto}</span></span>
+        <span key={item.clase}>
+          <i className={`legend-dot ${item.clase}`} /> <span>{item.texto}</span>
+        </span>
       ))}
     </div>
   );

@@ -69,9 +69,18 @@ export default function Minijuego() {
       <CabeceraSeccion etiqueta={TEXTOS.juegoEyebrow} titulo={TEXTOS.juegoTitle} intro={TEXTOS.juegoIntro} />
       <div className="game-panel glass-soft">
         <div className="game-stats">
-          <span><strong>{movimientos}</strong> <span>{TEXTOS.juegoMovesLabel}</span></span>
-          <span><strong>{encontradas}/{PAREJAS}</strong> <span>{TEXTOS.juegoPairsLabel}</span></span>
-          <button className="btn btn-ghost" type="button" onClick={reiniciar}>{TEXTOS.juegoRestart}</button>
+          <span>
+            <strong>{movimientos}</strong> <span>{TEXTOS.juegoMovesLabel}</span>
+          </span>
+          <span>
+            <strong>
+              {encontradas}/{PAREJAS}
+            </strong>{" "}
+            <span>{TEXTOS.juegoPairsLabel}</span>
+          </span>
+          <button className="btn btn-ghost" type="button" onClick={reiniciar}>
+            {TEXTOS.juegoRestart}
+          </button>
         </div>
         <div className={`memory-board${gano ? " is-won" : ""}`}>
           {mazo.map((carta) => (
@@ -88,7 +97,9 @@ export default function Minijuego() {
           <div className="game-win">
             <span className="game-win-icon">🎉</span>
             <p>{TEXTOS.juegoWin}</p>
-            <button className="btn btn-primary" type="button" onClick={reiniciar}>{TEXTOS.juegoPlayAgain}</button>
+            <button className="btn btn-primary" type="button" onClick={reiniciar}>
+              {TEXTOS.juegoPlayAgain}
+            </button>
           </div>
         )}
       </div>

@@ -17,7 +17,9 @@ const decoder = new TextDecoder();
 
 const toB64 = (bytes: Uint8Array): string => {
   let binary = "";
-  bytes.forEach((b) => { binary += String.fromCharCode(b); });
+  bytes.forEach((b) => {
+    binary += String.fromCharCode(b);
+  });
   return btoa(binary);
 };
 const fromB64 = (text: string): Uint8Array<ArrayBuffer> => Uint8Array.from(atob(text), (c) => c.charCodeAt(0));

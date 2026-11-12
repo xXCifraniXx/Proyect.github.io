@@ -37,7 +37,9 @@ export default function Fondo() {
       </div>
       <div className="floating-hearts" id="floatingHearts" aria-hidden="true">
         {corazones.map((c) => (
-          <span key={c.id} className="heart" style={c.estilo}>{c.figura}</span>
+          <span key={c.id} className="heart" style={c.estilo}>
+            {c.figura}
+          </span>
         ))}
       </div>
     </>

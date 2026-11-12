@@ -23,20 +23,26 @@ export function useAjusteCompartido(): AjusteCompartido {
     if (!nubeActiva) return undefined;
     let cancelar: (() => void) | undefined;
     let vigente = true;
-    void cargarFirebase().then(async ({ db }) => {
-      const { doc, onSnapshot } = await import("firebase/firestore");
-      if (!vigente) return;
-      cancelar = onSnapshot(doc(db, ...RUTA), (snap) => {
-        const dato: unknown = snap.exists() ? snap.data() : null;
-        setAjuste(esAjusteValido(dato) ? dato : null);
-      }, (error) => {
+    void cargarFirebase()
+      .then(async ({ db }) => {
+        const { doc, onSnapshot } = await import("firebase/firestore");
+        if (!vigente) return;
+        cancelar = onSnapshot(
+          doc(db, ...RUTA),
+          (snap) => {
+            const dato: unknown = snap.exists() ? snap.data() : null;
+            setAjuste(esAjusteValido(dato) ? dato : null);
+          },
+          (error) => {
+            console.warn("[bajadas] sin nube:", error);
+            setAjuste(null);
+          }
+        );
+      })
+      .catch((error: unknown) => {
         console.warn("[bajadas] sin nube:", error);
         setAjuste(null);
       });
-    }).catch((error: unknown) => {
-      console.warn("[bajadas] sin nube:", error);
-      setAjuste(null);
-    });
     return () => {
       vigente = false;
       cancelar?.();

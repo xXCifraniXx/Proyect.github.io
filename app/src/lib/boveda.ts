@@ -30,9 +30,7 @@ function armarCartas(): CartaBoveda[] {
     .map((carta): CartaBoveda => ({ id: carta.fecha, carta, fecha: new Date(carta.fecha) }));
   const cumple = cartaDeCumple();
   const todas = cumple ? [...delConfig, { id: "cumple", carta: cumple, fecha: new Date(cumple.fecha) }] : delConfig;
-  return todas
-    .filter((c) => !Number.isNaN(c.fecha.getTime()))
-    .sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
+  return todas.filter((c) => !Number.isNaN(c.fecha.getTime())).sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
 }
 
 export const CARTAS_BOVEDA = armarCartas();

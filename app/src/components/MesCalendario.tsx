@@ -28,10 +28,14 @@ function MesCalendario({ mes, rotacion, hoy }: MesCalendarioProps) {
     <article className="calendar-month glass-soft">
       <h3>{mesYAnio(mes)}</h3>
       <div className="weekdays" aria-hidden="true">
-        {DIAS_SEMANA.map((d) => <span key={d}>{d}</span>)}
+        {DIAS_SEMANA.map((d) => (
+          <span key={d}>{d}</span>
+        ))}
       </div>
       <div className="calendar-grid">
-        {Array.from({ length: huecos }, (_, i) => <div key={`h${i}`} className="calendar-day empty" aria-hidden="true" />)}
+        {Array.from({ length: huecos }, (_, i) => (
+          <div key={`h${i}`} className="calendar-day empty" aria-hidden="true" />
+        ))}
         {Array.from({ length: diasDelMes }, (_, i) => {
           const dia = new Date(anio, m, i + 1);
           const info = tipoDeDia(rotacion, dia);

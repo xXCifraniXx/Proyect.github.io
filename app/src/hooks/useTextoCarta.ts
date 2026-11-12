@@ -17,7 +17,9 @@ export function useTextoCarta(carta: CartaConEdad | null): string | null {
     void textoDeCarta(carta).then((texto) => {
       if (vigente) setResultado({ carta, texto });
     });
-    return () => { vigente = false; };
+    return () => {
+      vigente = false;
+    };
   }, [carta]);
 
   return carta && resultado?.carta === carta ? resultado.texto : null;

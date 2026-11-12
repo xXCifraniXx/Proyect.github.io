@@ -58,7 +58,8 @@ export function sumarDias(fecha: Date, dias: number): Date {
 }
 
 /** "AAAA-MM-DD" (sirve también para los <input type="date">). */
-export const claveDia = (fecha: Date): string => `${fecha.getFullYear()}-${pad2(fecha.getMonth() + 1)}-${pad2(fecha.getDate())}`;
+export const claveDia = (fecha: Date): string =>
+  `${fecha.getFullYear()}-${pad2(fecha.getMonth() + 1)}-${pad2(fecha.getDate())}`;
 
 /** Días de calendario entre dos fechas, sin importar la hora ni el horario de verano. */
 export function diasCalendario(inicio: Date, fin: Date): number {

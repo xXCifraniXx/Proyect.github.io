@@ -51,11 +51,18 @@ export default function Musica() {
         </div>
         <div className="music-controls">
           <button className="btn btn-primary" type="button" onClick={() => void alternar()}>
-            {sonando ? (TEXTOS.musicPause || "Pausar ⏸") : (TEXTOS.musicPlay || "Reproducir 🎵")}
+            {sonando ? TEXTOS.musicPause || "Pausar ⏸" : TEXTOS.musicPlay || "Reproducir 🎵"}
           </button>
           <label className="volume-control">
             <span>{TEXTOS.musicVolume}</span>
-            <input type="range" min={0} max={1} step={0.01} value={volumen} onChange={(e) => setVolumen(Number(e.target.value))} />
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.01}
+              value={volumen}
+              onChange={(e) => setVolumen(Number(e.target.value))}
+            />
           </label>
         </div>
       </div>

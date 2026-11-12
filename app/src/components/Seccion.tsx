@@ -14,7 +14,12 @@ interface SeccionProps {
 export default function Seccion({ id, className, ariaLabelledby, children }: SeccionProps) {
   const ref = useRevelar<HTMLElement>();
   return (
-    <section ref={ref} id={id} className={`section reveal${className ? ` ${className}` : ""}`} aria-labelledby={ariaLabelledby}>
+    <section
+      ref={ref}
+      id={id}
+      className={`section reveal${className ? ` ${className}` : ""}`}
+      aria-labelledby={ariaLabelledby}
+    >
       {children}
     </section>
   );

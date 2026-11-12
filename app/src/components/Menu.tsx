@@ -63,7 +63,9 @@ export default function Menu({ visibles = {} }: MenuProps) {
 
   return (
     <nav className="topbar" aria-label="Navegación principal">
-      <a href="#inicio" className="brand">Para {NOMBRES.novia}</a>
+      <a href="#inicio" className="brand">
+        Para {NOMBRES.novia}
+      </a>
       <button
         ref={boton}
         className="menu-toggle"
@@ -72,14 +74,20 @@ export default function Menu({ visibles = {} }: MenuProps) {
         aria-controls="navLinks"
         onClick={() => setAbierto((valor) => !valor)}
       >
-        <span className="menu-toggle-icon" aria-hidden="true"><span /><span /><span /></span>
+        <span className="menu-toggle-icon" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </span>
         <span>Menú</span>
       </button>
       <div ref={panel} className={`nav-links${abierto ? " is-open" : ""}`} id="navLinks">
         {enlaces
           .filter((enlace) => enlace.visible !== false)
           .map((enlace) => (
-            <a key={enlace.href} href={enlace.href} onClick={() => setAbierto(false)}>{enlace.texto}</a>
+            <a key={enlace.href} href={enlace.href} onClick={() => setAbierto(false)}>
+              {enlace.texto}
+            </a>
           ))}
       </div>
     </nav>

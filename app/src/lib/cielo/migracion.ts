@@ -13,13 +13,19 @@ const CLAVE_MIGRADA = `constelacion-migrada-${id}`;
 const CLAVE_PENDIENTES = `constelacion-pendientes-${id}`;
 
 function leer(clave: string): string | null {
-  try { return localStorage.getItem(clave); } catch { return null; }
+  try {
+    return localStorage.getItem(clave);
+  } catch {
+    return null;
+  }
 }
 function escribir(clave: string, valor: string | null) {
   try {
     if (valor === null) localStorage.removeItem(clave);
     else localStorage.setItem(clave, valor);
-  } catch { /* modo privado */ }
+  } catch {
+    /* modo privado */
+  }
 }
 
 export const yaMigrado = (): boolean => leer(CLAVE_MIGRADA) === "1";

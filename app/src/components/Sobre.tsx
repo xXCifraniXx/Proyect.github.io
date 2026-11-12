@@ -71,11 +71,11 @@ export default function Sobre() {
       </div>
       <p className="hint">
         {abierto
-          ? (TEXTOS.letterHintOpen || "La carta ya está abierta. Toca el sobre para cerrarla.")
-          : (TEXTOS.letterHintClosed || "Toca el sobre para abrirlo con calma.")}
+          ? TEXTOS.letterHintOpen || "La carta ya está abierta. Toca el sobre para cerrarla."
+          : TEXTOS.letterHintClosed || "Toca el sobre para abrirlo con calma."}
       </p>
       <button className="btn btn-ghost" type="button" onClick={desdeBoton}>
-        {abierto ? (TEXTOS.letterClose || "Cerrar carta") : (TEXTOS.letterOpen || "Abrir carta")}
+        {abierto ? TEXTOS.letterClose || "Cerrar carta" : TEXTOS.letterOpen || "Abrir carta"}
       </button>
     </div>
   );

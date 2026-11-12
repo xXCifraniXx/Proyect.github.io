@@ -22,4 +22,8 @@ export async function textoDeCarta(carta: CartaConEdad): Promise<string> {
 }
 
 /** Separa el texto en párrafos (una línea en blanco entre párrafos). */
-export const enParrafos = (texto: string): string[] => texto.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+export const enParrafos = (texto: string): string[] =>
+  texto
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean);
