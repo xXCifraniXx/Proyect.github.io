@@ -1,0 +1,6 @@
+dist/
+node_modules/
+package-lock.json
+public/
+# La documentación se escribe a mano (y CLAUDE.md es solo local).
+*.md

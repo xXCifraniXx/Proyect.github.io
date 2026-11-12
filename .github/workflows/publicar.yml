@@ -1,6 +1,6 @@
 # PUBLICAR
-# Cada vez que algo llega a main: revisa (calidad.yml), compila la versión
-# React y la publica en GitHub Pages, en el mismo link de siempre
+# Cada vez que algo llega a main: revisa (calidad.yml), compila el sitio
+# y lo publica en GitHub Pages, en el mismo link de siempre
 # (https://xxcifranixx.github.io/Proyect.github.io/).
 #
 # Requiere en GitHub: Settings → Pages → Source = "GitHub Actions".
@@ -28,9 +28,6 @@ jobs:
     name: Compilar
     needs: calidad
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: app
     steps:
       - uses: actions/checkout@v7
 
@@ -38,7 +35,6 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: app/package-lock.json
 
       - name: Instalar dependencias
         run: npm ci
@@ -50,7 +46,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: app/dist
+          path: dist
 
   publicar:
     name: Publicar en GitHub Pages

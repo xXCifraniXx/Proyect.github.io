@@ -1,403 +1,50 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
-  <!--
-    Vista previa del enlace (WhatsApp, Instagram, etc.).
-    Los lectores de enlaces NO ejecutan JavaScript, así que este texto va aquí
-    fijo, no en config.js. Cambia el mensaje y la imagen a tu gusto.
-  -->
-  <title>Para Anthuanete 💜</title>
-  <meta name="description" content="Un rincón hecho para los dos: nuestra carta, cada mes juntos, la cuenta para volver a abrazarnos y un cielo para llenar de recuerdos." />
+    <!--
+      Vista previa del enlace (WhatsApp, Instagram, etc.). Los lectores de
+      enlaces no ejecutan JavaScript, así que este texto va aquí fijo.
+    -->
+    <title>Para Anthuanete 💜</title>
+    <meta
+      name="description"
+      content="Un rincón hecho para los dos: nuestra carta, cada mes juntos, la cuenta para volver a abrazarnos y un cielo para llenar de recuerdos."
+    />
 
-  <link rel="canonical" href="https://xxcifranixx.github.io/Proyect.github.io/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Para Anthuanete" />
-  <meta property="og:title" content="Para Anthuanete 💜" />
-  <meta property="og:description" content="Un rincón hecho para los dos: nuestra carta, cada mes juntos, la cuenta para volver a abrazarnos y un cielo para llenar de recuerdos." />
-  <meta property="og:url" content="https://xxcifranixx.github.io/Proyect.github.io/" />
-  <meta property="og:image" content="https://xxcifranixx.github.io/Proyect.github.io/assets/images/compartir.jpg" />
-  <meta property="og:image:type" content="image/jpeg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Corazón con el símbolo de infinito y la fecha 08/03/26" />
-  <meta property="og:locale" content="es_ES" />
+    <link rel="canonical" href="https://xxcifranixx.github.io/Proyect.github.io/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Para Anthuanete" />
+    <meta property="og:title" content="Para Anthuanete 💜" />
+    <meta
+      property="og:description"
+      content="Un rincón hecho para los dos: nuestra carta, cada mes juntos, la cuenta para volver a abrazarnos y un cielo para llenar de recuerdos."
+    />
+    <meta property="og:url" content="https://xxcifranixx.github.io/Proyect.github.io/" />
+    <meta property="og:image" content="https://xxcifranixx.github.io/Proyect.github.io/assets/images/compartir.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Corazón con el símbolo de infinito y la fecha 08/03/26" />
+    <meta property="og:locale" content="es_ES" />
 
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Para Anthuanete 💜" />
-  <meta name="twitter:description" content="Un rincón hecho para los dos: nuestra carta, cada mes juntos, la cuenta para volver a abrazarnos y un cielo para llenar de recuerdos." />
-  <meta name="twitter:image" content="https://xxcifranixx.github.io/Proyect.github.io/assets/images/compartir.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Para Anthuanete 💜" />
+    <meta
+      name="twitter:description"
+      content="Un rincón hecho para los dos: nuestra carta, cada mes juntos, la cuenta para volver a abrazarnos y un cielo para llenar de recuerdos."
+    />
+    <meta name="twitter:image" content="https://xxcifranixx.github.io/Proyect.github.io/assets/images/compartir.jpg" />
 
-  <meta name="theme-color" content="#120817" />
-  <link rel="icon" href="assets/images/icono.svg" type="image/svg+xml" />
-  <link rel="icon" href="assets/images/icono-32.png" type="image/png" sizes="32x32" />
-  <link rel="apple-touch-icon" href="assets/images/icono-180.png" />
-  <link rel="stylesheet" href="assets/css/styles.css" />
-</head>
-<body>
-  <!--
-    El HTML es solo la plantilla. Todos los textos y las secciones dinámicas
-    se rellenan desde assets/js/app.js leyendo assets/js/config.js.
-    Los elementos con  data-bind  reciben su texto desde config.textos.
-  -->
-  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
-
-  <div class="ambient" aria-hidden="true">
-    <span class="orb orb-rose"></span>
-    <span class="orb orb-lilac"></span>
-    <span class="orb orb-gold"></span>
-  </div>
-
-  <div class="floating-hearts" id="floatingHearts" aria-hidden="true"></div>
-
-  <section class="welcome" id="welcome" aria-label="Pantalla de bienvenida">
-    <div class="welcome-card glass reveal-now">
-      <span class="eyebrow" data-bind="textos.welcomeEyebrow"></span>
-      <h1 data-bind="textos.welcomeTitle"></h1>
-      <p data-bind="textos.welcomeText"></p>
-      <button class="btn btn-primary" id="enterBtn" type="button" data-bind="textos.welcomeButton"></button>
-      <p class="tiny-note" data-bind="textos.welcomeNote"></p>
-    </div>
-  </section>
-
-  <audio id="audioPlayer" preload="none" playsinline></audio>
-
-  <div class="app-shell">
-    <header class="hero glass reveal" id="inicio">
-      <nav class="topbar" aria-label="Navegación principal">
-        <a href="#inicio" class="brand" id="brandText"></a>
-        <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="navLinks">
-          <span class="menu-toggle-icon" aria-hidden="true"><span></span><span></span><span></span></span>
-          <span>Menú</span>
-        </button>
-        <div class="nav-links" id="navLinks">
-          <a href="#mensaje-mes" id="navMes" data-bind="textos.navMes" hidden></a>
-          <a href="#carta" data-bind="textos.navCarta"></a>
-          <a href="#linea-tiempo" data-bind="textos.navMeses"></a>
-          <a href="#tiempo" data-bind="textos.navTiempo"></a>
-          <a href="#calendario" data-bind="textos.navBajada"></a>
-          <a href="#musica" data-bind="textos.navMusica"></a>
-          <a href="#cumple" id="navCumple" data-bind="textos.navCumple" hidden></a>
-          <a href="#boveda" data-bind="textos.navBoveda"></a>
-          <a href="#constelacion" data-bind="textos.navConstelacion"></a>
-          <a href="#juego" data-bind="textos.navJuego"></a>
-        </div>
-      </nav>
-
-      <div class="hero-grid">
-        <div class="hero-copy">
-          <span class="eyebrow" data-bind="textos.heroEyebrow"></span>
-          <h1 data-bind="textos.heroTitle"></h1>
-          <p class="lead" data-bind="textos.heroIntro"></p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#carta" data-bind="textos.heroCtaCarta"></a>
-            <a class="btn btn-secondary" href="#boveda" id="heroCtaBoveda" data-bind="textos.heroCtaBoveda"></a>
-          </div>
-        </div>
-
-        <div class="letter-stage" aria-label="Carta interactiva">
-          <div class="envelope" id="envelope" role="button" tabindex="0" aria-pressed="false" aria-label="Abrir o cerrar la carta">
-            <div class="envelope-back"></div>
-            <article class="letter-paper">
-              <h2 data-bind="textos.letterTitle"></h2>
-              <p data-bind="textos.letterMessage"></p>
-              <strong data-bind="textos.letterSignature"></strong>
-            </article>
-            <div class="envelope-front"></div>
-            <div class="envelope-flap"></div>
-            <div class="seal">❤</div>
-          </div>
-          <p class="hint" id="letterHint"></p>
-          <button class="btn btn-ghost" id="openLetterBtn" type="button"></button>
-        </div>
-      </div>
-    </header>
-
-    <main>
-      <section class="section reveal month-note-section" id="mensaje-mes" aria-labelledby="mesTitulo" hidden>
-        <article class="month-note">
-          <p class="month-note-date" id="mesFecha"></p>
-          <h2 class="month-note-title" id="mesTitulo"></h2>
-          <div class="month-note-body" id="mesMensaje"></div>
-          <p class="month-note-sign" id="mesFirma"></p>
-        </article>
-      </section>
-
-      <section class="section reveal" id="carta">
-        <div class="section-head">
-          <span class="eyebrow" data-bind="textos.cartaEyebrow"></span>
-          <h2 data-bind="textos.cartaTitle"></h2>
-          <p data-bind="textos.cartaIntro"></p>
-        </div>
-        <div class="surprise-card glass-soft">
-          <button class="btn btn-primary" id="surpriseBtn" type="button"></button>
-          <p class="surprise-message" id="surpriseMessage"></p>
-        </div>
-      </section>
-
-      <section class="section reveal" id="linea-tiempo">
-        <div class="section-head">
-          <span class="eyebrow" data-bind="textos.timelineEyebrow"></span>
-          <h2 data-bind="textos.timelineTitle"></h2>
-          <p data-bind="textos.timelineIntro"></p>
-        </div>
-        <div class="timeline-wrap glass-soft">
-          <div class="timeline-viewport" id="timelineViewport" tabindex="0" aria-label="Fotos por mes">
-            <div class="timeline-track" id="timelineTrack"></div>
-          </div>
-          <div class="timeline-nav">
-            <button class="carousel-btn prev" id="timelinePrev" type="button" aria-label="Mes anterior">‹</button>
-            <ol class="timeline-rail" id="timelineRail" aria-label="Elegir mes"></ol>
-            <button class="carousel-btn next" id="timelineNext" type="button" aria-label="Mes siguiente">›</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="section reveal" id="tiempo">
-        <div class="section-head">
-          <span class="eyebrow" data-bind="textos.tiempoEyebrow"></span>
-          <h2 data-bind="textos.tiempoTitle"></h2>
-          <p data-bind="textos.timeIntro"></p>
-        </div>
-
-        <div class="counter-grid">
-          <article class="counter-card glass-soft">
-            <strong id="yearsTogether">0</strong>
-            <span data-bind="textos.labelYears"></span>
-          </article>
-          <article class="counter-card glass-soft">
-            <strong id="monthsTogether">0</strong>
-            <span data-bind="textos.labelMonths"></span>
-          </article>
-          <article class="counter-card glass-soft">
-            <strong id="daysTogether">0</strong>
-            <span data-bind="textos.labelDays"></span>
-          </article>
-          <article class="counter-card glass-soft">
-            <strong id="totalDaysTogether">0</strong>
-            <span data-bind="textos.labelTotalDays"></span>
-          </article>
-        </div>
-
-        <div class="return-card glass-soft" id="returnCard">
-          <div>
-            <span class="eyebrow small" data-bind="textos.countdownEyebrow"></span>
-            <h3 id="returnTitle"></h3>
-            <p id="returnText"></p>
-          </div>
-          <div class="return-grid">
-            <div><strong id="returnDays">0</strong><span data-bind="textos.labelCountdownDays"></span></div>
-            <div><strong id="returnHours">0</strong><span data-bind="textos.labelCountdownHours"></span></div>
-            <div><strong id="returnMinutes">0</strong><span data-bind="textos.labelCountdownMinutes"></span></div>
-            <div><strong id="returnSeconds">0</strong><span data-bind="textos.labelCountdownSeconds"></span></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section reveal" id="calendario">
-        <div class="section-head calendar-head">
-          <div>
-            <span class="eyebrow" data-bind="textos.calendarEyebrow"></span>
-            <h2 data-bind="textos.calendarTitle"></h2>
-            <p data-bind="textos.calendarIntro"></p>
-          </div>
-          <div class="calendar-legend" aria-label="Leyenda del calendario">
-            <span><i class="legend-dot legend-mine"></i> <span data-bind="textos.legendMine"></span></span>
-            <span><i class="legend-dot legend-departure"></i> <span data-bind="textos.legendDeparture"></span></span>
-            <span><i class="legend-dot legend-return"></i> <span data-bind="textos.legendReturn"></span></span>
-            <span><i class="legend-dot legend-rest"></i> <span data-bind="textos.legendRest"></span></span>
-            <span><i class="legend-dot legend-today"></i> <span data-bind="textos.legendToday"></span></span>
-          </div>
-        </div>
-
-        <div class="roster-panel glass-soft" id="rosterPanel">
-          <article class="roster-status">
-            <span class="eyebrow small" data-bind="textos.rosterEyebrow"></span>
-            <h3 id="rosterStatusTitle"></h3>
-            <p id="rosterStatusText"></p>
-          </article>
-
-          <div class="roster-countdown">
-            <span id="rosterCountdownLabel"></span>
-            <div class="roster-countdown-grid">
-              <div><strong id="rosterDays">0</strong><span data-bind="textos.labelCountdownDays"></span></div>
-              <div><strong id="rosterHours">0</strong><span data-bind="textos.labelCountdownHours"></span></div>
-              <div><strong id="rosterMinutes">0</strong><span data-bind="textos.labelCountdownMinutes"></span></div>
-              <div><strong id="rosterSeconds">0</strong><span data-bind="textos.labelCountdownSeconds"></span></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="calendar-toolbar glass-soft">
-          <button class="round-btn" id="calendarPrev" type="button" aria-label="Mes anterior">‹</button>
-          <strong id="calendarRangeLabel"></strong>
-          <button class="round-btn" id="calendarNext" type="button" aria-label="Mes siguiente">›</button>
-          <button class="today-btn" id="calendarToday" type="button" data-bind="textos.calendarTodayBtn"></button>
-        </div>
-
-        <div class="calendar-months" id="calendarMonths" aria-label="Calendario de rotación"></div>
-
-        <details class="roster-editor glass-soft" id="rosterEditor">
-          <summary><span data-bind="textos.rosterEditorTitle"></span></summary>
-          <form class="roster-editor-form" id="rosterEditorForm" novalidate>
-            <label class="roster-editor-field">
-              <span data-bind="textos.rosterEditorNextDown"></span>
-              <input type="date" id="rosterNextDown" required />
-            </label>
-            <div class="roster-editor-grid">
-              <label class="roster-editor-field">
-                <span data-bind="textos.rosterEditorMineDays"></span>
-                <input type="number" id="rosterMineDays" min="1" max="60" inputmode="numeric" />
-              </label>
-              <label class="roster-editor-field">
-                <span data-bind="textos.rosterEditorRestDays"></span>
-                <input type="number" id="rosterRestDays" min="1" max="60" inputmode="numeric" />
-              </label>
-              <label class="roster-editor-field">
-                <span data-bind="textos.rosterEditorReturnTime"></span>
-                <input type="time" id="rosterReturnTime" />
-              </label>
-            </div>
-            <div class="roster-editor-account" id="rosterAccount" hidden>
-              <span id="rosterAccountText"></span>
-              <button type="button" class="btn btn-ghost" id="rosterAccountBtn"></button>
-            </div>
-            <p class="roster-editor-note" data-bind="textos.rosterEditorNote"></p>
-            <div class="roster-editor-actions">
-              <button type="submit" class="btn btn-primary" data-bind="textos.rosterEditorSave"></button>
-              <button type="button" class="btn btn-ghost" id="rosterReset" data-bind="textos.rosterEditorReset" hidden></button>
-            </div>
-            <p class="roster-editor-status" id="rosterEditorStatus" role="status" aria-live="polite"></p>
-          </form>
-        </details>
-      </section>
-
-      <section class="section reveal" id="musica">
-        <div class="section-head">
-          <span class="eyebrow" data-bind="textos.musicaEyebrow"></span>
-          <h2 data-bind="textos.musicaTitle"></h2>
-          <p data-bind="textos.musicaIntro"></p>
-        </div>
-
-        <div class="music-panel glass-soft">
-          <div class="music-info">
-            <span class="music-label" data-bind="textos.musicLabel"></span>
-            <strong id="currentSongTitle"></strong>
-            <span id="currentSongArtist"></span>
-          </div>
-
-          <div class="music-controls">
-            <button class="btn btn-primary" id="playMusicBtn" type="button"></button>
-            <label class="volume-control">
-              <span data-bind="textos.musicVolume"></span>
-              <input type="range" id="volumeRange" min="0" max="1" step="0.01" value="0.24" />
-            </label>
-          </div>
-        </div>
-      </section>
-
-      <section class="section reveal" id="boveda">
-        <div class="section-head">
-          <span class="eyebrow" data-bind="textos.bovedaEyebrow"></span>
-          <h2 data-bind="textos.bovedaTitle"></h2>
-          <p data-bind="textos.bovedaIntro"></p>
-        </div>
-        <div class="boveda-grid" id="bovedaGrid"></div>
-      </section>
-
-      <section class="section reveal" id="cumple">
-        <div class="section-head">
-          <span class="eyebrow" data-bind="textos.cumpleEyebrow"></span>
-          <h2 id="cumpleTitle"></h2>
-          <p id="cumpleIntro"></p>
-        </div>
-        <div class="cumple-card glass-soft">
-          <div class="cumple-locked" id="cumpleLocked" hidden>
-            <span class="cumple-gift" aria-hidden="true">🎁</span>
-            <span class="cumple-locked-label" data-bind="textos.cumpleAntesLabel"></span>
-            <div class="return-grid">
-              <div><strong id="cumpleDays">0</strong><span data-bind="textos.labelCountdownDays"></span></div>
-              <div><strong id="cumpleHours">0</strong><span data-bind="textos.labelCountdownHours"></span></div>
-              <div><strong id="cumpleMinutes">0</strong><span data-bind="textos.labelCountdownMinutes"></span></div>
-              <div><strong id="cumpleSeconds">0</strong><span data-bind="textos.labelCountdownSeconds"></span></div>
-            </div>
-          </div>
-          <div class="cumple-stage" id="cumpleStage" hidden>
-            <div class="cake" id="cake" role="group" aria-label="Pastel de cumpleaños"></div>
-            <button class="btn btn-primary" id="cumpleBlow" type="button" data-bind="textos.cumpleBtnSoplar"></button>
-            <div class="cumple-wish" id="cumpleWish" hidden>
-              <p data-bind="textos.cumpleDeseo"></p>
-              <div class="cumple-wish-actions">
-                <button class="btn btn-primary" id="cumpleOpenLetter" type="button" data-bind="textos.cumpleBtnCarta"></button>
-                <button class="btn btn-ghost" id="cumpleRelight" type="button" data-bind="textos.cumpleBtnEncender"></button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section reveal" id="constelacion">
-        <div class="section-head">
-          <span class="eyebrow" data-bind="textos.constelacionEyebrow"></span>
-          <h2 data-bind="textos.constelacionTitle"></h2>
-          <p data-bind="textos.constelacionIntro"></p>
-        </div>
-        <div class="constelacion-card glass-soft">
-          <canvas id="constelacionTeaser" aria-hidden="true"></canvas>
-          <a class="btn btn-primary" href="constelacion/index.html" id="constelacionBtn" data-bind="textos.constelacionBtn"></a>
-        </div>
-      </section>
-
-      <section class="section reveal" id="juego">
-        <div class="section-head">
-          <span class="eyebrow" data-bind="textos.juegoEyebrow"></span>
-          <h2 data-bind="textos.juegoTitle"></h2>
-          <p data-bind="textos.juegoIntro"></p>
-        </div>
-        <div class="game-panel glass-soft">
-          <div class="game-stats">
-            <span><strong id="gameMoves">0</strong> <span data-bind="textos.juegoMovesLabel"></span></span>
-            <span><strong id="gamePairs">0</strong> <span data-bind="textos.juegoPairsLabel"></span></span>
-            <button class="btn btn-ghost" id="gameRestart" type="button" data-bind="textos.juegoRestart"></button>
-          </div>
-          <div class="memory-board" id="memoryBoard"></div>
-          <div class="game-win" id="gameWin" hidden>
-            <span class="game-win-icon">🎉</span>
-            <p data-bind="textos.juegoWin"></p>
-            <button class="btn btn-primary" id="gamePlayAgain" type="button" data-bind="textos.juegoPlayAgain"></button>
-          </div>
-        </div>
-      </section>
-
-      <section class="section final-section reveal" id="final">
-        <div class="final-card glass">
-          <span class="eyebrow" data-bind="textos.finalEyebrow"></span>
-          <h2 data-bind="textos.finalPhrase"></h2>
-          <p data-bind="textos.finalSign"></p>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <div class="lightbox" id="bovedaModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Carta abierta">
-    <div class="lightbox-card boveda-modal-card">
-      <button class="lightbox-close" id="bovedaModalClose" type="button" aria-label="Cerrar carta">×</button>
-      <span class="boveda-modal-icon" id="bovedaModalIcon">💌</span>
-      <span class="boveda-modal-date" id="bovedaModalDate"></span>
-      <h3 id="bovedaModalTitle"></h3>
-      <p id="bovedaModalMessage"></p>
-      <a class="btn btn-primary" id="bovedaModalAction" hidden></a>
-    </div>
-  </div>
-
-  <script src="assets/js/config.js"></script>
-  <script src="assets/js/sello.js"></script>
-  <script src="assets/js/confetti.js"></script>
-  <script src="assets/js/cumple.js"></script>
-  <script src="assets/js/app.js"></script>
-  <script src="assets/js/nube-config.js"></script>
-  <script type="module" src="assets/js/nube-bajadas.js"></script>
-</body>
+    <meta name="theme-color" content="#120817" />
+    <link rel="icon" href="/assets/images/icono.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/images/icono-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/assets/images/icono-180.png" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

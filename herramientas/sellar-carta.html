@@ -1,94 +1,113 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex" />
-  <title>Sellar carta</title>
-  <style>
-    :root { color-scheme: dark; }
-    body { margin: 0; min-height: 100vh; background: #120817; color: #fff8fb; font: 16px/1.5 Inter, system-ui, sans-serif; }
-    main { max-width: 720px; margin: 0 auto; padding: 32px 16px; }
-    h1 { font-family: Georgia, serif; font-weight: 400; margin: 0 0 8px; }
-    p { color: #d8c4d6; margin: 0 0 20px; }
-    label { display: block; font-weight: 600; margin: 18px 0 6px; }
-    textarea { box-sizing: border-box; width: 100%; min-height: 200px; padding: 12px; border-radius: 12px; border: 1px solid #5a3557; background: #1d0e22; color: inherit; font: inherit; }
-    #salida { min-height: 110px; font-family: ui-monospace, Consolas, monospace; font-size: 13px; }
-    button { margin-top: 12px; padding: 10px 18px; border: 0; border-radius: 999px; background: #ff9eb8; color: #120817; font: 600 15px/1 inherit; cursor: pointer; }
-    button:focus-visible { outline: 2px solid #f3d99f; outline-offset: 3px; }
-    #estado { min-height: 1.5em; margin-top: 10px; color: #f3d99f; }
-    code { background: #2a1430; padding: 1px 6px; border-radius: 6px; }
-  </style>
-  <link rel="icon" href="../assets/images/icono.svg" type="image/svg+xml" />
-  <link rel="icon" href="../assets/images/icono-32.png" type="image/png" sizes="32x32" />
-  <link rel="apple-touch-icon" href="../assets/images/icono-180.png" />
-</head>
-<body>
-  <main>
-    <h1>Sellar una carta de La Bóveda</h1>
-    <p>
-      Escribe la carta, pulsa <strong>Sellar</strong> y copia el resultado en
-      <code>mensajeSellado</code> de esa carta en <code>assets/js/config.js</code>
-      (y borra su <code>mensaje</code>). Puedes usar <code>{edad}</code> en la carta de cumpleaños.
-      Nada de lo que escribes aquí sale de este navegador.
-    </p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Sellar carta</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #120817;
+        color: #fff8fb;
+        font:
+          16px/1.5 Inter,
+          system-ui,
+          sans-serif;
+      }
+      main {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 32px 16px;
+      }
+      h1 {
+        font-family: Georgia, serif;
+        font-weight: 400;
+        margin: 0 0 8px;
+      }
+      p {
+        color: #d8c4d6;
+        margin: 0 0 20px;
+      }
+      label {
+        display: block;
+        font-weight: 600;
+        margin: 18px 0 6px;
+      }
+      textarea {
+        box-sizing: border-box;
+        width: 100%;
+        min-height: 200px;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid #5a3557;
+        background: #1d0e22;
+        color: inherit;
+        font: inherit;
+      }
+      #salida {
+        min-height: 110px;
+        font-family: ui-monospace, Consolas, monospace;
+        font-size: 13px;
+      }
+      button {
+        margin-top: 12px;
+        padding: 10px 18px;
+        border: 0;
+        border-radius: 999px;
+        background: #ff9eb8;
+        color: #120817;
+        font: 600 15px/1 inherit;
+        cursor: pointer;
+      }
+      button:focus-visible {
+        outline: 2px solid #f3d99f;
+        outline-offset: 3px;
+      }
+      #estado {
+        min-height: 1.5em;
+        margin-top: 10px;
+        color: #f3d99f;
+      }
+      code {
+        background: #2a1430;
+        padding: 1px 6px;
+        border-radius: 6px;
+      }
+    </style>
+    <link rel="icon" href="/assets/images/icono.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/images/icono-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/assets/images/icono-180.png" />
+  </head>
+  <body>
+    <main>
+      <h1>Sellar una carta de La Bóveda</h1>
+      <p>
+        Escribe la carta, pulsa <strong>Sellar</strong> y copia el resultado en <code>mensajeSellado</code> de esa carta
+        en <code>src/config/</code> (<code>boveda.ts</code>, <code>meses.ts</code> o <code>cumpleanos.ts</code>) (y
+        borra su <code>mensaje</code>). Puedes usar <code>{edad}</code> en la carta de cumpleaños. Nada de lo que
+        escribes aquí sale de este navegador.
+      </p>
 
-    <label for="entrada">Texto de la carta</label>
-    <textarea id="entrada" placeholder="Escribe aquí la carta…"></textarea>
-    <button id="sellar" type="button">Sellar</button>
+      <label for="entrada">Texto de la carta</label>
+      <textarea id="entrada" placeholder="Escribe aquí la carta…"></textarea>
+      <button id="sellar" type="button">Sellar</button>
 
-    <label for="salida">Resultado para <code>mensajeSellado</code></label>
-    <textarea id="salida" spellcheck="false"></textarea>
-    <button id="copiar" type="button">Copiar</button>
-    <button id="abrir" type="button">Abrir un sello</button>
-    <p id="estado" role="status" aria-live="polite"></p>
-    <p>Para leer o corregir una carta ya sellada, pega su <code>mensajeSellado</code> en
-      el cuadro de resultado y pulsa <strong>Abrir un sello</strong>: el texto aparece arriba.</p>
-  </main>
+      <label for="salida">Resultado para <code>mensajeSellado</code></label>
+      <textarea id="salida" spellcheck="false"></textarea>
+      <button id="copiar" type="button">Copiar</button>
+      <button id="abrir" type="button">Abrir un sello</button>
+      <p id="estado" role="status" aria-live="polite"></p>
+      <p>
+        Para leer o corregir una carta ya sellada, pega su <code>mensajeSellado</code> en el cuadro de resultado y pulsa
+        <strong>Abrir un sello</strong>: el texto aparece arriba.
+      </p>
+    </main>
 
-  <script src="../assets/js/sello.js"></script>
-  <script>
-    (() => {
-      const entrada = document.getElementById("entrada");
-      const salida = document.getElementById("salida");
-      const estado = document.getElementById("estado");
-
-      document.getElementById("sellar").addEventListener("click", async () => {
-        const texto = entrada.value;
-        if (!texto.trim()) { estado.textContent = "Primero escribe la carta."; return; }
-        try {
-          const sello = await window.Sello.sellar(texto);
-          // Comprobación: el sello se vuelve a abrir antes de dártelo.
-          if (await window.Sello.abrir(sello) !== texto) throw new Error("La comprobación falló.");
-          salida.value = sello;
-          estado.textContent = "Listo. Copia el resultado en config.js.";
-        } catch (error) {
-          estado.textContent = `No se pudo sellar: ${error.message}`;
-        }
-      });
-
-      document.getElementById("abrir").addEventListener("click", async () => {
-        const sello = salida.value.trim().replace(/^"|"$/g, "");
-        if (!sello) { estado.textContent = "Pega primero el mensajeSellado en el cuadro de resultado."; return; }
-        try {
-          entrada.value = await window.Sello.abrir(sello);
-          estado.textContent = "Sello abierto. Edita el texto y vuelve a sellarlo.";
-        } catch (_) {
-          estado.textContent = "Ese texto no es un sello válido.";
-        }
-      });
-
-      document.getElementById("copiar").addEventListener("click", async () => {
-        if (!salida.value) return;
-        try {
-          await navigator.clipboard.writeText(salida.value);
-          estado.textContent = "Copiado.";
-        } catch (_) {
-          salida.select();
-          estado.textContent = "Selecciona el texto y cópialo con Ctrl+C.";
-        }
-      });
-    })();
-  </script>
-</body>
+    <script type="module" src="/src/herramientas/sellarCarta.ts"></script>
+  </body>
 </html>

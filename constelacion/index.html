@@ -1,51 +1,20 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Constelación de nosotros</title>
-  <meta name="description" content="Un cielo para los dos: toca para crear estrellas con recuerdos y se conectan en una constelación." />
-  <meta name="theme-color" content="#120817" />
-  <link rel="icon" href="../assets/images/icono.svg" type="image/svg+xml" />
-  <link rel="icon" href="../assets/images/icono-32.png" type="image/png" sizes="32x32" />
-  <link rel="apple-touch-icon" href="../assets/images/icono-180.png" />
-  <link rel="stylesheet" href="estrellas.css" />
-</head>
-<body>
-  <canvas id="sky" aria-label="Lienzo de la constelación"></canvas>
-
-  <header class="topbar">
-    <div class="title-wrap">
-      <a class="back-link" href="../index.html">← Volver a la carta</a>
-      <h1>Constelación de nosotros</h1>
-    </div>
-    <div class="actions">
-      <button id="authBtn" type="button" class="chip" hidden>Iniciar sesión</button>
-      <button id="undoBtn" type="button" class="chip" title="Quitar la última estrella">↶ Deshacer</button>
-      <button id="downloadBtn" type="button" class="chip" title="Descargar como imagen">⤓ Guardar imagen</button>
-      <button id="clearBtn" type="button" class="chip danger" title="Borrar todo el cielo">✦ Vaciar cielo</button>
-    </div>
-  </header>
-
-  <p class="hint" id="hint">Toca cualquier parte del cielo para poner una estrella y escribir un recuerdo.</p>
-
-  <div class="composer" id="composer" hidden>
-    <input id="composerInput" type="text" maxlength="60" placeholder="un recuerdo, una palabra, una fecha…" autocomplete="off" />
-    <div class="composer-row">
-      <button id="composerCancel" type="button" class="chip ghost">Cancelar</button>
-      <button id="composerSave" type="button" class="chip primary">Añadir estrella ✦</button>
-    </div>
-  </div>
-
-  <div class="star-pop" id="starPop" hidden>
-    <span id="starPopLabel"></span>
-    <button id="starPopDelete" type="button" aria-label="Quitar esta estrella">×</button>
-  </div>
-
-  <footer class="counter" id="counter" aria-live="polite"></footer>
-
-  <script src="estrellas.js"></script>
-  <script src="../assets/js/nube-config.js"></script>
-  <script type="module" src="nube.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Constelación de nosotros</title>
+    <meta
+      name="description"
+      content="Un cielo para los dos: toca para crear estrellas con recuerdos y se conectan en una constelación."
+    />
+    <meta name="theme-color" content="#120817" />
+    <link rel="icon" href="/assets/images/icono.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/images/icono-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/assets/images/icono-180.png" />
+  </head>
+  <body>
+    <div id="cielo"></div>
+    <script type="module" src="/src/constelacion/main.tsx"></script>
+  </body>
 </html>
