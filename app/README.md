@@ -43,20 +43,39 @@ Solo funciones del plan gratuito.
 
 ## Estructura
 
-Un componente por archivo `.tsx`, con el mismo nombre que el componente.
+Un componente por archivo `.tsx`, con el mismo nombre que el componente. Cada
+sección del sitio es una carpeta en `features/` con sus componentes, su lógica
+y sus tests.
 
 ```text
 src/
-├── main.tsx            Arranque de la página principal
+├── main.tsx               Arranque de la página principal
 ├── constelacion/main.tsx  Arranque de la página del cielo (constelacion/index.html)
-├── App.tsx             La página: junta todas las secciones
-├── components/         Un componente por archivo (Bienvenida.tsx, Menu.tsx…)
-│   └── cielo/          Componentes de la página del cielo
-├── hooks/              Lógica de React reutilizable (useAhora, useSesion, useAjusteCompartido…)
-├── lib/                Cálculos sin pantalla (contenido, fechas, sello de cartas, cumpleaños…)
-│   └── cielo/          Estrellas, dibujo del cielo y subida inicial
-└── types/              Tipos de TypeScript (config.ts describe el contenido de config.js)
+├── App.tsx                La página: junta todas las secciones en orden
+├── features/              Una carpeta por sección
+│   ├── inicio/            Bienvenida, menú y sobre
+│   ├── mensaje-mes/       Mensaje del mes (y cuál toca mostrar)
+│   ├── carta/             Sección Carta
+│   ├── galeria/           Una foto por mes
+│   ├── tiempo/            Tiempo juntos
+│   ├── bajadas/           Calendario, rotación 14×7 y ajuste compartido
+│   ├── musica/            Canción
+│   ├── boveda/            La Bóveda y la ventana de carta
+│   ├── cumple/            Cumpleaños y pastel
+│   ├── constelacion/      Sección que lleva al cielo
+│   ├── cielo/             Página del cielo: estrellas, dibujo y Firebase
+│   ├── juego/             Minijuego de memoria
+│   ├── cierre/            Para terminar
+│   └── sesion/            Inicio de sesión con Google
+├── components/ui/         Piezas que usan varias secciones (Seccion, CuentaRegresiva…)
+├── hooks/                 Hooks compartidos (useAhora, useRevelar, useTextoCarta)
+├── lib/                   Lógica compartida sin pantalla (contenido, fechas, sello, Firebase, cumpleaños…)
+└── types/                 Tipos de TypeScript (config.ts describe el contenido de config.js)
 ```
+
+Cada carpeta de `features/` y `components/ui/` tiene un `index.ts` con lo que
+se usa desde fuera. Entre carpetas se importa siempre desde ese `index.ts`;
+dentro de una carpeta, directo del archivo.
 
 TypeScript está en modo estricto: si un dato puede faltar (por ejemplo un texto
 de `config.js`), hay que decir qué hacer en ese caso. Si agregas una clave

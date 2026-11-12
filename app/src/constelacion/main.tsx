@@ -2,8 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 // Los mismos estilos que la constelación actual.
 import "../../../constelacion/estrellas.css";
-import PaginaCielo from "../components/cielo/PaginaCielo.tsx";
-import { apartarPendientes } from "../lib/cielo/migracion.ts";
+import { apartarPendientes, PaginaCielo } from "../features/cielo/index.ts";
 import { nubeActiva } from "../lib/firebase.ts";
 
 /*

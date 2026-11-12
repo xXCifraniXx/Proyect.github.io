@@ -1,30 +1,24 @@
 import { useCallback, useState } from "react";
-import Bajadas from "./components/Bajadas.tsx";
-import Bienvenida from "./components/Bienvenida.tsx";
-import Boveda from "./components/Boveda.tsx";
-import CartaSorpresa from "./components/CartaSorpresa.tsx";
-import Cierre from "./components/Cierre.tsx";
-import Constelacion from "./components/Constelacion.tsx";
-import Cumpleanos from "./components/Cumpleanos.tsx";
-import Fondo from "./components/Fondo.tsx";
-import Galeria from "./components/Galeria.tsx";
-import Inicio from "./components/Inicio.tsx";
-import MensajeDelMes from "./components/MensajeDelMes.tsx";
-import Minijuego from "./components/Minijuego.tsx";
-import type { EnlacesVisibles } from "./components/Menu.tsx";
-import Musica from "./components/Musica.tsx";
-import ProgresoScroll from "./components/ProgresoScroll.tsx";
-import TiempoJuntos from "./components/TiempoJuntos.tsx";
-import VentanaCarta from "./components/VentanaCarta.tsx";
-import { CARTA_CUMPLE, type CartaAbierta, type CartaBoveda } from "./lib/boveda.ts";
+import { Bajadas } from "./features/bajadas/index.ts";
+import { Bienvenida, type EnlacesVisibles, Inicio } from "./features/inicio/index.ts";
+import { Boveda, CARTA_CUMPLE, type CartaAbierta, type CartaBoveda, VentanaCarta } from "./features/boveda/index.ts";
+import { CartaSorpresa } from "./features/carta/index.ts";
+import { Cierre } from "./features/cierre/index.ts";
+import { Constelacion } from "./features/constelacion/index.ts";
+import { Cumpleanos } from "./features/cumple/index.ts";
+import { Fondo, ProgresoScroll } from "./components/ui/index.ts";
+import { Galeria } from "./features/galeria/index.ts";
+import { MensajeDelMes, mensajeMesVigente } from "./features/mensaje-mes/index.ts";
+import { Minijuego } from "./features/juego/index.ts";
+import { Musica } from "./features/musica/index.ts";
+import { TiempoJuntos } from "./features/tiempo/index.ts";
 import { celebrar } from "./lib/confeti.ts";
 import { ahora, ocurrencia } from "./lib/cumple.ts";
-import { mensajeMesVigente } from "./lib/mensajeMes.ts";
 
 /*
   PÁGINA PRINCIPAL
-  Cada parte del sitio es un componente (un archivo por componente en
-  src/components), en el mismo orden que la página.
+  Cada sección vive en su carpeta de src/features y se junta aquí, en el
+  mismo orden que la página.
 */
 export default function App() {
   // Se calculan una vez al abrir la página.
