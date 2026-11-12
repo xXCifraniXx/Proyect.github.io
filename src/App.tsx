@@ -6,7 +6,7 @@ import { CartaSorpresa } from "./features/carta/index.ts";
 import { Cierre } from "./features/cierre/index.ts";
 import { Constelacion } from "./features/constelacion/index.ts";
 import { Cumpleanos } from "./features/cumple/index.ts";
-import { Fondo, ProgresoScroll } from "./components/ui/index.ts";
+import { Fondo, LimiteDeError, ProgresoScroll } from "./components/ui/index.ts";
 import { Galeria } from "./features/galeria/index.ts";
 import { MensajeDelMes, mensajeMesVigente } from "./features/mensaje-mes/index.ts";
 import { Minijuego } from "./features/juego/index.ts";
@@ -42,27 +42,50 @@ export default function App() {
   const seccionCumple = cumple && <Cumpleanos ocurrencia={cumple} />;
 
   // Una sola ventana de carta para La Bóveda y el pastel (ver features/boveda/ventanaCarta.ts).
+  // Cada sección va dentro de un LimiteDeError: si una falla, las demás se siguen viendo.
   return (
     <ProveedorVentanaCarta>
       <ProgresoScroll />
       <Fondo />
-      <Bienvenida onEntrar={alEntrar} />
+      <LimiteDeError nombre="bienvenida">
+        <Bienvenida onEntrar={alEntrar} />
+      </LimiteDeError>
       <div className="app-shell">
-        <Inicio visibles={visibles} />
+        <LimiteDeError nombre="inicio">
+          <Inicio visibles={visibles} />
+        </LimiteDeError>
         <main>
-          {nota && <MensajeDelMes nota={nota} />}
+          <LimiteDeError nombre="mensaje del mes">{nota && <MensajeDelMes nota={nota} />}</LimiteDeError>
           {/* El día del cumpleaños, lo primero que ve es su sorpresa. */}
-          {esHoy && seccionCumple}
-          <CartaSorpresa />
-          <Galeria />
-          <TiempoJuntos />
-          <Bajadas />
-          <Musica />
-          <Boveda />
-          {!esHoy && seccionCumple}
-          <Constelacion />
-          <Minijuego />
-          <Cierre />
+          <LimiteDeError nombre="cumpleaños">{esHoy && seccionCumple}</LimiteDeError>
+          <LimiteDeError nombre="carta">
+            <CartaSorpresa />
+          </LimiteDeError>
+          <LimiteDeError nombre="galería">
+            <Galeria />
+          </LimiteDeError>
+          <LimiteDeError nombre="tiempo">
+            <TiempoJuntos />
+          </LimiteDeError>
+          <LimiteDeError nombre="bajadas">
+            <Bajadas />
+          </LimiteDeError>
+          <LimiteDeError nombre="música">
+            <Musica />
+          </LimiteDeError>
+          <LimiteDeError nombre="bóveda">
+            <Boveda />
+          </LimiteDeError>
+          <LimiteDeError nombre="cumpleaños">{!esHoy && seccionCumple}</LimiteDeError>
+          <LimiteDeError nombre="constelación">
+            <Constelacion />
+          </LimiteDeError>
+          <LimiteDeError nombre="juego">
+            <Minijuego />
+          </LimiteDeError>
+          <LimiteDeError nombre="cierre">
+            <Cierre />
+          </LimiteDeError>
         </main>
       </div>
     </ProveedorVentanaCarta>

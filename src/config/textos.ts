@@ -267,5 +267,9 @@ export const textos = {
   cieloPlaceholder: "un recuerdo, una palabra, una fecha…",
   ariaLienzoCielo: "Lienzo de la constelación",
   ariaQuitarEstrella: "Quitar esta estrella",
-  estrellaSinNombre: "estrella sin nombre"
+  estrellaSinNombre: "estrella sin nombre",
+
+  // Si falla la página entera (solo se ve en ese caso)
+  errorPagina: "Algo no cargó bien. Recarga la página, por favor 💜",
+  errorRecargar: "Recargar la página"
 } satisfies Record<string, string>;

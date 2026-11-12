@@ -1,5 +1,7 @@
 import type { Sesion } from "./useSesion.ts";
-import { TEXTOS } from "../../lib/contenido.ts";
+// textos directo (no lib/contenido): sesion/ también lo usa la página del cielo,
+// que no necesita cargar todo el contenido de la página principal.
+import { textos as TEXTOS } from "../../config/textos.ts";
 import { rellenar } from "../../lib/rellenar.ts";
 
 interface CuentaGoogleProps {
