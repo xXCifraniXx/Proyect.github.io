@@ -1,0 +1,35 @@
+import { esAjusteValido, type AjusteBajadas } from "./rotacion.ts";
+
+/*
+  Ajuste de bajadas guardado solo en este dispositivo (cuando no hay sesión).
+  Usa la misma clave que el sitio actual, así un ajuste hecho en una versión
+  se ve también en la otra.
+*/
+const CLAVE = "roster-override-v1";
+
+export function leerAjusteLocal(): AjusteBajadas | null {
+  try {
+    const crudo = localStorage.getItem(CLAVE);
+    const dato: unknown = crudo ? JSON.parse(crudo) : null;
+    return esAjusteValido(dato) ? dato : null;
+  } catch {
+    return null;
+  }
+}
+
+export function guardarAjusteLocal(ajuste: AjusteBajadas): boolean {
+  try {
+    localStorage.setItem(CLAVE, JSON.stringify(ajuste));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function borrarAjusteLocal(): void {
+  try {
+    localStorage.removeItem(CLAVE);
+  } catch {
+    /* modo privado */
+  }
+}
