@@ -1,7 +1,7 @@
-import { useCallback, useState } from "react";
+import { useMemo } from "react";
 import { Bajadas } from "./features/bajadas/index.ts";
 import { Bienvenida, type EnlacesVisibles, Inicio } from "./features/inicio/index.ts";
-import { Boveda, CARTA_CUMPLE, type CartaAbierta, type CartaBoveda, VentanaCarta } from "./features/boveda/index.ts";
+import { Boveda, ProveedorVentanaCarta } from "./features/boveda/index.ts";
 import { CartaSorpresa } from "./features/carta/index.ts";
 import { Cierre } from "./features/cierre/index.ts";
 import { Constelacion } from "./features/constelacion/index.ts";
@@ -13,7 +13,8 @@ import { Minijuego } from "./features/juego/index.ts";
 import { Musica } from "./features/musica/index.ts";
 import { TiempoJuntos } from "./features/tiempo/index.ts";
 import { celebrar } from "./lib/confeti.ts";
-import { ahora, ocurrencia } from "./lib/cumple.ts";
+import { useDia } from "./hooks/useAhora.ts";
+import { ocurrenciaEn, RELOJ_CUMPLE } from "./lib/cumple.ts";
 
 /*
   PÁGINA PRINCIPAL
@@ -21,9 +22,11 @@ import { ahora, ocurrencia } from "./lib/cumple.ts";
   mismo orden que la página.
 */
 export default function App() {
-  // Se calculan una vez al abrir la página.
-  const [nota] = useState(mensajeMesVigente);
-  const [cumple] = useState(ocurrencia);
+  // Dependen del día: si la página queda abierta, cambian a medianoche
+  // (por ejemplo, el mensaje del mes aparece solo el día 8).
+  const dia = useDia(RELOJ_CUMPLE);
+  const nota = useMemo(() => mensajeMesVigente(undefined, dia), [dia]);
+  const cumple = useMemo(() => ocurrenciaEn(dia), [dia]);
   const esHoy = cumple?.estado === "hoy";
 
   const visibles: EnlacesVisibles = {
@@ -36,27 +39,11 @@ export default function App() {
     if (esHoy) setTimeout(celebrar, 300);
   };
 
-  // Una sola ventana de carta para La Bóveda y el pastel de cumpleaños.
-  const [abierta, setAbierta] = useState<CartaAbierta | null>(null);
-  const abrirCarta = useCallback((carta: CartaAbierta) => {
-    // Nunca se abre una carta antes de su fecha, venga de donde venga.
-    if (carta.fecha > ahora()) return;
-    setAbierta(carta);
-  }, []);
-  const cerrarCarta = useCallback(() => setAbierta(null), []);
-  const abrirDesdeBoveda = useCallback(
-    (item: CartaBoveda, texto: string) => abrirCarta({ ...item, texto }),
-    [abrirCarta]
-  );
-  // Desde el pastel se abre sin el botón "Ir a soplar mis velas", que ya no tendría sentido.
-  // (Copia local: así TypeScript sabe que dentro de la función no es null.)
-  const cartaCumple = CARTA_CUMPLE;
-  const abrirCartaCumple = cartaCumple ? () => abrirCarta({ ...cartaCumple, sinAccion: true }) : undefined;
+  const seccionCumple = cumple && <Cumpleanos ocurrencia={cumple} />;
 
-  const seccionCumple = cumple && <Cumpleanos ocurrencia={cumple} onAbrirCarta={abrirCartaCumple} />;
-
+  // Una sola ventana de carta para La Bóveda y el pastel (ver features/boveda/ventanaCarta.ts).
   return (
-    <>
+    <ProveedorVentanaCarta>
       <ProgresoScroll />
       <Fondo />
       <Bienvenida onEntrar={alEntrar} />
@@ -71,14 +58,13 @@ export default function App() {
           <TiempoJuntos />
           <Bajadas />
           <Musica />
-          <Boveda onAbrir={abrirDesdeBoveda} />
+          <Boveda />
           {!esHoy && seccionCumple}
           <Constelacion />
           <Minijuego />
           <Cierre />
         </main>
       </div>
-      <VentanaCarta abierta={abierta} onCerrar={cerrarCarta} />
-    </>
+    </ProveedorVentanaCarta>
   );
 }

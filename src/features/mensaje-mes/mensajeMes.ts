@@ -13,8 +13,7 @@ export interface NotaDelMes extends Carta {
   fecha hasta el mismo día del mes siguiente. El texto se descifra en el
   componente.
 */
-export function mensajeMesVigente(lista: Carta[] = CONFIG.mensajesMes ?? []): NotaDelMes | null {
-  const now = ahora();
+export function mensajeMesVigente(lista: Carta[] = CONFIG.mensajesMes ?? [], now: Date = ahora()): NotaDelMes | null {
   const nota = lista
     .filter((item) => !item.borrador && item.fecha && (item.mensaje || item.mensajeSellado))
     .map((item) => ({ ...item, inicio: new Date(item.fecha) }))

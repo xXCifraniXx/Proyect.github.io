@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
-
-// Definido fuera del hook para que sea siempre la misma función (si se
-// creara en cada render, el intervalo se reiniciaría a cada rato).
-const relojNormal = (): Date => new Date();
+import { useSyncExternalStore } from "react";
+import { RELOJ, type Reloj } from "../lib/reloj.ts";
 
 /**
- * La fecha y hora actual, actualizada cada "cadaMs" (por defecto, cada segundo).
- * "reloj" permite usar otro "ahora" (por ejemplo, el de la vista previa del
- * cumpleaños); debe ser una función fija, no una creada en cada render.
+ * La fecha y hora actual, una vez por segundo. Todas las secciones comparten
+ * el mismo temporizador (ver lib/reloj.ts). Para lo del cumpleaños, pasa
+ * RELOJ_CUMPLE (respeta la vista previa ?cumple=…).
  */
-export function useAhora(cadaMs = 1000, reloj: () => Date = relojNormal): Date {
-  const [ahora, setAhora] = useState(reloj);
-  useEffect(() => {
-    const id = setInterval(() => setAhora(reloj()), cadaMs);
-    return () => clearInterval(id);
-  }, [cadaMs, reloj]);
-  return ahora;
+export function useAhora(reloj: Reloj = RELOJ): Date {
+  return useSyncExternalStore(reloj.suscribir, reloj.actual);
+}
+
+/**
+ * La fecha de hoy: solo cambia al pasar la medianoche. Para lo que depende
+ * del día y no necesita redibujarse cada segundo.
+ */
+export function useDia(reloj: Reloj = RELOJ): Date {
+  return useSyncExternalStore(reloj.suscribir, reloj.delDia);
 }

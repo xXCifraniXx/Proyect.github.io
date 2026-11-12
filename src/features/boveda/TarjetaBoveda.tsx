@@ -9,14 +9,13 @@ interface TarjetaBovedaProps {
   ahora: Date;
   /** Orden en la grilla, para que aparezcan una tras otra. */
   indice: number;
-  onAbrir: (item: CartaBoveda, texto: string) => void;
 }
 
 /** Una carta de La Bóveda: sellada con lo que falta, o abierta con un adelanto. */
-export default function TarjetaBoveda({ item, ahora, indice, onAbrir }: TarjetaBovedaProps) {
+export default function TarjetaBoveda({ item, ahora, indice }: TarjetaBovedaProps) {
   const estilo: CSSProperties = { animationDelay: `${indice * 60}ms` };
 
-  if (item.fecha <= ahora) return <TarjetaBovedaAbierta item={item} estilo={estilo} onAbrir={onAbrir} />;
+  if (item.fecha <= ahora) return <TarjetaBovedaAbierta item={item} estilo={estilo} />;
 
   const falta = tiempoEntre(ahora, item.fecha);
   const partes = [falta.years && `${falta.years} a`, falta.months && `${falta.months} m`, `${falta.days} d`].filter(

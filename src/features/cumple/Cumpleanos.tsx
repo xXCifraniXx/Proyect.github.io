@@ -7,7 +7,6 @@ import Pastel from "./Pastel.tsx";
 interface CumpleanosProps {
   /** El cumpleaños de ahora (lo calcula App con ocurrencia()). */
   ocurrencia: Ocurrencia;
-  onAbrirCarta?: () => void;
 }
 
 /*
@@ -16,7 +15,7 @@ interface CumpleanosProps {
     hoy      pastel con velas para soplar (la sección sube al inicio)
     despues  queda de recuerdo y se pueden volver a encender las velas
 */
-export default function Cumpleanos({ ocurrencia, onAbrirCarta }: CumpleanosProps) {
+export default function Cumpleanos({ ocurrencia }: CumpleanosProps) {
   const { estado } = ocurrencia;
   const titulo = { antes: TEXTOS.cumpleTituloAntes, hoy: TEXTOS.cumpleTituloHoy, despues: TEXTOS.cumpleTituloDespues }[
     estado
@@ -32,7 +31,7 @@ export default function Cumpleanos({ ocurrencia, onAbrirCarta }: CumpleanosProps
         {estado === "antes" ? (
           <CuentaCumple objetivo={ocurrencia.date} />
         ) : (
-          <Pastel dia={ocurrencia.date} velas={CONFIG.cumpleanos?.velas ?? 5} onAbrirCarta={onAbrirCarta} />
+          <Pastel dia={ocurrencia.date} velas={CONFIG.cumpleanos?.velas ?? 5} />
         )}
       </div>
     </Seccion>
