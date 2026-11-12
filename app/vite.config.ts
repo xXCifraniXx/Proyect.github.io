@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { cpSync, createReadStream, existsSync, statSync } from "node:fs";
 import { extname, join, resolve } from "node:path";
 import react from "@vitejs/plugin-react";
@@ -70,5 +71,12 @@ export default defineConfig({
     port: 5173,
     // Permite importar config.js y styles.css desde la carpeta del sitio actual.
     fs: { allow: [raiz] }
+  },
+  // Tests (Vitest): happy-dom da window, localStorage y location como en el
+  // navegador. Zona horaria fija para que las fechas den igual en cualquier equipo.
+  test: {
+    environment: "happy-dom",
+    include: ["src/**/*.test.ts"],
+    env: { TZ: "America/Lima" }
   }
 });
