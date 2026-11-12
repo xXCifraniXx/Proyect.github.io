@@ -1,7 +1,10 @@
 # Proyecto romántico para Anthuanete
 
-Landing estática (HTML + CSS + JavaScript vanilla, sin backend ni build) que se
-publica en **GitHub Pages**. Todo el contenido editable vive en un solo archivo:
+Sitio que se publica en **GitHub Pages**. Desde el 12 de noviembre de 2026 lo
+que se publica es la versión **React + TypeScript** de [`app/`](app/README.md),
+compilada por GitHub Actions. Esta guía describe el sitio estático de la raíz
+(HTML + CSS + JavaScript vanilla), que queda como respaldo en el tag
+`v1-estatico`. Las dos versiones leen el mismo contenido editable:
 [`assets/js/config.js`](assets/js/config.js).
 
 ## Estructura
@@ -191,9 +194,13 @@ lectores de enlaces no ejecutan JavaScript.
 
 ## Publicar
 
-1. **Settings → Pages** en el repositorio.
-2. **Source**: `Deploy from a branch`, rama `main`, carpeta `/ (root)`.
+**Settings → Pages → Source** está en `GitHub Actions`. Cada vez que algo llega a
+`main`, [`.github/workflows/publicar.yml`](.github/workflows/publicar.yml) revisa
+el código (tipos, lint, tests, formato, peso), compila `app/` y publica
+`app/dist` en `https://xxcifranixx.github.io/Proyect.github.io/` (el repo se
+llama `Proyect.github.io`, no `usuario.github.io`, por eso va en esa carpeta).
+Si una revisión falla, no se publica nada y el sitio sigue como estaba.
 
-Como el repo se llama `Proyect.github.io` (no `usuario.github.io`), GitHub lo
-publica en `https://xxcifranixx.github.io/Proyect.github.io/` unos minutos
-después de cada `push`. No hace falta build ni `npm install`.
+Las ramas y los PR hacia `develop` o `main` pasan por
+[`calidad.yml`](.github/workflows/calidad.yml). Detalles en
+[`app/README.md`](app/README.md).
