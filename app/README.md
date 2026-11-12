@@ -34,6 +34,22 @@ Para no duplicar nada durante la migración, lee directamente:
 - `../assets/images` y `../assets/audio` — fotos y canción (Vite las sirve en
   desarrollo y las copia a `dist/` al compilar; ver `vite.config.ts`).
 
+## Revisión y publicación (GitHub Actions)
+
+En `.github/workflows/`:
+
+- **`calidad.yml`** corre en cada PR hacia `develop` o `main` y en cada push a
+  `develop`: tipos, lint, tests, formato, compilación, peso de la carga inicial
+  (`npm run revisar-peso`, límite de 100 KB comprimidos) y que no haya correos en
+  el repo.
+- **`publicar.yml`** corre cuando algo llega a `main` (o a mano desde la pestaña
+  Actions): primero pasa por `calidad.yml`, después compila y publica `app/dist`
+  en GitHub Pages, en el mismo link. Necesita _Settings → Pages → Source_ en
+  "GitHub Actions".
+
+La compilación copia también `herramientas/sellar-carta.html` y
+`assets/js/sello.js`, para que la herramienta de sellar siga en la misma ruta.
+
 ## Firebase
 
 Se instala con npm (`firebase`) y se carga aparte, solo cuando una sección lo
