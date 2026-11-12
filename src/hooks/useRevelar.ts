@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 /*
   Hace aparecer un bloque (clase "show") la primera vez que entra en pantalla,
-  con las clases .reveal / .show de styles.css.
+  con las clases .reveal / .show de src/styles/base.css.
   Uso:  const ref = useRevelar<HTMLElement>();  <section ref={ref} className="reveal">
 */
 export function useRevelar<T extends HTMLElement = HTMLElement>() {

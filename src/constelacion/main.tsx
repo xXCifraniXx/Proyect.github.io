@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "../styles/estrellas.css";
+import "../features/cielo/cielo.css";
 import { apartarPendientes, PaginaCielo } from "../features/cielo/index.ts";
 import { nubeActiva } from "../lib/firebase.ts";
 

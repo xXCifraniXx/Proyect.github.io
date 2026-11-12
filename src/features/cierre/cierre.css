@@ -1,0 +1,17 @@
+/* Para terminar. */
+@layer secciones {
+  /* Cierre */
+  .final-card {
+    padding: clamp(24px, 6vw, 56px);
+    text-align: center;
+  }
+  .final-card h2 {
+    margin-top: 14px;
+    font-size: clamp(2rem, 6vw, 4.2rem);
+    line-height: 1;
+  }
+  .final-card p {
+    margin-top: 12px;
+    color: var(--muted);
+  }
+}

@@ -1,0 +1,27 @@
+/* Colores, sombras, radios y medidas que usa todo el sitio. */
+@layer tokens {
+  :root {
+    --bg-1: #120817;
+    --bg-2: #231027;
+    --bg-3: #421b3f;
+    --rose: #ff9eb8;
+    --rose-strong: #ff6f9a;
+    --lilac: #c99bff;
+    --gold: #f3d99f;
+    --mint: #9ef0c6;
+    --mint-strong: #57d29e;
+    --text: #fff8fb;
+    --muted: rgba(255, 255, 255, 0.74);
+    --muted-2: rgba(255, 255, 255, 0.56);
+    --paper: #fff9fb;
+    --paper-text: #573144;
+    --stroke: rgba(255, 255, 255, 0.14);
+    --stroke-strong: rgba(255, 255, 255, 0.24);
+    --shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+    --shadow-soft: 0 14px 34px rgba(0, 0, 0, 0.18);
+    --radius-xl: 34px;
+    --radius-lg: 26px;
+    --radius-md: 18px;
+    --maxw: 1120px;
+  }
+}

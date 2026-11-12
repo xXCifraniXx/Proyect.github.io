@@ -1,0 +1,51 @@
+/* Música. */
+@layer secciones {
+  /* Música */
+  .music-panel {
+    margin-top: 14px;
+    padding: 18px;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 18px;
+    align-items: center;
+  }
+  .music-info {
+    display: grid;
+    gap: 8px;
+  }
+  .music-label {
+    color: var(--gold);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .music-info strong {
+    font-size: 1.25rem;
+  }
+  .music-info span {
+    color: var(--muted);
+  }
+  .music-controls {
+    display: grid;
+    gap: 14px;
+  }
+  .music-controls .btn {
+    width: 100%;
+  }
+  .volume-control {
+    color: var(--muted);
+    display: grid;
+    gap: 6px;
+  }
+  .volume-control input {
+    width: 100%;
+    accent-color: var(--rose);
+    min-height: 32px;
+  }
+
+  @media (max-width: 920px) {
+    .music-panel {
+      grid-template-columns: 1fr;
+    }
+  }
+}

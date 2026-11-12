@@ -1,0 +1,47 @@
+/* Mensaje del mes. */
+@layer secciones {
+  /* Mensaje del mes */
+  .month-note {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: clamp(30px, 6vw, 58px) clamp(22px, 6vw, 64px) clamp(26px, 5vw, 46px);
+    border-radius: 8px;
+    background: var(--paper);
+    color: var(--paper-text);
+    box-shadow: var(--shadow);
+  }
+  .month-note-date {
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
+    color: rgba(87, 49, 68, 0.7);
+  }
+  .month-note .month-note-title {
+    margin-top: 6px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(2.5rem, 8vw, 4.2rem);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    color: #7b3150;
+  }
+  .month-note-body {
+    margin-top: clamp(20px, 4vw, 30px);
+    display: grid;
+    gap: 1em;
+    max-width: 60ch;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.06rem;
+    line-height: 1.85;
+  }
+  .month-note-sign {
+    margin-top: 26px;
+    text-align: right;
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    color: #c64f7d;
+  }
+  .month-note-sign::before {
+    content: "— ";
+  }
+}

@@ -1,0 +1,17 @@
+/* Sección Carta (mensaje sorpresa). */
+@layer secciones {
+  .surprise-card {
+    margin-top: 14px;
+    padding: 18px;
+  }
+  .surprise-message {
+    display: none;
+    margin-top: 14px;
+    color: var(--muted);
+    line-height: 1.76;
+    white-space: pre-line;
+  }
+  .surprise-message.show {
+    display: block;
+  }
+}

@@ -1,0 +1,30 @@
+/*
+  ESTILOS DE LA PÁGINA PRINCIPAL
+  ------------------------------
+  Tres capas, de menos a más fuerte:
+    tokens     variables (colores, sombras, radios, medidas)
+    base       lo común: reset, fondo, superficies, botones, secciones…
+    secciones  un archivo por sección, junto a su componente en src/features/
+
+  Una regla de "secciones" gana a una de "base" aunque sea menos específica,
+  así que una sección puede ajustar un botón o un título sin pelear con la
+  especificidad. El orden de los @import de abajo es el orden de la página y
+  también importa: dentro de una capa, gana la regla que viene después.
+*/
+@layer tokens, base, secciones;
+
+@import "./tokens.css";
+@import "./base.css";
+
+@import "../features/inicio/inicio.css";
+@import "../features/tiempo/tiempo.css";
+@import "../features/carta/carta.css";
+@import "../features/musica/musica.css";
+@import "../features/galeria/galeria.css";
+@import "../features/mensaje-mes/mensaje-mes.css";
+@import "../features/boveda/boveda.css";
+@import "../features/constelacion/constelacion.css";
+@import "../features/juego/juego.css";
+@import "../features/cumple/cumple.css";
+@import "../features/cierre/cierre.css";
+@import "../features/bajadas/bajadas.css";
