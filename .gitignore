@@ -18,3 +18,6 @@ node_modules/
 
 # Compilado de la versión React
 app/dist/
+
+# Instrucciones locales para Claude Code (nunca se suben)
+CLAUDE.md
