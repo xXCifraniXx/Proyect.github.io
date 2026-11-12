@@ -55,7 +55,7 @@ Proyect.github.io/
 │   ├── components/ui/          Piezas que usan varias secciones (Seccion, CuentaRegresiva…)
 │   ├── hooks/                  Hooks compartidos (useAhora, useRevelar, useTextoCarta)
 │   ├── lib/                    Lógica compartida sin pantalla (fechas, sello, Firebase, cumpleaños…)
-│   ├── styles/                 styles.css (página principal) y estrellas.css (cielo)
+│   ├── styles/                 index.css (orden de las capas), tokens.css y base.css
 │   └── types/config.ts         Tipos del contenido
 ├── firestore.rules             Reglas para pegar en Firebase
 ├── SPEC.md                     Contrato: lo que el sitio debe seguir haciendo
@@ -67,6 +67,23 @@ carpeta de `features/` y `components/ui/` tiene un `index.ts` con lo que se usa
 desde fuera: entre carpetas se importa desde ese `index.ts`; dentro de una
 carpeta, directo del archivo. TypeScript está en modo estricto: si un dato
 puede faltar, hay que decir qué se muestra en ese caso.
+
+## Estilos
+
+CSS sin librerías, en tres capas (`@layer`), de menos a más fuerte:
+
+| Capa | Dónde | Qué va ahí |
+|---|---|---|
+| `tokens` | `src/styles/tokens.css` | Variables: colores, sombras, radios, medidas. |
+| `base` | `src/styles/base.css` | Lo común: reset, fondo, superficies, botones, títulos, secciones, cuenta regresiva, aparición al hacer scroll. |
+| `secciones` | `src/features/<sección>/<sección>.css` | Un archivo por sección, junto a su componente. |
+
+[`src/styles/index.css`](src/styles/index.css) declara las capas e importa
+los archivos en el orden de la página (dentro de una capa gana la regla que
+viene después). Una regla de `secciones` gana a una de `base` aunque sea
+menos específica. La página del cielo usa las mismas capas en
+`src/features/cielo/cielo.css`. Las clases condicionales se arman con
+`clsx`, por ejemplo `clsx("envelope", abierto && "open")`.
 
 ## Qué se puede editar en `src/config/`
 

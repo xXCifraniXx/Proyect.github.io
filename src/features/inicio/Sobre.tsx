@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { useCallback, useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
 import { TEXTOS } from "../../lib/contenido.ts";
 
@@ -50,7 +51,7 @@ export default function Sobre() {
     <div className="letter-stage" aria-label="Carta interactiva">
       <div
         ref={sobre}
-        className={`envelope${abierto ? " open" : ""}`}
+        className={clsx("envelope", abierto && "open")}
         id="envelope"
         role="button"
         tabIndex={0}

@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { useEffect, useRef, type MouseEvent } from "react";
 import { useTextoCarta } from "../../hooks/useTextoCarta.ts";
 import type { CartaAbierta } from "./boveda.ts";
@@ -42,7 +43,7 @@ export default function VentanaCarta({ abierta, onCerrar }: VentanaCartaProps) {
 
   return (
     <div
-      className={`lightbox${abierta ? " show" : ""}`}
+      className={clsx("lightbox", abierta && "show")}
       aria-hidden={!abierta}
       role="dialog"
       aria-modal="true"

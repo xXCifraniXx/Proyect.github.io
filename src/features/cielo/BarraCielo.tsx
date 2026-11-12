@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import type { Sesion } from "../sesion/index.ts";
 
 interface BarraCieloProps {
@@ -35,7 +36,7 @@ export default function BarraCielo({
         {sesion?.lista && (
           <button
             type="button"
-            className={`chip${!usuario && resaltarSesion ? " primary" : ""}`}
+            className={clsx("chip", !usuario && resaltarSesion && "primary")}
             title={usuario ? (usuario.email ?? "") : "Entrar con Google para poner estrellas"}
             onClick={() => void (usuario ? sesion.salir() : sesion.entrar())}
           >

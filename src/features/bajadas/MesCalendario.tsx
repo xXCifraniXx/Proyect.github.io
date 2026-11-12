@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { memo } from "react";
 import { claveDia, mesYAnio } from "../../lib/fechas.ts";
 import { tipoDeDia, type Rotacion } from "./rotacion.ts";
@@ -39,7 +40,7 @@ function MesCalendario({ mes, rotacion, hoy }: MesCalendarioProps) {
         {Array.from({ length: diasDelMes }, (_, i) => {
           const dia = new Date(anio, m, i + 1);
           const info = tipoDeDia(rotacion, dia);
-          const clases = ["calendar-day", info.tipo, claveDia(dia) === hoy && "today"].filter(Boolean).join(" ");
+          const clases = clsx("calendar-day", info.tipo, claveDia(dia) === hoy && "today");
           return (
             <div key={i} className={clases} title={info.etiqueta}>
               <strong>{i + 1}</strong>

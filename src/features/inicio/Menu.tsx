@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { NOMBRES, TEXTOS } from "../../lib/contenido.ts";
 
@@ -81,7 +82,7 @@ export default function Menu({ visibles = {} }: MenuProps) {
         </span>
         <span>Menú</span>
       </button>
-      <div ref={panel} className={`nav-links${abierto ? " is-open" : ""}`} id="navLinks">
+      <div ref={panel} className={clsx("nav-links", abierto && "is-open")} id="navLinks">
         {enlaces
           .filter((enlace) => enlace.visible !== false)
           .map((enlace) => (

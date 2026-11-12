@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCieloCompartido } from "./useCieloCompartido.ts";
 import { useSesion } from "../sesion/index.ts";
@@ -178,7 +179,7 @@ export default function PaginaCielo() {
         onDescargar={() => descargarImagen(estrellas, window.innerWidth, window.innerHeight)}
         onVaciar={vaciarCielo}
       />
-      <p className={`hint${pistaVisible ? "" : " fade"}`}>{pista.texto}</p>
+      <p className={clsx("hint", !pistaVisible && "fade")}>{pista.texto}</p>
       {nuevaEn && <CompositorEstrella onGuardar={anadir} onCancelar={() => setNuevaEn(null)} />}
       {activa && (
         <BurbujaEstrella

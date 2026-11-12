@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { CONFIG, TEXTOS } from "../../lib/contenido.ts";
 import { rafagaCorazones } from "../../lib/corazones.ts";
@@ -81,7 +82,7 @@ export default function Minijuego() {
             {TEXTOS.juegoRestart}
           </button>
         </div>
-        <div className={`memory-board${gano ? " is-won" : ""}`}>
+        <div className={clsx("memory-board", gano && "is-won")}>
           {mazo.map((carta) => (
             <CartaMemoria
               key={carta.id}

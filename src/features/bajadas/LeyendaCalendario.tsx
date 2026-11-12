@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { TEXTOS } from "../../lib/contenido.ts";
 
 const ITEMS = [
@@ -14,7 +15,7 @@ export default function LeyendaCalendario() {
     <div className="calendar-legend" aria-label="Leyenda del calendario">
       {ITEMS.map((item) => (
         <span key={item.clase}>
-          <i className={`legend-dot ${item.clase}`} /> <span>{item.texto}</span>
+          <i className={clsx("legend-dot", item.clase)} /> <span>{item.texto}</span>
         </span>
       ))}
     </div>

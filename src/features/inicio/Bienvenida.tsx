@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { useState } from "react";
 import { TEXTOS } from "../../lib/contenido.ts";
 
@@ -16,7 +17,7 @@ export default function Bienvenida({ onEntrar }: BienvenidaProps) {
   };
 
   return (
-    <section className={`welcome${oculta ? " hide" : ""}`} id="welcome" aria-label="Pantalla de bienvenida">
+    <section className={clsx("welcome", oculta && "hide")} id="welcome" aria-label="Pantalla de bienvenida">
       <div className="welcome-card glass reveal-now">
         <span className="eyebrow">{TEXTOS.welcomeEyebrow}</span>
         <h1>{TEXTOS.welcomeTitle}</h1>

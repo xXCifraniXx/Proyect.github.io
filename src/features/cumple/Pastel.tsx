@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { useRef, useState, type CSSProperties } from "react";
 import { TEXTOS } from "../../lib/contenido.ts";
 import { celebrar } from "../../lib/confeti.ts";
@@ -87,7 +88,7 @@ export default function Pastel({ dia, velas, onAbrirCarta }: PastelProps) {
   return (
     <div className="cumple-stage">
       <div
-        className={`cake${restaurado ? " is-restored" : ""}`}
+        className={clsx("cake", restaurado && "is-restored")}
         role="group"
         aria-label="Pastel de cumpleaños"
         style={estilo}
@@ -97,7 +98,7 @@ export default function Pastel({ dia, velas, onAbrirCarta }: PastelProps) {
           {apagadas.map((apagada, i) => (
             <button
               key={i}
-              className={`candle${apagada ? " is-out" : ""}`}
+              className={clsx("candle", apagada && "is-out")}
               type="button"
               aria-label={`Apagar la vela ${i + 1}`}
               onClick={() => apagar(i)}

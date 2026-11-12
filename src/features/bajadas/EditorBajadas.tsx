@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { CuentaGoogle, type Sesion } from "../sesion/index.ts";
 import { TEXTOS } from "../../lib/contenido.ts";
@@ -57,7 +58,7 @@ export default function EditorBajadas({
   };
 
   return (
-    <details className={`roster-editor glass-soft${editada ? " is-edited" : ""}`}>
+    <details className={clsx("roster-editor glass-soft", editada && "is-edited")}>
       <summary>
         <span>{TEXTOS.rosterEditorTitle}</span>
       </summary>
@@ -72,7 +73,7 @@ export default function EditorBajadas({
       >
         <CuentaGoogle sesion={sesion} />
       </FormularioBajadas>
-      <p className={`roster-editor-status${visible ? " is-visible" : ""}`} role="status" aria-live="polite">
+      <p className={clsx("roster-editor-status", visible && "is-visible")} role="status" aria-live="polite">
         {mensaje}
       </p>
     </details>
