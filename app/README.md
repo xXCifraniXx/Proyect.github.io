@@ -17,6 +17,13 @@ Abre http://localhost:5173/Proyect.github.io/ . Los cambios se ven al instante.
 Para compilar la versión final: `npm run build` (revisa los tipos y deja el sitio en `app/dist/`).
 Solo revisar los tipos: `npm run typecheck`.
 
+Tests (Vitest, en `src/**/*.test.ts`): `npm test`, o `npm run test:watch` mientras
+editas. Cubren la rotación de mina, el cumpleaños, el mensaje del mes, las
+fechas y el sello; el de sello abre todas las cartas reales de `config.js` sin
+mostrar su texto.
+
+Formato (Prettier): `npm run format` lo aplica y `npm run format:check` solo revisa.
+
 ## Qué usa del sitio actual
 
 Para no duplicar nada durante la migración, lee directamente:
