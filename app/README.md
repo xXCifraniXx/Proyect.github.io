@@ -23,8 +23,16 @@ Para no duplicar nada durante la migración, lee directamente:
 
 - `../assets/js/config.js` — todo el contenido (textos, fechas, fotos, cartas).
 - `../assets/css/styles.css` — los estilos.
+- `../assets/js/nube-config.js` — el proyecto de Firebase y quiénes pueden cambiar cosas.
 - `../assets/images` y `../assets/audio` — fotos y canción (Vite las sirve en
   desarrollo y las copia a `dist/` al compilar; ver `vite.config.ts`).
+
+## Firebase
+
+Se instala con npm (`firebase`) y se carga aparte, solo cuando una sección lo
+usa (ver `src/lib/firebase.ts`). Usa el mismo proyecto, las mismas reglas
+(`firestore.rules` en la raíz) y la misma sesión de Google que el sitio actual.
+Solo funciones del plan gratuito.
 
 ## Estructura
 
@@ -35,7 +43,7 @@ src/
 ├── main.tsx            Arranque: estilos, título y <App />
 ├── App.tsx             La página: junta todas las secciones
 ├── components/         Un componente por archivo (Bienvenida.tsx, Menu.tsx…)
-├── hooks/              Lógica de React reutilizable (useRevelar.ts)
+├── hooks/              Lógica de React reutilizable (useAhora, useSesion, useAjusteCompartido…)
 ├── lib/                Cálculos sin pantalla (contenido, fechas, sello de cartas, cumpleaños…)
 └── types/              Tipos de TypeScript (config.ts describe el contenido de config.js)
 ```
@@ -48,7 +56,7 @@ nueva en `config.js`, súmala en `src/types/config.ts`.
 
 - [x] Fase 1: bienvenida, fondo, menú de tres líneas y carta del sobre (en TypeScript)
 - [x] Fase 2: mensaje del mes (cartas selladas en TypeScript), sección Carta y galería de fotos
-- [ ] Tiempo juntos, calendario de bajadas (con Firebase)
+- [x] Fase 3: tiempo juntos, calendario de bajadas y ajuste compartido con Firebase (npm)
 - [ ] Música y cumpleaños
 - [ ] La Bóveda (cartas selladas)
 - [ ] Constelación (con Firebase)

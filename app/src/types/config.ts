@@ -101,9 +101,27 @@ export interface Config {
   opciones?: Opciones;
 }
 
+/** Configuración de Firebase (assets/js/nube-config.js). */
+export interface NubeConfig {
+  /** Id de la pareja: el cielo y los ajustes viven bajo este nombre. */
+  cieloId: string;
+  /** UID de las cuentas de Google que pueden cambiar cosas. */
+  miembros?: string[];
+  firebase: {
+    apiKey: string;
+    authDomain: string;
+    projectId: string;
+    storageBucket?: string;
+    messagingSenderId?: string;
+    appId: string;
+  } | null;
+}
+
 declare global {
   interface Window {
     /** Lo define assets/js/config.js al cargarse. */
     APP_CONFIG?: Config;
+    /** Lo define assets/js/nube-config.js al cargarse. */
+    CIELO_CONFIG?: NubeConfig;
   }
 }

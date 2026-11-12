@@ -54,6 +54,11 @@ function mediosDelSitio(): Plugin {
 export default defineConfig({
   base: BASE,
   plugins: [react(), mediosDelSitio()],
+  build: {
+    // Firestore (con actualizaciones en vivo) pesa ~580 kB; se carga aparte y
+    // solo cuando una sección lo usa, así que no afecta la primera carga.
+    chunkSizeWarningLimit: 700
+  },
   server: {
     port: 5173,
     // Permite importar config.js y styles.css desde la carpeta del sitio actual.

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Bajadas from "./components/Bajadas.tsx";
 import Bienvenida from "./components/Bienvenida.tsx";
 import CartaSorpresa from "./components/CartaSorpresa.tsx";
 import Fondo from "./components/Fondo.tsx";
@@ -7,6 +8,7 @@ import Inicio from "./components/Inicio.tsx";
 import MensajeDelMes from "./components/MensajeDelMes.tsx";
 import type { EnlacesVisibles } from "./components/Menu.tsx";
 import ProgresoScroll from "./components/ProgresoScroll.tsx";
+import TiempoJuntos from "./components/TiempoJuntos.tsx";
 import { estadoCumple } from "./lib/cumple.ts";
 import { mensajeMesVigente } from "./lib/mensajeMes.ts";
 
@@ -35,6 +37,8 @@ export default function App() {
           {nota && <MensajeDelMes nota={nota} />}
           <CartaSorpresa />
           <Galeria />
+          <TiempoJuntos />
+          <Bajadas />
         </main>
       </div>
     </>
