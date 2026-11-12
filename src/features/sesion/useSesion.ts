@@ -24,14 +24,20 @@ export function useSesion(): Sesion {
     if (!nubeActiva) return undefined;
     let cancelar: (() => void) | undefined;
     let vigente = true;
-    void cargarFirebase().then(async ({ auth }) => {
-      const { onAuthStateChanged } = await import("firebase/auth");
-      if (!vigente) return;
-      cancelar = onAuthStateChanged(auth, (u) => {
-        setUsuario(u);
-        setLista(true);
+    void cargarFirebase()
+      .then(async ({ auth }) => {
+        const { onAuthStateChanged } = await import("firebase/auth");
+        if (!vigente) return;
+        cancelar = onAuthStateChanged(auth, (u) => {
+          setUsuario(u);
+          setLista(true);
+        });
+      })
+      .catch((error: unknown) => {
+        // Sin Firebase (por ejemplo, sin conexión): se sigue sin sesión.
+        console.warn("[sesión] sin nube:", error);
+        if (vigente) setLista(true);
       });
-    });
     return () => {
       vigente = false;
       cancelar?.();
