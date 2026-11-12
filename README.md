@@ -52,8 +52,8 @@ Proyect.github.io/
 │   ├── features/               Una carpeta por sección (inicio, mensaje-mes, carta,
 │   │                           galeria, tiempo, bajadas, musica, boveda, cumple,
 │   │                           constelacion, cielo, juego, cierre, sesion)
-│   ├── components/ui/          Piezas que usan varias secciones (Seccion, CuentaRegresiva…)
-│   ├── hooks/                  Hooks compartidos (useAhora, useRevelar, useTextoCarta)
+│   ├── components/ui/          Piezas que usan varias secciones (Seccion, CuentaRegresiva, LimiteDeError…)
+│   ├── hooks/                  Hooks compartidos (useAhora / useDia, useRevelar, useTextoCarta, useSuscripcionFirestore)
 │   ├── lib/                    Lógica compartida sin pantalla (fechas, sello, Firebase, cumpleaños…)
 │   ├── styles/                 index.css (orden de las capas), tokens.css y base.css
 │   └── types/config.ts         Tipos del contenido
@@ -61,6 +61,16 @@ Proyect.github.io/
 ├── SPEC.md                     Contrato: lo que el sitio debe seguir haciendo
 └── .github/workflows/          Revisión y publicación automáticas
 ```
+
+Piezas que usa toda la página:
+
+- **Reloj:** `useAhora()` (cada segundo) y `useDia()` (cambia a medianoche)
+  comparten un solo temporizador (`src/lib/reloj.ts`). Para lo del cumpleaños,
+  `useAhora(RELOJ_CUMPLE)`, que respeta la vista previa `?cumple=…`.
+- **Ventana de carta:** `const { abrir } = useVentanaCarta()` desde cualquier
+  componente; nunca abre una carta antes de su fecha.
+- **Errores:** cada sección va dentro de `LimiteDeError`; si una falla, las
+  demás se siguen viendo y el error queda en la consola con su nombre.
 
 Un componente por archivo `.tsx`, con el mismo nombre que el componente. Cada
 carpeta de `features/` y `components/ui/` tiene un `index.ts` con lo que se usa
@@ -89,7 +99,7 @@ menos específica. La página del cielo usa las mismas capas en
 
 | Archivo | Qué tiene |
 |---|---|
-| `textos.ts` | Todas las frases del sitio, por nombre (`heroTitle`, `navCarta`…). |
+| `textos.ts` | Todas las frases del sitio, por nombre (`heroTitle`, `navCarta`…), incluidas las etiquetas para lectores de pantalla y los mensajes del cielo y de la sesión. `{fecha}`, `{nombre}`, `{n}`… se reemplazan solos. Si un componente usa un nombre que no existe aquí, TypeScript avisa. |
 | `meses.ts` | `lineaTiempo` (una foto por mes, `mes` en formato `"AAAA-MM"`) y `mensajesMes` (mensaje de cada mesiversario). |
 | `boveda.ts` | Las cartas de La Bóveda. |
 | `cumpleanos.ts` | Fecha de nacimiento, carta, velas y textos del día del cumpleaños. |
