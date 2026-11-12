@@ -1,0 +1,451 @@
+/* Bienvenida, barra superior y menú, portada y sobre con la carta. */
+@layer secciones {
+  /* Bienvenida */
+  .welcome {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background:
+      radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.18), transparent 34%),
+      linear-gradient(145deg, rgba(17, 9, 21, 0.88), rgba(35, 16, 38, 0.92), rgba(59, 24, 55, 0.92));
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition:
+      opacity 0.75s ease,
+      visibility 0.75s ease;
+  }
+  .welcome.hide {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .welcome-card {
+    width: min(560px, 100%);
+    padding: 30px 22px;
+    border-radius: 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .welcome-card::after {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    right: -90px;
+    bottom: -90px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.18), transparent 68%);
+    pointer-events: none;
+  }
+
+  .welcome h1 {
+    margin-top: 16px;
+    font-size: clamp(2.1rem, 8vw, 4rem);
+    line-height: 0.98;
+  }
+  .welcome p {
+    margin: 14px auto 22px;
+    max-width: 44ch;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+  .tiny-note {
+    font-size: 0.88rem;
+    color: var(--muted-2);
+  }
+
+  /* Portada */
+  .hero {
+    min-height: calc(100vh - 36px);
+    border-radius: var(--radius-xl);
+    padding: clamp(18px, 4vw, 30px);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    width: 380px;
+    height: 380px;
+    right: -160px;
+    bottom: -160px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.13), transparent 70%);
+    pointer-events: none;
+  }
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: clamp(18px, 4vw, 34px);
+    position: relative;
+    z-index: 2;
+  }
+  .brand {
+    display: inline-flex;
+    color: var(--gold);
+    font-weight: 800;
+  }
+  .nav-links {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .nav-links a {
+    color: var(--muted);
+    font-size: 0.92rem;
+    padding: 9px 12px;
+    border: 1px solid var(--stroke);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    transition:
+      transform 0.25s ease,
+      background 0.25s ease,
+      color 0.25s ease;
+  }
+  .nav-links a:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text);
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.08fr 0.92fr;
+    gap: clamp(18px, 4vw, 46px);
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-copy h1 {
+    margin-top: 18px;
+    font-size: clamp(2.6rem, 7vw, 5.8rem);
+    line-height: 0.94;
+    max-width: 12ch;
+  }
+  .lead {
+    margin-top: 22px;
+    max-width: 62ch;
+    color: var(--muted);
+    line-height: 1.82;
+    font-size: clamp(1rem, 1.8vw, 1.12rem);
+  }
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 26px;
+  }
+
+  /* Sobre / carta interactiva */
+  .letter-stage {
+    display: grid;
+    place-items: center;
+    gap: 14px;
+  }
+  .envelope {
+    width: min(100%, 380px);
+    aspect-ratio: 1.08 / 0.82;
+    position: relative;
+    cursor: pointer;
+    perspective: 1200px;
+    isolation: isolate;
+    overflow: visible;
+  }
+  .envelope:not(.open) {
+    overflow: hidden;
+    border-radius: 24px;
+  }
+  .envelope.open {
+    overflow: visible;
+  }
+  .envelope-back {
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #ffe4ef, #ffc6dc);
+    box-shadow: 0 26px 50px rgba(0, 0, 0, 0.22);
+    z-index: 1;
+  }
+  .envelope-back::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    clip-path: polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%);
+    background: linear-gradient(180deg, #ffd0e1, #ffbad4);
+  }
+  .envelope-front {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    border-radius: 24px;
+    background: linear-gradient(180deg, #fff3f7, #ffd5e4);
+    clip-path: polygon(0 100%, 0 0, 50% 58%, 100% 0, 100% 100%);
+  }
+  .envelope-flap {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    transform-origin: top center;
+    transition: transform 1s cubic-bezier(0.2, 0.7, 0.15, 1);
+  }
+  .envelope-flap::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 58%;
+    clip-path: polygon(0 0, 50% 100%, 100% 0);
+    background: linear-gradient(180deg, #ffe0eb, #ffc9dc);
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+  }
+  .seal {
+    position: absolute;
+    top: 39%;
+    left: 50%;
+    width: 64px;
+    height: 64px;
+    border-radius: 999px;
+    transform: translate(-50%, -50%);
+    display: grid;
+    place-items: center;
+    color: #fff;
+    background: linear-gradient(135deg, var(--rose-strong), var(--lilac));
+    box-shadow: 0 12px 28px rgba(255, 111, 154, 0.28);
+    z-index: 5;
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease;
+  }
+  .letter-paper {
+    position: absolute;
+    left: 50%;
+    bottom: 16px;
+    z-index: 2;
+    width: 82%;
+    min-height: 66%;
+    transform: translateX(-50%) translateY(54%) scale(0.96);
+    opacity: 0;
+    visibility: hidden;
+    border-radius: 20px;
+    padding: 22px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+    color: var(--paper-text);
+    background: var(--paper);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
+    pointer-events: none;
+    transition:
+      transform 1s cubic-bezier(0.2, 0.7, 0.15, 1),
+      opacity 0.35s ease 0.18s,
+      visibility 0s linear 0.45s,
+      box-shadow 1s ease;
+  }
+  .letter-paper h2 {
+    font-size: 1.35rem;
+    color: #7b3150;
+  }
+  .letter-paper p {
+    font-size: 0.96rem;
+    line-height: 1.65;
+  }
+  .letter-paper strong {
+    color: #c64f7d;
+    font-size: 0.92rem;
+  }
+  .envelope.open .envelope-flap {
+    transform: rotateX(180deg);
+  }
+  .envelope.open .letter-paper {
+    transform: translateX(-50%) translateY(-42%) scale(1.02);
+    opacity: 1;
+    visibility: visible;
+    box-shadow: 0 30px 55px rgba(0, 0, 0, 0.18);
+    z-index: 6;
+    transition:
+      transform 1s cubic-bezier(0.2, 0.7, 0.15, 1),
+      opacity 0.35s ease 0.28s,
+      visibility 0s linear 0s,
+      box-shadow 1s ease;
+  }
+  .envelope.open .seal {
+    transform: translate(-50%, -50%) scale(0.84);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .hint {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.93rem;
+  }
+
+  /* Menú de tres líneas (pantallas medianas y móviles) */
+  .menu-toggle {
+    display: none;
+  }
+  .nav-links a[hidden] {
+    display: none;
+  }
+
+  @media (max-width: 1200px) {
+    .topbar {
+      flex-wrap: nowrap;
+      z-index: 20;
+    }
+    .menu-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke-strong);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      font-size: 0.92rem;
+      cursor: pointer;
+    }
+    .menu-toggle:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }
+    .menu-toggle-icon {
+      position: relative;
+      width: 18px;
+      height: 12px;
+    }
+    .menu-toggle-icon span {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      border-radius: 2px;
+      background: currentColor;
+      transition:
+        transform 0.25s ease,
+        opacity 0.2s ease,
+        top 0.25s ease;
+    }
+    .menu-toggle-icon span:nth-child(1) {
+      top: 0;
+    }
+    .menu-toggle-icon span:nth-child(2) {
+      top: 5px;
+    }
+    .menu-toggle-icon span:nth-child(3) {
+      top: 10px;
+    }
+    .menu-toggle[aria-expanded="true"] .menu-toggle-icon span:nth-child(1) {
+      top: 5px;
+      transform: rotate(45deg);
+    }
+    .menu-toggle[aria-expanded="true"] .menu-toggle-icon span:nth-child(2) {
+      opacity: 0;
+    }
+    .menu-toggle[aria-expanded="true"] .menu-toggle-icon span:nth-child(3) {
+      top: 5px;
+      transform: rotate(-45deg);
+    }
+    .nav-links {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      right: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      padding: 10px;
+      border-radius: 22px;
+      background: #2a1230;
+      border: 1px solid var(--stroke-strong);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px);
+      transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0s linear 0.2s;
+    }
+    .nav-links.is-open {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0s linear 0s;
+    }
+    .nav-links a {
+      padding: 13px 14px;
+      border-radius: 14px;
+      border-color: transparent;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+    .nav-links a:hover {
+      transform: none;
+    }
+    .nav-links a:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: -2px;
+    }
+  }
+
+  @media (max-width: 920px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+    }
+    .letter-stage {
+      order: -1;
+    }
+    /* Al abrirse, la solapa y la carta suben por encima del sobre: se deja ese espacio. */
+    .envelope {
+      transition: margin-top 0.9s cubic-bezier(0.2, 0.7, 0.15, 1);
+    }
+    .envelope.open {
+      margin-top: var(--lift, min(60vw, 230px));
+    }
+    .hero-copy h1 {
+      max-width: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero {
+      min-height: auto;
+      padding: 18px;
+      border-radius: 26px;
+    }
+    .topbar {
+      margin-bottom: 18px;
+    }
+    .hero-copy h1 {
+      font-size: clamp(2.35rem, 16vw, 3.6rem);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero-actions a {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .welcome-card {
+      border-radius: 26px;
+      padding: 26px 18px;
+    }
+  }
+}

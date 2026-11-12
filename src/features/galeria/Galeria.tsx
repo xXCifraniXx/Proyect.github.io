@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { useDia } from "../../hooks/useAhora.ts";
 import { CONFIG, TEXTOS } from "../../lib/contenido.ts";
 import { mesesDesde } from "../../lib/fechas.ts";
 import type { FotoDelMes } from "../../types/config.ts";
@@ -6,20 +7,20 @@ import { CabeceraSeccion, Seccion } from "../../components/ui/index.ts";
 import LineaDeMeses from "./LineaDeMeses.tsx";
 import TarjetaMes from "./TarjetaMes.tsx";
 
-// Meses y fotos se calculan una vez al cargar la página (no cambian mientras
-// está abierta), fuera del componente para no recalcularlos en cada render.
+// Las fotos se leen una vez; los meses dependen del día (ver más abajo).
 const INICIO = new Date(CONFIG.fechas?.inicioRelacion ?? "");
-const MESES: string[] = Number.isNaN(INICIO.getTime()) ? [] : mesesDesde(INICIO, new Date());
 const FOTOS = new Map<string, FotoDelMes>((CONFIG.lineaTiempo ?? []).map((foto) => [foto.mes, foto]));
 
 /*
   GALERÍA: una foto por mes
   Una tarjeta por cada mes desde el inicio de la relación hasta hoy. Se
   recorre deslizando, con las flechas, con ← → o tocando un mes en la línea
-  de abajo. Siempre abre en el mes más reciente.
+  de abajo. Siempre abre en el mes más reciente. Si la página queda abierta
+  al empezar un mes nuevo, su tarjeta aparece sola.
 */
 export default function Galeria() {
-  const meses = MESES;
+  const dia = useDia();
+  const meses = useMemo(() => (Number.isNaN(INICIO.getTime()) ? [] : mesesDesde(INICIO, dia)), [dia]);
   const fotos = FOTOS;
 
   const visor = useRef<HTMLDivElement>(null);
@@ -97,7 +98,7 @@ export default function Galeria() {
           ref={visor}
           className="timeline-viewport"
           tabIndex={0}
-          aria-label="Fotos por mes"
+          aria-label={TEXTOS.ariaGaleria}
           onScroll={alDeslizar}
           onKeyDown={alPulsarTecla}
         >
@@ -121,7 +122,7 @@ export default function Galeria() {
           <button
             className="carousel-btn prev"
             type="button"
-            aria-label="Mes anterior"
+            aria-label={TEXTOS.ariaMesAnterior}
             disabled={activo <= 0}
             onClick={() => irA(activo - 1)}
           >
@@ -131,7 +132,7 @@ export default function Galeria() {
           <button
             className="carousel-btn next"
             type="button"
-            aria-label="Mes siguiente"
+            aria-label={TEXTOS.ariaMesSiguiente}
             disabled={activo >= meses.length - 1}
             onClick={() => irA(activo + 1)}
           >

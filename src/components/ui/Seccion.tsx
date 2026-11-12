@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import type { ReactNode } from "react";
 import { useRevelar } from "../../hooks/useRevelar.ts";
 
@@ -14,12 +15,7 @@ interface SeccionProps {
 export default function Seccion({ id, className, ariaLabelledby, children }: SeccionProps) {
   const ref = useRevelar<HTMLElement>();
   return (
-    <section
-      ref={ref}
-      id={id}
-      className={`section reveal${className ? ` ${className}` : ""}`}
-      aria-labelledby={ariaLabelledby}
-    >
+    <section ref={ref} id={id} className={clsx("section reveal", className)} aria-labelledby={ariaLabelledby}>
       {children}
     </section>
   );

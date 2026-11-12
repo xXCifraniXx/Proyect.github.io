@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { useState } from "react";
 import { TEXTOS } from "../../lib/contenido.ts";
 import { CabeceraSeccion, Seccion } from "../../components/ui/index.ts";
@@ -11,9 +12,9 @@ export default function CartaSorpresa() {
       <CabeceraSeccion etiqueta={TEXTOS.cartaEyebrow} titulo={TEXTOS.cartaTitle} intro={TEXTOS.cartaIntro} />
       <div className="surprise-card glass-soft">
         <button className="btn btn-primary" type="button" aria-expanded={visible} onClick={() => setVisible((v) => !v)}>
-          {visible ? TEXTOS.surpriseClose || "Ocultar mensaje 💌" : TEXTOS.surpriseOpen || "Ver mensaje sorpresa 💗"}
+          {visible ? TEXTOS.surpriseClose : TEXTOS.surpriseOpen}
         </button>
-        <p className={`surprise-message${visible ? " show" : ""}`}>{TEXTOS.surpriseMessage}</p>
+        <p className={clsx("surprise-message", visible && "show")}>{TEXTOS.surpriseMessage}</p>
       </div>
     </Seccion>
   );

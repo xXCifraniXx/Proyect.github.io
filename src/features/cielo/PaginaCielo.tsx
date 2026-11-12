@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCieloCompartido } from "./useCieloCompartido.ts";
 import { useSesion } from "../sesion/index.ts";
@@ -5,12 +6,14 @@ import { descargarImagen } from "./dibujo.ts";
 import { crearEstrella, guardarLocales, leerLocales, normalizar, type Estrella } from "./estrellas.ts";
 import { marcarMigrado, pendientesQueFaltan, yaMigrado } from "./migracion.ts";
 import { nubeActiva } from "../../lib/firebase.ts";
+import { textos } from "../../config/textos.ts";
+import { rellenar } from "../../lib/rellenar.ts";
 import BarraCielo from "./BarraCielo.tsx";
 import BurbujaEstrella from "./BurbujaEstrella.tsx";
 import CompositorEstrella from "./CompositorEstrella.tsx";
 import LienzoCielo from "./LienzoCielo.tsx";
 
-const PISTA_INICIAL = "Toca cualquier parte del cielo para poner una estrella y escribir un recuerdo.";
+const PISTA_INICIAL = textos.cieloPista;
 
 /*
   PÁGINA DEL CIELO
@@ -68,11 +71,11 @@ export default function PaginaCielo() {
   // En los eventos: además de responder, avisa por qué no se puede.
   const puedeEditar = (): boolean => {
     if (editable) return true;
-    if (conectando) avisar("Conectando con el cielo compartido…");
+    if (conectando) avisar(textos.cieloConectando);
     else if (sesion.usuario)
-      avisar(`Con ${sesion.usuario.email || "esta cuenta"} puedes mirar el cielo, pero no cambiarlo.`);
+      avisar(rellenar(textos.cieloSoloMirar, { correo: sesion.usuario.email || textos.sesionEstaCuenta }));
     else {
-      avisar("Inicia sesión con Google para poner o quitar estrellas ✦");
+      avisar(textos.cieloPideEntrar);
       setResaltarSesion(true);
     }
     return false;
@@ -81,9 +84,7 @@ export default function PaginaCielo() {
   const siFalla = (error: unknown) => {
     console.warn("[constelación] no se pudo guardar:", error);
     avisar(
-      (error as { code?: string }).code === "permission-denied"
-        ? "Esta cuenta no puede cambiar el cielo. Entra con la cuenta de uno de los dos."
-        : "No se pudo guardar en el cielo compartido. Revisa la conexión."
+      (error as { code?: string }).code === "permission-denied" ? textos.cieloSinPermiso : textos.cieloErrorGuardar
     );
   };
 
@@ -122,9 +123,7 @@ export default function PaginaCielo() {
 
   const vaciarCielo = () => {
     if (estrellas.length === 0 || !puedeEditar()) return;
-    const pregunta = enNube
-      ? "¿Vaciar el cielo por completo? Se borra para los dos y no se puede deshacer."
-      : "¿Vaciar el cielo por completo? Esto no se puede deshacer.";
+    const pregunta = enNube ? textos.cieloVaciarConfirmarNube : textos.cieloVaciarConfirmar;
     if (!window.confirm(pregunta)) return;
     setActivaId(null);
     if (enNube) void vaciar(estrellas).catch(siFalla);
@@ -152,12 +151,10 @@ export default function PaginaCielo() {
   // ----- contador -----
   const n = estrellas.length;
   let contador =
-    n === 0
-      ? "El cielo está vacío. Empieza por la primera estrella."
-      : `${n} ${n === 1 ? "estrella en nuestro cielo" : "estrellas en nuestro cielo"}`;
-  if (nube.estado === "online") contador += " · compartido ✦";
-  else if (nube.estado === "offline") contador += " · sin conexión, se enviará al volver";
-  else if (nube.estado === "error") contador += " · sin nube, guardado solo en este dispositivo";
+    n === 0 ? textos.cieloVacio : rellenar(n === 1 ? textos.cieloUnaEstrella : textos.cieloEstrellas, { n });
+  if (nube.estado === "online") contador += textos.cieloCompartido;
+  else if (nube.estado === "offline") contador += textos.cieloSinConexion;
+  else if (nube.estado === "error") contador += textos.cieloSinNube;
 
   return (
     <>
@@ -178,7 +175,7 @@ export default function PaginaCielo() {
         onDescargar={() => descargarImagen(estrellas, window.innerWidth, window.innerHeight)}
         onVaciar={vaciarCielo}
       />
-      <p className={`hint${pistaVisible ? "" : " fade"}`}>{pista.texto}</p>
+      <p className={clsx("hint", !pistaVisible && "fade")}>{pista.texto}</p>
       {nuevaEn && <CompositorEstrella onGuardar={anadir} onCancelar={() => setNuevaEn(null)} />}
       {activa && (
         <BurbujaEstrella

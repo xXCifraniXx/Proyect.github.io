@@ -1,7 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./styles/styles.css";
+import "./styles/index.css";
 import App from "./App.tsx";
+import { LimiteDeError, PaginaConError } from "./components/ui/index.ts";
 import { NOMBRES } from "./lib/contenido.ts";
 import { estadoCumple } from "./lib/cumple.ts";
 
@@ -13,6 +14,8 @@ if (!raiz) throw new Error('Falta <div id="root"> en index.html');
 
 createRoot(raiz).render(
   <StrictMode>
-    <App />
+    <LimiteDeError nombre="página" respaldo={<PaginaConError />}>
+      <App />
+    </LimiteDeError>
   </StrictMode>
 );

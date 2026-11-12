@@ -71,35 +71,35 @@ export default function Bajadas() {
         await compartido.guardar(nuevo);
       } catch (error) {
         console.warn("[bajadas] no se pudo guardar en la nube:", error);
-        return TEXTOS.rosterEditorCloudError || "No se pudo guardar para los dos. Revisa la conexión.";
+        return TEXTOS.rosterEditorCloudError;
       }
       borrarAjusteLocal();
       setLocal(null);
       irAHoy();
-      return TEXTOS.rosterEditorSavedSharedMsg || TEXTOS.rosterEditorSavedMsg || "Guardado.";
+      return TEXTOS.rosterEditorSavedSharedMsg;
     }
-    if (!guardarAjusteLocal(nuevo)) return TEXTOS.rosterEditorStorageError || "No se pudo guardar en este navegador.";
+    if (!guardarAjusteLocal(nuevo)) return TEXTOS.rosterEditorStorageError;
     setLocal(nuevo);
     irAHoy();
-    return TEXTOS.rosterEditorSavedMsg || "Guardado.";
+    return TEXTOS.rosterEditorSavedMsg;
   };
 
   const restablecer = async (): Promise<string> => {
     if (esAjusteValido(compartido.ajuste)) {
       if (!sesion.miembro) {
-        return TEXTOS.rosterEditorResetNeedsLogin || "Inicia sesión para volver al calendario original para los dos.";
+        return TEXTOS.rosterEditorResetNeedsLogin;
       }
       try {
         await compartido.borrar();
       } catch (error) {
         console.warn("[bajadas] no se pudo borrar en la nube:", error);
-        return TEXTOS.rosterEditorCloudError || "No se pudo guardar para los dos. Revisa la conexión.";
+        return TEXTOS.rosterEditorCloudError;
       }
     }
     borrarAjusteLocal();
     setLocal(null);
     irAHoy();
-    return TEXTOS.rosterEditorResetMsg || "Listo.";
+    return TEXTOS.rosterEditorResetMsg;
   };
 
   return (
@@ -116,11 +116,11 @@ export default function Bajadas() {
       {fase && <EstadoRotacion fase={fase} ahora={ahora} />}
 
       <div className="calendar-toolbar glass-soft">
-        <button className="round-btn" type="button" aria-label="Mes anterior" onClick={() => moverMes(-1)}>
+        <button className="round-btn" type="button" aria-label={TEXTOS.ariaMesAnterior} onClick={() => moverMes(-1)}>
           ‹
         </button>
         <strong>{etiquetaRango}</strong>
-        <button className="round-btn" type="button" aria-label="Mes siguiente" onClick={() => moverMes(1)}>
+        <button className="round-btn" type="button" aria-label={TEXTOS.ariaMesSiguiente} onClick={() => moverMes(1)}>
           ›
         </button>
         <button className="today-btn" type="button" onClick={irAHoy}>
@@ -128,7 +128,7 @@ export default function Bajadas() {
         </button>
       </div>
 
-      <div className="calendar-months" aria-label="Calendario de rotación">
+      <div className="calendar-months" aria-label={TEXTOS.ariaCalendario}>
         {meses.map((mes) => (
           <MesCalendario key={claveDia(mes)} mes={mes} rotacion={rotacion} hoy={hoy} />
         ))}

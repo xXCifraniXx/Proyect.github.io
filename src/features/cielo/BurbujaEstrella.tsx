@@ -1,5 +1,6 @@
 import type { Ref } from "react";
 import type { Estrella } from "./estrellas.ts";
+import { textos } from "../../config/textos.ts";
 
 interface BurbujaEstrellaProps {
   estrella: Estrella;
@@ -14,9 +15,9 @@ interface BurbujaEstrellaProps {
 export default function BurbujaEstrella({ estrella, puedeQuitar, onQuitar, ref }: BurbujaEstrellaProps) {
   return (
     <div ref={ref} className="star-pop">
-      <span>{estrella.label || "estrella sin nombre"}</span>
+      <span>{estrella.label || textos.estrellaSinNombre}</span>
       {puedeQuitar && (
-        <button type="button" aria-label="Quitar esta estrella" onClick={onQuitar}>
+        <button type="button" aria-label={textos.ariaQuitarEstrella} onClick={onQuitar}>
           ×
         </button>
       )}

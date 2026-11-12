@@ -1,5 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
-import { cargarFirebase, NUBE, nubeActiva } from "../../lib/firebase.ts";
+import { useCallback, useState } from "react";
+import type { Firestore } from "firebase/firestore";
+import { useSuscripcionFirestore } from "../../hooks/useSuscripcionFirestore.ts";
+import { conFirestore, NUBE, nubeActiva, type ModuloFirestore } from "../../lib/firebase.ts";
 import { esAjusteValido, type AjusteBajadas } from "./rotacion.ts";
 
 export interface AjusteCompartido {
@@ -19,53 +21,40 @@ const RUTA = ["parejas", NUBE?.cieloId ?? "", "ajustes", "bajadas"] as const;
 export function useAjusteCompartido(): AjusteCompartido {
   const [ajuste, setAjuste] = useState<AjusteBajadas | null | undefined>(nubeActiva ? undefined : null);
 
-  useEffect(() => {
-    if (!nubeActiva) return undefined;
-    let cancelar: (() => void) | undefined;
-    let vigente = true;
-    void cargarFirebase()
-      .then(async ({ db }) => {
-        const { doc, onSnapshot } = await import("firebase/firestore");
-        if (!vigente) return;
-        cancelar = onSnapshot(
-          doc(db, ...RUTA),
-          (snap) => {
-            const dato: unknown = snap.exists() ? snap.data() : null;
-            setAjuste(esAjusteValido(dato) ? dato : null);
-          },
-          (error) => {
-            console.warn("[bajadas] sin nube:", error);
-            setAjuste(null);
-          }
-        );
-      })
-      .catch((error: unknown) => {
-        console.warn("[bajadas] sin nube:", error);
-        setAjuste(null);
-      });
-    return () => {
-      vigente = false;
-      cancelar?.();
-    };
+  const sinNube = useCallback((error: unknown) => {
+    console.warn("[bajadas] sin nube:", error);
+    setAjuste(null);
   }, []);
 
-  const guardar = useCallback(async (nuevo: AjusteBajadas) => {
-    const { db } = await cargarFirebase();
-    const { doc, setDoc } = await import("firebase/firestore");
-    await setDoc(doc(db, ...RUTA), {
-      proximaBajada: nuevo.proximaBajada,
-      diasMina: Math.round(nuevo.diasMina),
-      diasDescanso: Math.round(nuevo.diasDescanso),
-      horaRegreso: nuevo.horaRegreso.slice(0, 5),
-      actualizado: Date.now()
-    });
-  }, []);
+  const suscribir = useCallback(
+    (db: Firestore, { doc, onSnapshot }: ModuloFirestore) =>
+      onSnapshot(
+        doc(db, ...RUTA),
+        (snap) => {
+          const dato: unknown = snap.exists() ? snap.data() : null;
+          setAjuste(esAjusteValido(dato) ? dato : null);
+        },
+        sinNube
+      ),
+    [sinNube]
+  );
+  useSuscripcionFirestore(suscribir, sinNube);
 
-  const borrar = useCallback(async () => {
-    const { db } = await cargarFirebase();
-    const { deleteDoc, doc } = await import("firebase/firestore");
-    await deleteDoc(doc(db, ...RUTA));
-  }, []);
+  const guardar = useCallback(
+    (nuevo: AjusteBajadas) =>
+      conFirestore((db, { doc, setDoc }) =>
+        setDoc(doc(db, ...RUTA), {
+          proximaBajada: nuevo.proximaBajada,
+          diasMina: Math.round(nuevo.diasMina),
+          diasDescanso: Math.round(nuevo.diasDescanso),
+          horaRegreso: nuevo.horaRegreso.slice(0, 5),
+          actualizado: Date.now()
+        })
+      ),
+    []
+  );
+
+  const borrar = useCallback(() => conFirestore((db, { deleteDoc, doc }) => deleteDoc(doc(db, ...RUTA))), []);
 
   return { ajuste, guardar, borrar };
 }

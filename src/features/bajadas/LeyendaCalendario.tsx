@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { TEXTOS } from "../../lib/contenido.ts";
 
 const ITEMS = [
@@ -11,10 +12,10 @@ const ITEMS = [
 /** Qué significa cada color del calendario. */
 export default function LeyendaCalendario() {
   return (
-    <div className="calendar-legend" aria-label="Leyenda del calendario">
+    <div className="calendar-legend" aria-label={TEXTOS.ariaLeyendaCalendario}>
       {ITEMS.map((item) => (
         <span key={item.clase}>
-          <i className={`legend-dot ${item.clase}`} /> <span>{item.texto}</span>
+          <i className={clsx("legend-dot", item.clase)} /> <span>{item.texto}</span>
         </span>
       ))}
     </div>

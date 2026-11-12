@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { useCallback, useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
 import { TEXTOS } from "../../lib/contenido.ts";
 
@@ -47,15 +48,15 @@ export default function Sobre() {
   };
 
   return (
-    <div className="letter-stage" aria-label="Carta interactiva">
+    <div className="letter-stage" aria-label={TEXTOS.ariaSobre}>
       <div
         ref={sobre}
-        className={`envelope${abierto ? " open" : ""}`}
+        className={clsx("envelope", abierto && "open")}
         id="envelope"
         role="button"
         tabIndex={0}
         aria-pressed={abierto}
-        aria-label="Abrir o cerrar la carta"
+        aria-label={TEXTOS.ariaSobreBoton}
         onClick={alternar}
         onKeyDown={alPulsarTecla}
       >
@@ -69,13 +70,9 @@ export default function Sobre() {
         <div className="envelope-flap" />
         <div className="seal">❤</div>
       </div>
-      <p className="hint">
-        {abierto
-          ? TEXTOS.letterHintOpen || "La carta ya está abierta. Toca el sobre para cerrarla."
-          : TEXTOS.letterHintClosed || "Toca el sobre para abrirlo con calma."}
-      </p>
+      <p className="hint">{abierto ? TEXTOS.letterHintOpen : TEXTOS.letterHintClosed}</p>
       <button className="btn btn-ghost" type="button" onClick={desdeBoton}>
-        {abierto ? TEXTOS.letterClose || "Cerrar carta" : TEXTOS.letterOpen || "Abrir carta"}
+        {abierto ? TEXTOS.letterClose : TEXTOS.letterOpen}
       </button>
     </div>
   );

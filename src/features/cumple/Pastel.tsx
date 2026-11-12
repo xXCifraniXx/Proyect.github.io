@@ -1,15 +1,15 @@
+import { clsx } from "clsx";
 import { useRef, useState, type CSSProperties } from "react";
 import { TEXTOS } from "../../lib/contenido.ts";
 import { celebrar } from "../../lib/confeti.ts";
 import { rafagaCorazones } from "../../lib/corazones.ts";
 import { dayKey, PREVIEW } from "../../lib/cumple.ts";
+import { CARTA_CUMPLE, useVentanaCarta } from "../boveda/index.ts";
 
 interface PastelProps {
   /** Día del cumpleaños de este año: cada año empieza con las velas encendidas. */
   dia: Date;
   velas: number;
-  /** Abre la carta de cumpleaños (si no hay, el botón no aparece). */
-  onAbrirCarta?: () => void;
 }
 
 // Se acuerda (en este dispositivo) de que ya apagó las velas este año.
@@ -37,7 +37,13 @@ function guardarHecho(clave: string, hecho: boolean) {
   Ella toca cada vela o pulsa "Soplar". Al apagarlas todas hay confeti y
   aparece el deseo con el botón para abrir la carta.
 */
-export default function Pastel({ dia, velas, onAbrirCarta }: PastelProps) {
+export default function Pastel({ dia, velas }: PastelProps) {
+  const { abrir } = useVentanaCarta();
+  // Desde el pastel se abre sin el botón "Ir a soplar mis velas", que ya no
+  // tendría sentido. Si no hay carta de cumpleaños, el botón no aparece.
+  // (Copia local: así TypeScript sabe que dentro de la función no es null.)
+  const carta = CARTA_CUMPLE;
+  const onAbrirCarta = carta ? () => abrir({ ...carta, sinAccion: true }) : undefined;
   const clave = `cumple-velas-${dayKey(dia)}`;
   const cantidad = Math.min(9, Math.max(1, velas || 5));
   const [yaHecho] = useState(() => leerHecho(clave));
@@ -87,9 +93,9 @@ export default function Pastel({ dia, velas, onAbrirCarta }: PastelProps) {
   return (
     <div className="cumple-stage">
       <div
-        className={`cake${restaurado ? " is-restored" : ""}`}
+        className={clsx("cake", restaurado && "is-restored")}
         role="group"
-        aria-label="Pastel de cumpleaños"
+        aria-label={TEXTOS.ariaPastel}
         style={estilo}
       >
         <div className="cake-glow" />
@@ -97,7 +103,7 @@ export default function Pastel({ dia, velas, onAbrirCarta }: PastelProps) {
           {apagadas.map((apagada, i) => (
             <button
               key={i}
-              className={`candle${apagada ? " is-out" : ""}`}
+              className={clsx("candle", apagada && "is-out")}
               type="button"
               aria-label={`Apagar la vela ${i + 1}`}
               onClick={() => apagar(i)}

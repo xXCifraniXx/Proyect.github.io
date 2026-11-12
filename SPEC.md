@@ -443,3 +443,11 @@ Las reglas viven en `firestore.rules` y se publican a mano en la consola.
    publicable.
 10. **Calidad:** `typecheck`, `lint`, los tests y `build` sin errores antes
     de cada merge.
+11. **Robustez:**
+    - si una sección falla al mostrarse, desaparece solo esa y el resto de la
+      página sigue funcionando; si falla la página entera, se ve
+      `textos.errorPagina` con un botón para recargar;
+    - lo que depende del día (mensaje del mes, cumpleaños, foto del mes nuevo)
+      se actualiza solo al pasar la medianoche, sin recargar;
+    - sin conexión a Firebase, la sesión y lo compartido siguen funcionando
+      solo en el dispositivo.

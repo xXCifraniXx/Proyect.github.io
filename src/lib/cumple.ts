@@ -14,6 +14,7 @@
 */
 import { CONFIG } from "../config/index.ts";
 import type { Carta, Cumpleanos, Textos } from "../types/config.ts";
+import { crearReloj } from "./reloj.ts";
 
 export type EstadoCumple = "antes" | "hoy" | "despues" | "off";
 
@@ -90,6 +91,10 @@ const clockOffset = ((): number => {
 
 /** "Ahora" para todo lo que depende de fechas (con la vista previa aplicada). */
 export const ahora = (): Date => new Date(Date.now() + clockOffset);
+/** Reloj compartido con la vista previa aplicada (para useAhora / useDia). */
+export const RELOJ_CUMPLE = crearReloj(ahora);
+/** El cumpleaños que corresponde en un momento dado (antes, hoy o después). */
+export const ocurrenciaEn = (momento: Date): Ocurrencia | null => occurrenceAt(momento);
 export const ocurrencia = (): Ocurrencia | null => occurrenceAt(ahora());
 export const estadoCumple = (): EstadoCumple => ocurrencia()?.estado ?? "off";
 
@@ -101,7 +106,7 @@ export function textosConCumple(base: Textos): Textos {
   const occ = ocurrencia();
   if (!occ) return base;
   const merged = occ.estado === "hoy" ? { ...base, ...(config()?.textosHoy ?? {}) } : base;
-  return Object.fromEntries(Object.entries(merged).map(([key, value]) => [key, fill(value, occ)]));
+  return Object.fromEntries(Object.entries(merged).map(([key, value]) => [key, fill(value, occ)])) as Textos;
 }
 
 /** Carta que se suma a La Bóveda, con la fecha del cumpleaños de este año. */

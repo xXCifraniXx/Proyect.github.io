@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useAhora } from "../../hooks/useAhora.ts";
 import { TEXTOS } from "../../lib/contenido.ts";
-import { ahora as ahoraCumple } from "../../lib/cumple.ts";
+import { RELOJ_CUMPLE } from "../../lib/cumple.ts";
 import { CuentaRegresiva } from "../../components/ui/index.ts";
 
 interface CuentaCumpleProps {
@@ -11,7 +11,7 @@ interface CuentaCumpleProps {
 
 /** Antes del cumpleaños: el regalo sellado con la cuenta regresiva. */
 export default function CuentaCumple({ objetivo }: CuentaCumpleProps) {
-  const ahora = useAhora(1000, ahoraCumple);
+  const ahora = useAhora(RELOJ_CUMPLE);
 
   // Al llegar el día se recarga la página para que entre en modo cumpleaños.
   useEffect(() => {

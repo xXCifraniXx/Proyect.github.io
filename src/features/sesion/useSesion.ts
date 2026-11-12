@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { User } from "firebase/auth";
 import { cargarFirebase, esMiembro, nubeActiva } from "../../lib/firebase.ts";
+import { textos } from "../../config/textos.ts";
 
 export interface Sesion {
   /** false mientras se pregunta a Firebase si ya hay sesión. */
@@ -24,14 +25,20 @@ export function useSesion(): Sesion {
     if (!nubeActiva) return undefined;
     let cancelar: (() => void) | undefined;
     let vigente = true;
-    void cargarFirebase().then(async ({ auth }) => {
-      const { onAuthStateChanged } = await import("firebase/auth");
-      if (!vigente) return;
-      cancelar = onAuthStateChanged(auth, (u) => {
-        setUsuario(u);
-        setLista(true);
+    void cargarFirebase()
+      .then(async ({ auth }) => {
+        const { onAuthStateChanged } = await import("firebase/auth");
+        if (!vigente) return;
+        cancelar = onAuthStateChanged(auth, (u) => {
+          setUsuario(u);
+          setLista(true);
+        });
+      })
+      .catch((error: unknown) => {
+        // Sin Firebase (por ejemplo, sin conexión): se sigue sin sesión.
+        console.warn("[sesión] sin nube:", error);
+        if (vigente) setLista(true);
       });
-    });
     return () => {
       vigente = false;
       cancelar?.();
@@ -47,11 +54,7 @@ export function useSesion(): Sesion {
     } catch (e) {
       const code = (e as { code?: string }).code;
       if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") return;
-      setError(
-        code === "auth/popup-blocked"
-          ? "El navegador bloqueó la ventana de Google. Permite las ventanas emergentes e inténtalo otra vez."
-          : "No se pudo iniciar sesión. Inténtalo otra vez en un momento."
-      );
+      setError(code === "auth/popup-blocked" ? textos.sesionVentanaBloqueada : textos.sesionError);
     }
   }, []);
 

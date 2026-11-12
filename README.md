@@ -52,15 +52,25 @@ Proyect.github.io/
 │   ├── features/               Una carpeta por sección (inicio, mensaje-mes, carta,
 │   │                           galeria, tiempo, bajadas, musica, boveda, cumple,
 │   │                           constelacion, cielo, juego, cierre, sesion)
-│   ├── components/ui/          Piezas que usan varias secciones (Seccion, CuentaRegresiva…)
-│   ├── hooks/                  Hooks compartidos (useAhora, useRevelar, useTextoCarta)
+│   ├── components/ui/          Piezas que usan varias secciones (Seccion, CuentaRegresiva, LimiteDeError…)
+│   ├── hooks/                  Hooks compartidos (useAhora / useDia, useRevelar, useTextoCarta, useSuscripcionFirestore)
 │   ├── lib/                    Lógica compartida sin pantalla (fechas, sello, Firebase, cumpleaños…)
-│   ├── styles/                 styles.css (página principal) y estrellas.css (cielo)
+│   ├── styles/                 index.css (orden de las capas), tokens.css y base.css
 │   └── types/config.ts         Tipos del contenido
 ├── firestore.rules             Reglas para pegar en Firebase
 ├── SPEC.md                     Contrato: lo que el sitio debe seguir haciendo
 └── .github/workflows/          Revisión y publicación automáticas
 ```
+
+Piezas que usa toda la página:
+
+- **Reloj:** `useAhora()` (cada segundo) y `useDia()` (cambia a medianoche)
+  comparten un solo temporizador (`src/lib/reloj.ts`). Para lo del cumpleaños,
+  `useAhora(RELOJ_CUMPLE)`, que respeta la vista previa `?cumple=…`.
+- **Ventana de carta:** `const { abrir } = useVentanaCarta()` desde cualquier
+  componente; nunca abre una carta antes de su fecha.
+- **Errores:** cada sección va dentro de `LimiteDeError`; si una falla, las
+  demás se siguen viendo y el error queda en la consola con su nombre.
 
 Un componente por archivo `.tsx`, con el mismo nombre que el componente. Cada
 carpeta de `features/` y `components/ui/` tiene un `index.ts` con lo que se usa
@@ -68,11 +78,28 @@ desde fuera: entre carpetas se importa desde ese `index.ts`; dentro de una
 carpeta, directo del archivo. TypeScript está en modo estricto: si un dato
 puede faltar, hay que decir qué se muestra en ese caso.
 
+## Estilos
+
+CSS sin librerías, en tres capas (`@layer`), de menos a más fuerte:
+
+| Capa | Dónde | Qué va ahí |
+|---|---|---|
+| `tokens` | `src/styles/tokens.css` | Variables: colores, sombras, radios, medidas. |
+| `base` | `src/styles/base.css` | Lo común: reset, fondo, superficies, botones, títulos, secciones, cuenta regresiva, aparición al hacer scroll. |
+| `secciones` | `src/features/<sección>/<sección>.css` | Un archivo por sección, junto a su componente. |
+
+[`src/styles/index.css`](src/styles/index.css) declara las capas e importa
+los archivos en el orden de la página (dentro de una capa gana la regla que
+viene después). Una regla de `secciones` gana a una de `base` aunque sea
+menos específica. La página del cielo usa las mismas capas en
+`src/features/cielo/cielo.css`. Las clases condicionales se arman con
+`clsx`, por ejemplo `clsx("envelope", abierto && "open")`.
+
 ## Qué se puede editar en `src/config/`
 
 | Archivo | Qué tiene |
 |---|---|
-| `textos.ts` | Todas las frases del sitio, por nombre (`heroTitle`, `navCarta`…). |
+| `textos.ts` | Todas las frases del sitio, por nombre (`heroTitle`, `navCarta`…), incluidas las etiquetas para lectores de pantalla y los mensajes del cielo y de la sesión. `{fecha}`, `{nombre}`, `{n}`… se reemplazan solos. Si un componente usa un nombre que no existe aquí, TypeScript avisa. |
 | `meses.ts` | `lineaTiempo` (una foto por mes, `mes` en formato `"AAAA-MM"`) y `mensajesMes` (mensaje de cada mesiversario). |
 | `boveda.ts` | Las cartas de La Bóveda. |
 | `cumpleanos.ts` | Fecha de nacimiento, carta, velas y textos del día del cumpleaños. |

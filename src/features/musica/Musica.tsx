@@ -45,12 +45,12 @@ export default function Musica() {
       <div className="music-panel glass-soft">
         <div className="music-info">
           <span className="music-label">{TEXTOS.musicLabel}</span>
-          <strong>{CANCION.titulo || "Nuestra canción"}</strong>
-          <span>{error ? "No se pudo reproducir el audio en este navegador." : CANCION.artista}</span>
+          <strong>{CANCION.titulo || TEXTOS.musicaSinTitulo}</strong>
+          <span>{error ? TEXTOS.musicaError : CANCION.artista}</span>
         </div>
         <div className="music-controls">
           <button className="btn btn-primary" type="button" onClick={() => void alternar()}>
-            {sonando ? TEXTOS.musicPause || "Pausar ⏸" : TEXTOS.musicPlay || "Reproducir 🎵"}
+            {sonando ? TEXTOS.musicPause : TEXTOS.musicPlay}
           </button>
           <label className="volume-control">
             <span>{TEXTOS.musicVolume}</span>
