@@ -1,8 +1,10 @@
-# Versión React del sitio (en migración)
+# Versión React del sitio
 
-Nueva versión del sitio hecha con **React + TypeScript + Vite**. Mientras se migra, el sitio
-publicado sigue siendo el de la carpeta raíz; esta versión se publicará en el
-mismo link solo cuando haga todo lo que hace la actual.
+El sitio hecho con **React + TypeScript + Vite**. Desde el 12 de noviembre de 2026 es
+el que se publica en https://xxcifranixx.github.io/Proyect.github.io/ (con
+`publicar.yml`). El sitio estático de la carpeta raíz quedó como respaldo en el
+tag `v1-estatico`; todavía comparte `assets/` (contenido, estilos, fotos) con
+esta versión.
 
 ## Cómo verla en tu equipo
 
@@ -106,4 +108,4 @@ nueva en `config.js`, súmala en `src/types/config.ts`.
 - [x] Fase 5: La Bóveda (cartas selladas, ventana de carta compartida con el pastel)
 - [x] Fase 6: sección Constelación y la página del cielo (constelacion/index.html) con Firebase y sesión
 - [x] Fase 7: minijuego y cierre (la página completa coincide texto por texto con el sitio actual)
-- [ ] Publicar con GitHub Actions en el mismo link
+- [x] Publicar con GitHub Actions en el mismo link (12 de noviembre de 2026)
