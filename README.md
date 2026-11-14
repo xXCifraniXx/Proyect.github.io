@@ -95,6 +95,11 @@ menos específica. La página del cielo usa las mismas capas en
 `src/features/cielo/cielo.css`. Las clases condicionales se arman con
 `clsx`, por ejemplo `clsx("envelope", abierto && "open")`.
 
+Los prefijos como `-webkit-` no se escriben a mano: la compilación los
+agrega según los navegadores. Con `backdrop-filter` escrito dos veces (con y
+sin prefijo), la compilación dejaba solo el prefijado y Chrome no mostraba
+el desenfoque.
+
 ## Qué se puede editar en `src/config/`
 
 | Archivo | Qué tiene |
