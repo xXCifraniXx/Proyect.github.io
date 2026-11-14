@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { useCallback, useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { TEXTOS } from "../../lib/contenido.ts";
 
 /*
@@ -8,6 +8,9 @@ import { TEXTOS } from "../../lib/contenido.ts";
   suben por encima del sobre; en pantallas angostas el CSS deja ese espacio
   arriba (--lift), que se calcula con la altura real de la carta para que no
   tape el menú aunque el texto sea largo.
+
+  El sobre no es un botón: así los lectores de pantalla pueden leer la carta
+  que lleva adentro. Con teclado se abre con el botón de abajo.
 */
 export default function Sobre() {
   const [abierto, setAbierto] = useState(false);
@@ -35,31 +38,16 @@ export default function Sobre() {
 
   const alternar = () => setAbierto((valor) => !valor);
 
-  const alPulsarTecla = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      alternar();
-    }
-  };
-
   const desdeBoton = () => {
     alternar();
     sobre.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   return (
-    <div className="letter-stage" aria-label={TEXTOS.ariaSobre}>
-      <div
-        ref={sobre}
-        className={clsx("envelope", abierto && "open")}
-        id="envelope"
-        role="button"
-        tabIndex={0}
-        aria-pressed={abierto}
-        aria-label={TEXTOS.ariaSobreBoton}
-        onClick={alternar}
-        onKeyDown={alPulsarTecla}
-      >
+    <div className="letter-stage" role="group" aria-label={TEXTOS.ariaSobre}>
+      {/* Tocar el sobre lo abre o lo cierra; el botón de abajo hace lo mismo con teclado. */}
+      {/* oxlint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+      <div ref={sobre} className={clsx("envelope", abierto && "open")} id="envelope" onClick={alternar}>
         <div className="envelope-back" />
         <article ref={papel} className="letter-paper">
           <h2>{TEXTOS.letterTitle}</h2>

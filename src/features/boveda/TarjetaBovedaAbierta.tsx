@@ -13,7 +13,9 @@ interface TarjetaBovedaAbiertaProps {
 
 /*
   Carta de La Bóveda que ya se puede leer: muestra un adelanto y se abre al
-  tocarla. Va en su propio componente para descifrar el texto solo cuando la
+  tocarla. El título es el botón, estirado para cubrir toda la tarjeta (ver
+  .boveda-abrir en boveda.css): así el botón se llama como la carta y el
+  adelanto se puede leer aparte. Va en su propio componente para descifrar el texto solo cuando la
   carta ya está abierta (un hook no puede llamarse dentro de un "if").
 */
 export default function TarjetaBovedaAbierta({ item, estilo }: TarjetaBovedaAbiertaProps) {
@@ -23,21 +25,13 @@ export default function TarjetaBovedaAbierta({ item, estilo }: TarjetaBovedaAbie
   const adelanto = texto.length > 90 ? `${texto.slice(0, 90)}…` : texto;
 
   return (
-    <article
-      className="boveda-card glass-soft is-unlocked"
-      style={estilo}
-      role="button"
-      tabIndex={0}
-      onClick={abrirEsta}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          abrirEsta();
-        }
-      }}
-    >
+    <article className="boveda-card glass-soft is-unlocked" style={estilo}>
       <span className="boveda-icon">{item.carta.icono || TEXTOS.cartaIcono}</span>
-      <h3>{item.carta.titulo || TEXTOS.cartaSinTitulo}</h3>
+      <h3>
+        <button className="boveda-abrir" type="button" onClick={abrirEsta}>
+          {item.carta.titulo || TEXTOS.cartaSinTitulo}
+        </button>
+      </h3>
       <p>{adelanto}</p>
       <span className="boveda-date">
         {rellenar(TEXTOS.bovedaDesbloqueada, { fecha: formatoFechaLarga(item.fecha) })}

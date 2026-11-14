@@ -189,7 +189,6 @@ export const textos = {
   ariaNavegacion: "Navegación principal",
   menuBoton: "Menú",
   ariaSobre: "Carta interactiva",
-  ariaSobreBoton: "Abrir o cerrar la carta",
   ariaGaleria: "Fotos por mes",
   ariaMesAnterior: "Mes anterior",
   ariaMesSiguiente: "Mes siguiente",
