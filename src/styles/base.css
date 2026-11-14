@@ -172,13 +172,15 @@
     z-index: 1;
     padding: max(18px, env(safe-area-inset-top)) 0 max(32px, env(safe-area-inset-bottom));
   }
+  /* backdrop-filter va sin -webkit-: la compilación agrega el prefijo para
+     Safari. Si se escribe a mano, la compilación deja solo el prefijado y
+     Chrome pierde el desenfoque. */
   .glass,
   .glass-soft {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.07));
     border: 1px solid var(--stroke);
     box-shadow: var(--shadow);
     backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
   }
   .glass-soft {
     box-shadow: var(--shadow-soft);

@@ -64,6 +64,20 @@
   .boveda-card.is-unlocked .boveda-date {
     color: var(--rose-strong);
   }
+  /* Botón de una carta abierta: es el título, estirado para cubrir toda la tarjeta. */
+  .boveda-abrir {
+    all: unset;
+    cursor: pointer;
+  }
+  .boveda-abrir::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  .boveda-card:has(.boveda-abrir:focus-visible) {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
   .boveda-card.is-unlocked::after {
     content: "Toca para leer";
     position: absolute;
@@ -78,20 +92,31 @@
     line-height: 1.7;
   }
 
-  /* Modal de La Bóveda */
+  /* Modal de La Bóveda: un <dialog>. Se le quitan los estilos que trae del
+     navegador (tamaño, margen, borde, fondo) para que cubra toda la pantalla. */
   .lightbox {
     position: fixed;
     inset: 0;
     z-index: 100;
     display: none;
     place-items: center;
+    width: auto;
+    height: auto;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    border: 0;
     padding: 18px;
+    overflow: visible;
+    color: inherit;
     background: rgba(0, 0, 0, 0.58);
     backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
   }
-  .lightbox.show {
+  .lightbox[open] {
     display: grid;
+  }
+  .lightbox::backdrop {
+    background: transparent;
   }
   .lightbox-card {
     width: min(560px, 100%);

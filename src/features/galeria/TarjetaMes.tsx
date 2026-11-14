@@ -22,6 +22,8 @@ export default function TarjetaMes({ clave, foto, inclinacion, activa, onElegir,
   const clases = clsx("timeline-card", inclinacion, !foto?.src && "is-empty", activa && "is-active");
 
   return (
+    // Tocar una foto la centra; con teclado se usan ← →, los botones ‹ › o la línea de meses.
+    // oxlint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
     <figure ref={ref} className={clases} onClick={activa ? undefined : onElegir}>
       <div className="timeline-photo">
         {foto?.src ? (

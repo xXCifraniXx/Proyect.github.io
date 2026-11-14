@@ -14,6 +14,7 @@ import { Musica } from "./features/musica/index.ts";
 import { TiempoJuntos } from "./features/tiempo/index.ts";
 import { celebrar } from "./lib/confeti.ts";
 import { useDia } from "./hooks/useAhora.ts";
+import { useRecargarSiCambia } from "./hooks/useRecargarSiCambia.ts";
 import { ocurrenciaEn, RELOJ_CUMPLE } from "./lib/cumple.ts";
 
 /*
@@ -28,6 +29,10 @@ export default function App() {
   const nota = useMemo(() => mensajeMesVigente(undefined, dia), [dia]);
   const cumple = useMemo(() => ocurrenciaEn(dia), [dia]);
   const esHoy = cumple?.estado === "hoy";
+
+  // Los textos, la carta y los adornos del cumpleaños se arman al cargar la
+  // página: si su estado cambia con la página abierta, se recarga.
+  useRecargarSiCambia(cumple?.estado);
 
   const visibles: EnlacesVisibles = {
     mes: nota !== null,

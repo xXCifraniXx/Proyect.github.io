@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useAhora } from "../../hooks/useAhora.ts";
 import { TEXTOS } from "../../lib/contenido.ts";
 import { RELOJ_CUMPLE } from "../../lib/cumple.ts";
@@ -9,14 +8,12 @@ interface CuentaCumpleProps {
   objetivo: Date;
 }
 
-/** Antes del cumpleaños: el regalo sellado con la cuenta regresiva. */
+/**
+ * Antes del cumpleaños: el regalo sellado con la cuenta regresiva.
+ * Al llegar el día, App recarga la página para que entre en modo cumpleaños.
+ */
 export default function CuentaCumple({ objetivo }: CuentaCumpleProps) {
   const ahora = useAhora(RELOJ_CUMPLE);
-
-  // Al llegar el día se recarga la página para que entre en modo cumpleaños.
-  useEffect(() => {
-    if (ahora >= objetivo) window.location.reload();
-  }, [ahora, objetivo]);
 
   return (
     <div className="cumple-locked">

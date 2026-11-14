@@ -23,7 +23,7 @@ Abre http://localhost:5173/Proyect.github.io/ . Los cambios se ven al instante.
 | `npm run build` | Revisa los tipos y compila el sitio en `dist/` |
 | `npm run preview` | Sirve `dist/` como lo haría GitHub Pages |
 | `npm run typecheck` | Solo revisa los tipos |
-| `npm run lint` | Revisa el código (oxlint) |
+| `npm run lint` | Revisa el código (oxlint): reglas de los hooks y de accesibilidad. Falla con cualquier aviso |
 | `npm test` | Tests (Vitest); `npm run test:watch` mientras editas |
 | `npm run format` | Da formato (Prettier); `format:check` solo revisa |
 | `npm run revisar-peso` | Después de `build`: la carga inicial debe pesar menos de 100 KB comprimidos |
@@ -94,6 +94,11 @@ viene después). Una regla de `secciones` gana a una de `base` aunque sea
 menos específica. La página del cielo usa las mismas capas en
 `src/features/cielo/cielo.css`. Las clases condicionales se arman con
 `clsx`, por ejemplo `clsx("envelope", abierto && "open")`.
+
+Los prefijos como `-webkit-` no se escriben a mano: la compilación los
+agrega según los navegadores. Con `backdrop-filter` escrito dos veces (con y
+sin prefijo), la compilación dejaba solo el prefijado y Chrome no mostraba
+el desenfoque.
 
 ## Qué se puede editar en `src/config/`
 

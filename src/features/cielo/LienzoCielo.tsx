@@ -25,6 +25,7 @@ interface LienzoCieloProps {
   leve movimiento según el mouse o la inclinación del celular. El dibujo vive
   fuera de React: el bucle lee los datos más recientes desde refs, así no se
   reinicia cada vez que cambia una estrella.
+  Con "reducir movimiento" el cielo queda quieto: sin vaivén ni titileo.
 */
 export default function LienzoCielo({
   estrellas,
@@ -52,7 +53,8 @@ export default function LienzoCielo({
     objetivoX: 0,
     objetivoY: 0,
     polvo: [] as Polvo[],
-    encima: null as string | null
+    encima: null as string | null,
+    quieto: false
   });
 
   useEffect(() => {
@@ -60,6 +62,7 @@ export default function LienzoCielo({
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return undefined;
     const v = vista.current;
+    v.quieto = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
     const ajustar = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -74,13 +77,14 @@ export default function LienzoCielo({
     };
 
     const alInclinar = (e: DeviceOrientationEvent) => {
-      if (e.gamma == null) return;
+      if (v.quieto || e.gamma == null) return;
       v.objetivoX = Math.max(-30, Math.min(30, e.gamma)) * -1;
       v.objetivoY = Math.max(-30, Math.min(30, (e.beta ?? 0) - 45)) * -0.5;
     };
 
     let cuadro = 0;
-    const dibujar = (t: number) => {
+    const dibujar = (reloj: number) => {
+      const t = v.quieto ? 0 : reloj;
       v.px += (v.objetivoX - v.px) * 0.06;
       v.py += (v.objetivoY - v.py) * 0.06;
       const { estrellas: lista, etiquetaHasta: hasta, activaId: activa } = datos.current;
@@ -139,8 +143,10 @@ export default function LienzoCielo({
 
   const alMover = (e: PointerEvent<HTMLCanvasElement>) => {
     const v = vista.current;
-    v.objetivoX = (e.clientX / v.w - 0.5) * -30;
-    v.objetivoY = (e.clientY / v.h - 0.5) * -30;
+    if (!v.quieto) {
+      v.objetivoX = (e.clientX / v.w - 0.5) * -30;
+      v.objetivoY = (e.clientY / v.h - 0.5) * -30;
+    }
     const t = toque.current;
     if (t && Math.hypot(e.clientX - t.x, e.clientY - t.y) > MOVIMIENTO_MAX) t.movido = true;
     // En escritorio, la etiqueta aparece al pasar el mouse.
