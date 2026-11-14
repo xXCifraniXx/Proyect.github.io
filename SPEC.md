@@ -418,10 +418,17 @@ Las reglas viven en `firestore.rules` y se publican a mano en la consola.
      menú y la carta abierta, en especial);
    - funciona también en tablet (768 px) y escritorio (≥1200 px).
 2. **Movimiento reducido:** con `prefers-reduced-motion` no hay confeti, el
-   cielo de adorno queda quieto y la galería no anima su desplazamiento.
+   cielo de adorno y la página del cielo quedan quietos (sin vaivén ni
+   titileo) y la galería no anima su desplazamiento.
 3. **Accesibilidad:**
    - todos los controles se pueden usar con teclado y tienen foco visible;
-   - las cartas abiertas y el sobre responden a Enter y Espacio;
+   - cada carta abierta de La Bóveda es un botón con el nombre de la carta
+     (responde a Enter y Espacio);
+   - el sobre se abre tocándolo o con su botón; la carta que lleva adentro
+     la pueden leer los lectores de pantalla;
+   - la ventana de una carta es un `<dialog>`: mientras está abierta, Tab no
+     sale de ella y lo de atrás no se puede tocar; al cerrarla, el foco
+     vuelve a donde estaba;
    - los botones solo con ícono tienen `aria-label`.
 4. **Privacidad y seguridad:**
    - cero correos en el código o el repo (solo UIDs);
@@ -441,13 +448,15 @@ Las reglas viven en `firestore.rules` y se publican a mano en la consola.
    del dispositivo.
 9. **Publicación:** GitHub Pages en `/Proyect.github.io/`. `main` siempre
    publicable.
-10. **Calidad:** `typecheck`, `lint`, los tests y `build` sin errores antes
-    de cada merge.
+10. **Calidad:** `typecheck`, `lint` (sin ningún aviso), los tests y
+    `build` sin errores antes de cada merge.
 11. **Robustez:**
     - si una sección falla al mostrarse, desaparece solo esa y el resto de la
       página sigue funcionando; si falla la página entera, se ve
       `textos.errorPagina` con un botón para recargar;
-    - lo que depende del día (mensaje del mes, cumpleaños, foto del mes nuevo)
-      se actualiza solo al pasar la medianoche, sin recargar;
+    - lo que depende del día (mensaje del mes, foto del mes nuevo) se
+      actualiza solo al pasar la medianoche, sin recargar;
+    - si el estado del cumpleaños cambia con la página abierta, la página se
+      recarga (sus textos, su carta y sus adornos se arman al cargar);
     - sin conexión a Firebase, la sesión y lo compartido siguen funcionando
       solo en el dispositivo.
