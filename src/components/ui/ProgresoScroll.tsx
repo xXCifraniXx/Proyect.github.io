@@ -1,18 +1,35 @@
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useRef } from "react";
 
-/** Barra fina arriba que se llena a medida que se baja por la página. */
+/**
+ * Barra fina arriba que se llena a medida que se baja por la página.
+ * El ancho se cambia directo en el elemento, una vez por cuadro: así React
+ * no vuelve a dibujar nada con cada movimiento del scroll.
+ */
 export default function ProgresoScroll() {
-  const [avance, setAvance] = useState(0);
+  const barra = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const actualizar = () => {
+  // useLayoutEffect: el primer ancho se pone antes de pintar.
+  useLayoutEffect(() => {
+    let cuadro = 0;
+    const medir = () => {
+      const el = barra.current;
+      if (!el) return;
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      setAvance(max > 0 ? (window.scrollY / max) * 100 : 0);
+      el.style.width = `${max > 0 ? (window.scrollY / max) * 100 : 0}%`;
     };
-    window.addEventListener("scroll", actualizar, { passive: true });
-    actualizar();
-    return () => window.removeEventListener("scroll", actualizar);
+    const alMover = () => {
+      cancelAnimationFrame(cuadro);
+      cuadro = requestAnimationFrame(medir);
+    };
+    medir();
+    window.addEventListener("scroll", alMover, { passive: true });
+    window.addEventListener("resize", alMover);
+    return () => {
+      cancelAnimationFrame(cuadro);
+      window.removeEventListener("scroll", alMover);
+      window.removeEventListener("resize", alMover);
+    };
   }, []);
 
-  return <div className="scroll-progress" style={{ width: `${avance}%` }} aria-hidden="true" />;
+  return <div ref={barra} className="scroll-progress" aria-hidden="true" />;
 }

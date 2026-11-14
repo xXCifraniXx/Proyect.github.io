@@ -196,6 +196,7 @@ export const textos = {
   ariaCalendario: "Calendario de rotación",
   ariaLeyendaCalendario: "Leyenda del calendario",
   ariaPastel: "Pastel de cumpleaños",
+  ariaApagarVela: "Apagar la vela {n}",
   ariaCartaOculta: "Carta oculta",
   ariaCartaAbierta: "Carta abierta",
   ariaCerrarCarta: "Cerrar carta",

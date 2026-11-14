@@ -2,6 +2,7 @@ import { clsx } from "clsx";
 import { useRef, useState, type CSSProperties } from "react";
 import { TEXTOS } from "../../lib/contenido.ts";
 import { celebrar } from "../../lib/confeti.ts";
+import { rellenar } from "../../lib/rellenar.ts";
 import { rafagaCorazones } from "../../lib/corazones.ts";
 import { dayKey, PREVIEW } from "../../lib/cumple.ts";
 import { CARTA_CUMPLE, useVentanaCarta } from "../boveda/index.ts";
@@ -105,7 +106,7 @@ export default function Pastel({ dia, velas }: PastelProps) {
               key={i}
               className={clsx("candle", apagada && "is-out")}
               type="button"
-              aria-label={`Apagar la vela ${i + 1}`}
+              aria-label={rellenar(TEXTOS.ariaApagarVela, { n: i + 1 })}
               onClick={() => apagar(i)}
             >
               <span className="flame" />
