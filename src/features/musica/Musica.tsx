@@ -32,6 +32,8 @@ export default function Musica() {
 
   return (
     <Seccion id="musica">
+      {/* Es una canción: no lleva subtítulos. */}
+      {/* oxlint-disable-next-line jsx-a11y/media-has-caption */}
       <audio
         ref={audio}
         src={CANCION.src}

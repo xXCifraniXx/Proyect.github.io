@@ -18,6 +18,8 @@ export default function CompositorEstrella({ onGuardar, onCancelar }: Compositor
         maxLength={MAX_ETIQUETA}
         placeholder={textos.cieloPlaceholder}
         autoComplete="off"
+        // Aparece justo al tocar el cielo para escribir el recuerdo: el foco va directo al campo.
+        // oxlint-disable-next-line jsx-a11y/no-autofocus
         autoFocus
         value={texto}
         onChange={(e) => setTexto(e.target.value)}

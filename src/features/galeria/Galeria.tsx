@@ -94,9 +94,13 @@ export default function Galeria() {
     <Seccion id="linea-tiempo">
       <CabeceraSeccion etiqueta={TEXTOS.timelineEyebrow} titulo={TEXTOS.timelineTitle} intro={TEXTOS.timelineIntro} />
       <div className="timeline-wrap glass-soft">
+        {/* Una zona que se desliza: tiene que poder enfocarse para moverla con ← →. */}
+        {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
         <div
           ref={visor}
           className="timeline-viewport"
+          role="region"
+          // oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex
           tabIndex={0}
           aria-label={TEXTOS.ariaGaleria}
           onScroll={alDeslizar}
