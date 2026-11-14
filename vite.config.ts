@@ -34,7 +34,7 @@ export default defineConfig({
   // navegador. Zona horaria fija para que las fechas den igual en cualquier equipo.
   test: {
     environment: "happy-dom",
-    include: ["src/**/*.test.ts"],
+    include: ["src/**/*.test.{ts,tsx}"],
     env: { TZ: "America/Lima" }
   }
 });

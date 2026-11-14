@@ -1,4 +1,4 @@
-import { act, createElement } from "react";
+import { act, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { puedeAbrirse } from "../../features/boveda/ventanaCarta.ts";
@@ -11,7 +11,7 @@ const Falla = () => {
   throw new Error("dato mal escrito");
 };
 
-const dibujar = (elemento: ReturnType<typeof createElement>) => {
+const dibujar = (elemento: ReactNode) => {
   const caja = document.createElement("div");
   const raiz = createRoot(caja);
   act(() => raiz.render(elemento));
@@ -24,11 +24,9 @@ describe("LimiteDeError", () => {
   it("si una sección falla, muestra el respaldo y deja el error en la consola", () => {
     const consola = vi.spyOn(console, "error").mockImplementation(() => {});
     const { caja, raiz } = dibujar(
-      createElement(LimiteDeError, {
-        nombre: "prueba",
-        respaldo: createElement("p", null, "respaldo"),
-        children: createElement(Falla)
-      })
+      <LimiteDeError nombre="prueba" respaldo={<p>respaldo</p>}>
+        <Falla />
+      </LimiteDeError>
     );
     expect(caja.textContent).toBe("respaldo");
     expect(consola.mock.calls.some((c) => String(c[0]).includes("[prueba]"))).toBe(true);
@@ -37,14 +35,20 @@ describe("LimiteDeError", () => {
 
   it("sin respaldo, la sección simplemente no aparece", () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
-    const { caja, raiz } = dibujar(createElement(LimiteDeError, { nombre: "prueba", children: createElement(Falla) }));
+    const { caja, raiz } = dibujar(
+      <LimiteDeError nombre="prueba">
+        <Falla />
+      </LimiteDeError>
+    );
     expect(caja.innerHTML).toBe("");
     act(() => raiz.unmount());
   });
 
   it("si no falla, muestra lo de adentro tal cual", () => {
     const { caja, raiz } = dibujar(
-      createElement(LimiteDeError, { nombre: "prueba", children: createElement("p", null, "hola") })
+      <LimiteDeError nombre="prueba">
+        <p>hola</p>
+      </LimiteDeError>
     );
     expect(caja.innerHTML).toBe("<p>hola</p>");
     act(() => raiz.unmount());

@@ -23,5 +23,5 @@
     "noFallthroughCasesInSwitch": true
   },
   // Solo los tests: corren en Node (Vitest), así que pueden usar node:fs.
-  "include": ["src/**/*.test.ts"]
+  "include": ["src/**/*.test.ts", "src/**/*.test.tsx"]
 }
