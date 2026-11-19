@@ -365,7 +365,7 @@
       gap: 6px;
       padding: 10px;
       border-radius: 22px;
-      background: #2a1230;
+      background: var(--panel);
       border: 1px solid var(--stroke-strong);
       box-shadow: var(--shadow);
       opacity: 0;

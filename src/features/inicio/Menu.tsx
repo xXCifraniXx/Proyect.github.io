@@ -1,21 +1,10 @@
 import { clsx } from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { NOMBRES, TEXTOS } from "../../lib/contenido.ts";
-
-/** Qué enlaces opcionales se muestran (dependen de la fecha). */
-export interface EnlacesVisibles {
-  mes?: boolean;
-  cumple?: boolean;
-}
+import { enlacesVisibles, type EnlacesVisibles } from "../navegacion/index.ts";
 
 interface MenuProps {
   visibles?: EnlacesVisibles;
-}
-
-interface Enlace {
-  href: string;
-  texto: string | undefined;
-  visible?: boolean;
 }
 
 /*
@@ -49,18 +38,7 @@ export default function Menu({ visibles = {} }: MenuProps) {
     };
   }, [abierto]);
 
-  const enlaces: Enlace[] = [
-    { href: "#mensaje-mes", texto: TEXTOS.navMes, visible: !!visibles.mes },
-    { href: "#carta", texto: TEXTOS.navCarta },
-    { href: "#linea-tiempo", texto: TEXTOS.navMeses },
-    { href: "#tiempo", texto: TEXTOS.navTiempo },
-    { href: "#calendario", texto: TEXTOS.navBajada },
-    { href: "#musica", texto: TEXTOS.navMusica },
-    { href: "#cumple", texto: TEXTOS.navCumple, visible: !!visibles.cumple },
-    { href: "#boveda", texto: TEXTOS.navBoveda },
-    { href: "#constelacion", texto: TEXTOS.navConstelacion },
-    { href: "#juego", texto: TEXTOS.navJuego }
-  ];
+  const enlaces = enlacesVisibles(visibles);
 
   return (
     <nav className="topbar" aria-label={TEXTOS.ariaNavegacion}>
@@ -83,13 +61,11 @@ export default function Menu({ visibles = {} }: MenuProps) {
         <span>{TEXTOS.menuBoton}</span>
       </button>
       <div ref={panel} className={clsx("nav-links", abierto && "is-open")} id="navLinks">
-        {enlaces
-          .filter((enlace) => enlace.visible !== false)
-          .map((enlace) => (
-            <a key={enlace.href} href={enlace.href} onClick={() => setAbierto(false)}>
-              {enlace.texto}
-            </a>
-          ))}
+        {enlaces.map((enlace) => (
+          <a key={enlace.href} href={enlace.href} onClick={() => setAbierto(false)}>
+            {enlace.texto}
+          </a>
+        ))}
       </div>
     </nav>
   );

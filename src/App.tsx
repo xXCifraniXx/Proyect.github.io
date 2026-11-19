@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { Bajadas } from "./features/bajadas/index.ts";
-import { Bienvenida, type EnlacesVisibles, Inicio } from "./features/inicio/index.ts";
+import { Bienvenida, Inicio } from "./features/inicio/index.ts";
+import { BarraSecciones, type EnlacesVisibles } from "./features/navegacion/index.ts";
 import { Boveda, ProveedorVentanaCarta } from "./features/boveda/index.ts";
 import { CartaSorpresa } from "./features/carta/index.ts";
 import { Cierre } from "./features/cierre/index.ts";
@@ -93,6 +94,9 @@ export default function App() {
           </LimiteDeError>
         </main>
       </div>
+      <LimiteDeError nombre="barra de secciones">
+        <BarraSecciones visibles={visibles} />
+      </LimiteDeError>
     </ProveedorVentanaCarta>
   );
 }
