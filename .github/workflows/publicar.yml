@@ -1,9 +1,16 @@
 # PUBLICAR
-# Cada vez que algo llega a main: revisa (calidad.yml), compila el sitio
-# y lo publica en GitHub Pages, en el mismo link de siempre
-# (https://xxcifranixx.github.io/Proyect.github.io/).
+# Cada vez que algo llega a main: revisa (calidad.yml), compila el sitio y lo
+# publica en Firebase Hosting (https://anthuanete-6d629.web.app/, plan Spark).
+# Después, y solo si eso salió bien, deja en el link viejo de GitHub Pages
+# (https://xxcifranixx.github.io/Proyect.github.io/) una página que lleva a
+# la misma dirección en el link nuevo (redireccion-github/index.html).
 #
-# Requiere en GitHub: Settings → Pages → Source = "GitHub Actions".
+# Requiere en GitHub:
+#   - el secreto FIREBASE_SERVICE_ACCOUNT_ANTHUANETE_6D629 (lo crea
+#     `firebase init hosting:github`; ver README, "Publicación");
+#   - Settings → Pages → Source = "GitHub Actions".
+# Si falta el secreto, la publicación falla y nada cambia: el link viejo
+# sigue mostrando el sitio como estaba.
 # También se puede lanzar a mano desde la pestaña Actions.
 name: Publicar
 
@@ -24,10 +31,13 @@ jobs:
   calidad:
     uses: ./.github/workflows/calidad.yml
 
-  compilar:
-    name: Compilar
+  firebase:
+    name: Publicar en Firebase Hosting
     needs: calidad
     runs-on: ubuntu-latest
+    environment:
+      name: firebase-hosting
+      url: https://anthuanete-6d629.web.app/
     steps:
       - uses: actions/checkout@v7
 
@@ -42,15 +52,16 @@ jobs:
       - name: Compilar
         run: npm run build
 
-      - uses: actions/configure-pages@v6
-
-      - uses: actions/upload-pages-artifact@v5
+      # Sube dist/ (ver firebase.json) al canal "live", el que ve Anthuanete.
+      - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          path: dist
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ANTHUANETE_6D629 }}
+          projectId: anthuanete-6d629
+          channelId: live
 
-  publicar:
-    name: Publicar en GitHub Pages
-    needs: compilar
+  redireccion:
+    name: Link viejo → link nuevo (GitHub Pages)
+    needs: firebase
     runs-on: ubuntu-latest
     permissions:
       pages: write
@@ -59,5 +70,18 @@ jobs:
       name: github-pages
       url: ${{ steps.publicacion.outputs.page_url }}
     steps:
+      - uses: actions/checkout@v7
+
+      # La misma página como 404.html: GitHub Pages la usa para cualquier
+      # dirección que no existe (…/constelacion/, …/herramientas/…).
+      - name: Preparar la redirección
+        run: cp redireccion-github/index.html redireccion-github/404.html
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: redireccion-github
+
       - id: publicacion
         uses: actions/deploy-pages@v5

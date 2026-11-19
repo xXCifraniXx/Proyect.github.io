@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      LINK VIEJO (GitHub Pages)
+      El sitio se mudó a Firebase Hosting. publicar.yml sube este archivo a
+      GitHub Pages como index.html y como 404.html, así que cualquier
+      dirección vieja lleva a la misma página en el link nuevo:
+        …github.io/Proyect.github.io/constelacion/?cumple=hoy
+        → https://anthuanete-6d629.web.app/constelacion/?cumple=hoy
+    -->
+    <title>Para Anthuanete 💜</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href="https://anthuanete-6d629.web.app/" />
+    <meta property="og:title" content="Para Anthuanete 💜" />
+    <meta property="og:url" content="https://anthuanete-6d629.web.app/" />
+    <meta property="og:image" content="https://anthuanete-6d629.web.app/assets/images/compartir.jpg" />
+    <script>
+      const NUEVO = "https://anthuanete-6d629.web.app";
+      const ruta = location.pathname.replace(/^\/Proyect\.github\.io/i, "") || "/";
+      location.replace(NUEVO + ruta + location.search + location.hash);
+    </script>
+    <noscript><meta http-equiv="refresh" content="0; url=https://anthuanete-6d629.web.app/" /></noscript>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: #120817;
+        color: #fff8fb;
+        font:
+          1rem/1.6 system-ui,
+          sans-serif;
+      }
+      a {
+        color: #f3d99f;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Este rincón ahora vive en <a href="https://anthuanete-6d629.web.app/">anthuanete-6d629.web.app</a> 💜</p>
+  </body>
+</html>

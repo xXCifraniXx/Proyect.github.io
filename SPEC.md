@@ -401,7 +401,8 @@ boveda 7, constelacion 4, juego 8, cumple 13, final 3.
 
 Las reglas viven en `firestore.rules` y se publican a mano en la consola.
 
-**Claves de `localStorage`** (se conservan entre versiones):
+**Claves de `localStorage`** (se conservan entre versiones; al cambiar de
+dominio empiezan vacías, porque el navegador las guarda por dominio):
 
 - `roster-override-v1`
 - `constelacion-nosotros-v1`
@@ -446,8 +447,14 @@ Las reglas viven en `firestore.rules` y se publican a mano en la consola.
    - íconos SVG, PNG 32 y `apple-touch-icon` 180.
 8. **Idioma y fechas:** todo en español (`es-ES`), con fechas en hora local
    del dispositivo.
-9. **Publicación:** GitHub Pages en `/Proyect.github.io/`. `main` siempre
-   publicable.
+9. **Publicación:** Firebase Hosting (plan Spark) en la raíz de
+   `https://anthuanete-6d629.web.app/`. `main` siempre publicable.
+   - El link viejo de GitHub Pages (`/Proyect.github.io/…`) lleva a la misma
+     página, con su `?…` y su `#…`, en el link nuevo.
+   - La página del link viejo se publica solo después de que la publicación
+     en Firebase salió bien.
+   - El HTML no se guarda en la caché del navegador; los `.js` y `.css` con
+     hash, un año; las fotos y la canción, un día.
 10. **Calidad:** `typecheck`, `lint` (sin ningún aviso), los tests y
     `build` sin errores antes de cada merge.
 11. **Robustez:**
