@@ -1,6 +1,6 @@
 # PUBLICAR
 # Cada vez que algo llega a main: revisa (calidad.yml), compila el sitio y lo
-# publica en Firebase Hosting (https://anthuanete-6d629.web.app/, plan Spark).
+# publica en Firebase Hosting (https://para-anthuanete.web.app/, plan Spark).
 # Después, y solo si eso salió bien, deja en el link viejo de GitHub Pages
 # (https://xxcifranixx.github.io/Proyect.github.io/) una página que lleva a
 # la misma dirección en el link nuevo (redireccion-github/index.html).
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: firebase-hosting
-      url: https://anthuanete-6d629.web.app/
+      url: https://para-anthuanete.web.app/
     steps:
       - uses: actions/checkout@v7
 

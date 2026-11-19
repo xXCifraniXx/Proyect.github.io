@@ -7,7 +7,7 @@ import { defineConfig } from "vite";
   CONFIGURACIÓN DE VITE
   ---------------------
   - "base" es "/": el sitio vive en la raíz de Firebase Hosting
-    (https://anthuanete-6d629.web.app/, ver firebase.json).
+    (https://para-anthuanete.web.app/, ver firebase.json).
   - public/ se copia tal cual a dist/: ahí van las fotos, la canción y los
     íconos (public/assets/images, public/assets/audio), con la misma ruta de
     siempre en el link (…/assets/images/marzo.webp).

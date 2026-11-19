@@ -448,9 +448,10 @@ dominio empiezan vacías, porque el navegador las guarda por dominio):
 8. **Idioma y fechas:** todo en español (`es-ES`), con fechas en hora local
    del dispositivo.
 9. **Publicación:** Firebase Hosting (plan Spark) en la raíz de
-   `https://anthuanete-6d629.web.app/`. `main` siempre publicable.
-   - El link viejo de GitHub Pages (`/Proyect.github.io/…`) lleva a la misma
-     página, con su `?…` y su `#…`, en el link nuevo.
+   `https://para-anthuanete.web.app/`. `main` siempre publicable.
+   - Los links viejos llevan a la misma página, con su `?…` y su `#…`, en el
+     link nuevo: el de GitHub Pages (`/Proyect.github.io/…`) y el sitio que
+     Firebase le da al proyecto (`anthuanete-6d629.web.app`, con un 301).
    - La página del link viejo se publica solo después de que la publicación
      en Firebase salió bien.
    - El HTML no se guarda en la caché del navegador; los `.js` y `.css` con

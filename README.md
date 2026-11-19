@@ -1,10 +1,11 @@
 # Proyecto romántico para Anthuanete
 
 Sitio hecho con **React + TypeScript + Vite**, publicado en Firebase Hosting:
-https://anthuanete-6d629.web.app/
+https://para-anthuanete.web.app/
 
-El link viejo (https://xxcifranixx.github.io/Proyect.github.io/) sigue
-funcionando: lleva a la misma página en el link nuevo.
+Los links viejos siguen funcionando y llevan a la misma página en el link
+nuevo: el de GitHub (https://xxcifranixx.github.io/Proyect.github.io/) y el
+que Firebase le da al proyecto (https://anthuanete-6d629.web.app/).
 
 Todo lo que se edita a mano (textos, fotos, mensajes, cartas, fechas) está en
 [`src/config/`](src/config/index.ts). El comportamiento que el sitio debe
@@ -61,8 +62,9 @@ Proyect.github.io/
 │   ├── styles/                 index.css (orden de las capas), tokens.css y base.css
 │   └── types/config.ts         Tipos del contenido
 ├── firestore.rules             Reglas para pegar en Firebase
-├── firebase.json, .firebaserc  Qué publica Firebase Hosting (dist/) y en qué proyecto
-├── redireccion-github/         Página del link viejo, que lleva al link nuevo
+├── firebase.json, .firebaserc  Qué publica Firebase Hosting y en qué proyecto: dist/ en
+│                               para-anthuanete; anthuanete-6d629 lleva al link nuevo
+├── redireccion-github/         Página de los links viejos, que lleva al link nuevo
 ├── SPEC.md                     Contrato: lo que el sitio debe seguir haciendo
 └── .github/workflows/          Revisión y publicación automáticas
 ```
@@ -250,8 +252,16 @@ JavaScript.
 
 ### Publicación en Firebase Hosting (una sola vez)
 
-Para que `publicar.yml` pueda subir el sitio, GitHub necesita una clave de
-Firebase guardada como secreto. Se crea así, desde la carpeta del proyecto:
+En la consola de Firebase (https://console.firebase.google.com), proyecto
+`anthuanete-6d629`:
+
+1. **Hosting → Agregar otro sitio** → `para-anthuanete`.
+2. **Authentication → Configuración → Dominios autorizados → Agregar dominio**
+   → `para-anthuanete.web.app` (para que funcione "Iniciar sesión").
+
+Después, para que `publicar.yml` pueda subir el sitio, GitHub necesita una
+clave de Firebase guardada como secreto. Se crea así, desde la carpeta del
+proyecto:
 
 ```bash
 npx firebase-tools login
