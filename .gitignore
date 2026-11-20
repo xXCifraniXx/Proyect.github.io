@@ -19,5 +19,9 @@ node_modules/
 # Sitio compilado (lo genera npm run build)
 dist/
 
+# Caché y registros de la CLI de Firebase
+.firebase/
+firebase-debug*.log
+
 # Instrucciones locales para Claude Code (nunca se suben)
 CLAUDE.md

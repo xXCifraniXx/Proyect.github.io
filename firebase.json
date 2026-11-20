@@ -1,0 +1,42 @@
+{
+  "hosting": [
+    {
+      "site": "para-anthuanete",
+      "public": "dist",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "headers": [
+        {
+          "source": "/assets/*.@(js|css)",
+          "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+        },
+        {
+          "source": "/assets/@(images|audio)/**",
+          "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+        },
+        {
+          "source": "**/*.html",
+          "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+        },
+        {
+          "source": "/",
+          "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+        },
+        {
+          "source": "/constelacion/",
+          "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+        }
+      ]
+    },
+    {
+      "site": "anthuanete-6d629",
+      "public": "redireccion-github",
+      "redirects": [
+        {
+          "regex": "^/(.*)$",
+          "destination": "https://para-anthuanete.web.app/:1",
+          "type": 301
+        }
+      ]
+    }
+  ]
+}
