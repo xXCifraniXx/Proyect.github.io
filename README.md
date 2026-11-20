@@ -1,7 +1,11 @@
 # Proyecto romántico para Anthuanete
 
-Sitio hecho con **React + TypeScript + Vite**, publicado en GitHub Pages:
-https://xxcifranixx.github.io/Proyect.github.io/
+Sitio hecho con **React + TypeScript + Vite**, publicado en Firebase Hosting:
+https://para-anthuanete.web.app/
+
+Los links viejos siguen funcionando y llevan a la misma página en el link
+nuevo: el de GitHub (https://xxcifranixx.github.io/Proyect.github.io/) y el
+que Firebase le da al proyecto (https://anthuanete-6d629.web.app/).
 
 Todo lo que se edita a mano (textos, fotos, mensajes, cartas, fechas) está en
 [`src/config/`](src/config/index.ts). El comportamiento que el sitio debe
@@ -15,13 +19,13 @@ npm install
 npm run dev
 ```
 
-Abre http://localhost:5173/Proyect.github.io/ . Los cambios se ven al instante.
+Abre http://localhost:5173/ . Los cambios se ven al instante.
 
 | Comando | Qué hace |
 |---|---|
 | `npm run dev` | Sitio en tu equipo, con recarga al guardar |
 | `npm run build` | Revisa los tipos y compila el sitio en `dist/` |
-| `npm run preview` | Sirve `dist/` como lo haría GitHub Pages |
+| `npm run preview` | Sirve `dist/` como lo haría el sitio publicado |
 | `npm run typecheck` | Solo revisa los tipos |
 | `npm run lint` | Revisa el código (oxlint): reglas de los hooks y de accesibilidad. Falla con cualquier aviso |
 | `npm test` | Tests (Vitest); `npm run test:watch` mientras editas |
@@ -58,6 +62,9 @@ Proyect.github.io/
 │   ├── styles/                 index.css (orden de las capas), tokens.css y base.css
 │   └── types/config.ts         Tipos del contenido
 ├── firestore.rules             Reglas para pegar en Firebase
+├── firebase.json, .firebaserc  Qué publica Firebase Hosting y en qué proyecto: dist/ en
+│                               para-anthuanete; anthuanete-6d629 lleva al link nuevo
+├── redireccion-github/         Página de los links viejos, que lleva al link nuevo
 ├── SPEC.md                     Contrato: lo que el sitio debe seguir haciendo
 └── .github/workflows/          Revisión y publicación automáticas
 ```
@@ -238,6 +245,40 @@ JavaScript.
   `develop`: tipos, lint, tests, formato, compilación, peso de la carga inicial
   y que no haya correos en el repo.
 - **`publicar.yml`** corre cuando algo llega a `main` (o a mano desde la pestaña
-  Actions): pasa por las mismas revisiones, compila y publica `dist/` en GitHub
-  Pages (*Settings → Pages → Source* = "GitHub Actions"). Si una revisión
-  falla, no se publica nada y el sitio sigue como estaba.
+  Actions): pasa por las mismas revisiones, compila y publica `dist/` en
+  Firebase Hosting. Recién cuando eso sale bien, deja en GitHub Pages la página
+  que lleva del link viejo al nuevo. Si algo falla, no se publica nada y el
+  sitio sigue como estaba.
+
+### Publicación en Firebase Hosting (una sola vez)
+
+En la consola de Firebase (https://console.firebase.google.com), proyecto
+`anthuanete-6d629`:
+
+1. **Hosting → Agregar otro sitio** → `para-anthuanete`.
+2. **Authentication → Configuración → Dominios autorizados → Agregar dominio**
+   → `para-anthuanete.web.app` (para que funcione "Iniciar sesión").
+
+Después, para que `publicar.yml` pueda subir el sitio, GitHub necesita una
+clave de Firebase guardada como secreto. Se crea así, desde la carpeta del
+proyecto:
+
+```bash
+npx firebase-tools login
+npx firebase-tools init hosting:github
+```
+
+- Repositorio: `xXCifraniXx/Proyect.github.io`.
+- "Set up the workflow to run a build script…": **No** (lo hace `publicar.yml`).
+- "Set up automatic deployment… when a PR is merged?": **No**.
+- Borra el archivo que crea, `.github/workflows/firebase-hosting-pull-request.yml`:
+  publicar.yml ya hace ese trabajo.
+
+El asistente crea una cuenta de servicio con permiso solo para Hosting y la
+guarda en el repo como el secreto `FIREBASE_SERVICE_ACCOUNT_ANTHUANETE_6D629`.
+Todo esto entra en el plan gratis (Spark).
+
+Al cambiar de dominio, lo que el navegador guardaba en el celular (las velas
+ya apagadas, la copia local del cielo y de las bajadas) empieza vacío en el
+link nuevo. Las cartas, las estrellas y las bajadas no se pierden: están en el
+código o en Firestore.

@@ -13,7 +13,7 @@ import { resolve } from "node:path";
 import { gzipSync } from "node:zlib";
 
 const LIMITE_KB = 100;
-const BASE = "/Proyect.github.io/";
+const BASE = "/";
 const dist = resolve(import.meta.dirname, "..", "dist");
 const paginas = ["index.html", "constelacion/index.html"];
 

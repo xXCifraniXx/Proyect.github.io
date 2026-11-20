@@ -14,7 +14,9 @@ import type { NubeConfig } from "../types/config.ts";
     2. Compilación → Firestore Database → Crear base de datos (modo producción).
     3. Pestaña "Reglas": pega el contenido de firestore.rules (raíz del repo) y publica.
     4. Authentication → Método de acceso → Google → Habilitar; y en
-       Configuración → Dominios autorizados, agrega xxcifranixx.github.io.
+       Configuración → Dominios autorizados, agrega para-anthuanete.web.app
+       (el sitio publicado; solo vienen autorizados los del proyecto,
+       anthuanete-6d629.web.app y .firebaseapp.com).
     5. Configuración del proyecto → Tus apps → Web (</>) → registrar app.
        Copia el objeto firebaseConfig y pégalo abajo, en "firebase".
 
