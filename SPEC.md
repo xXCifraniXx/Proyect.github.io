@@ -466,13 +466,14 @@ dominio empiezan vacías, porque el navegador las guarda por dominio):
    - íconos SVG, PNG 32 y `apple-touch-icon` 180.
 8. **Idioma y fechas:** todo en español (`es-ES`), con fechas en hora local
    del dispositivo.
-9. **Publicación:** Firebase Hosting (plan Spark) en la raíz de
+9. **Publicación:** solo Firebase Hosting (plan Spark), en la raíz de
    `https://para-anthuanete.web.app/`. `main` siempre publicable.
+   - `publicar.yml` ya no publica en GitHub Pages.
    - Los links viejos llevan a la misma página, con su `?…` y su `#…`, en el
-     link nuevo: el de GitHub Pages (`/Proyect.github.io/…`) y el sitio que
-     Firebase le da al proyecto (`anthuanete-6d629.web.app`, con un 301).
-   - La página del link viejo se publica solo después de que la publicación
-     en Firebase salió bien.
+     link nuevo: el sitio que Firebase le da al proyecto
+     (`anthuanete-6d629.web.app`, con un 301) y, mientras GitHub Pages siga
+     encendido, el de GitHub Pages (`/Proyect.github.io/…`), con la página
+     que quedó publicada el 20-11-2026.
    - El HTML no se guarda en la caché del navegador; los `.js` y `.css` con
      hash, un año; las fotos y la canción, un día.
 10. **Calidad:** `typecheck`, `lint` (sin ningún aviso), los tests y
