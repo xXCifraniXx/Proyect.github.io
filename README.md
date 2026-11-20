@@ -3,9 +3,9 @@
 Sitio hecho con **React + TypeScript + Vite**, publicado en Firebase Hosting:
 https://para-anthuanete.web.app/
 
-Los links viejos siguen funcionando y llevan a la misma página en el link
-nuevo: el de GitHub (https://xxcifranixx.github.io/Proyect.github.io/) y el
-que Firebase le da al proyecto (https://anthuanete-6d629.web.app/).
+Los links viejos llevan a la misma página en el link nuevo: el que Firebase le
+da al proyecto (https://anthuanete-6d629.web.app/) y, hasta que se apague
+GitHub Pages, el de GitHub (https://xxcifranixx.github.io/Proyect.github.io/).
 
 Todo lo que se edita a mano (textos, fotos, mensajes, cartas, fechas) está en
 [`src/config/`](src/config/index.ts). El comportamiento que el sitio debe
@@ -246,9 +246,8 @@ JavaScript.
   y que no haya correos en el repo.
 - **`publicar.yml`** corre cuando algo llega a `main` (o a mano desde la pestaña
   Actions): pasa por las mismas revisiones, compila y publica `dist/` en
-  Firebase Hosting. Recién cuando eso sale bien, deja en GitHub Pages la página
-  que lleva del link viejo al nuevo. Si algo falla, no se publica nada y el
-  sitio sigue como estaba.
+  Firebase Hosting. Si algo falla, no se publica nada y el sitio sigue como
+  estaba. GitHub Pages ya no se publica (ver "Apagar GitHub Pages").
 
 ### Publicación en Firebase Hosting (una sola vez)
 
@@ -282,3 +281,18 @@ Al cambiar de dominio, lo que el navegador guardaba en el celular (las velas
 ya apagadas, la copia local del cielo y de las bajadas) empieza vacío en el
 link nuevo. Las cartas, las estrellas y las bajadas no se pierden: están en el
 código o en Firestore.
+
+### Apagar GitHub Pages
+
+El link viejo de GitHub sigue mostrando la página que lleva al link nuevo
+(`redireccion-github/index.html`, publicada el 20-11-2026). Nadie la vuelve a
+subir: queda así hasta que se apague GitHub Pages.
+
+Cuando Anthuanete ya use el link nuevo (conviene esperar unas semanas):
+
+1. **Settings → Pages → Unpublish site**. Volver privado el repo hace lo mismo
+   con GitHub Free. Desde ahí, el link viejo de GitHub da 404.
+2. Opcional: **Settings → Environments** → borrar `github-pages`.
+
+La carpeta `redireccion-github/` se queda: Firebase la usa como `public` del
+sitio `anthuanete-6d629`, que responde todo con un 301 al link nuevo.
