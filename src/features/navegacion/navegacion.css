@@ -1,0 +1,196 @@
+/* Barra de secciones (abajo, al bajar por la página) y su panel. */
+@layer secciones {
+  .barra-secciones {
+    position: fixed;
+    left: 50%;
+    bottom: max(14px, env(safe-area-inset-bottom));
+    /* Debajo de la bienvenida (80) y de la barra de progreso (90). */
+    z-index: 60;
+    width: min(420px, calc(100% - 24px));
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 7px 7px 7px 20px;
+    border-radius: 999px;
+    border: 1px solid var(--stroke-strong);
+    background: var(--panel);
+    box-shadow: var(--shadow);
+    transform: translate(-50%, calc(100% + 28px));
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      transform 0.35s cubic-bezier(0.2, 0.7, 0.15, 1),
+      opacity 0.25s ease,
+      visibility 0s linear 0.35s;
+  }
+  .barra-secciones.is-visible {
+    transform: translate(-50%, 0);
+    opacity: 1;
+    visibility: visible;
+    transition:
+      transform 0.35s cubic-bezier(0.2, 0.7, 0.15, 1),
+      opacity 0.25s ease,
+      visibility 0s;
+  }
+  .barra-secciones-donde {
+    flex: 1;
+    min-width: 0;
+  }
+  .barra-secciones-nombre {
+    display: block;
+    min-height: 1.2em;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.05rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .barra-secciones-estrellas {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 6px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Una estrella por sección: pendiente, ya pasada (dorada) o la actual (rosa). */
+  .barra-secciones-estrellas li,
+  .panel-secciones-estrella {
+    flex: none;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.28);
+    transition:
+      background-color 0.3s ease,
+      width 0.3s ease,
+      height 0.3s ease;
+  }
+  .barra-secciones-estrellas .is-pasada,
+  .is-pasada .panel-secciones-estrella {
+    background: var(--gold);
+  }
+  .barra-secciones-estrellas .is-actual,
+  .is-actual .panel-secciones-estrella {
+    width: 9px;
+    height: 9px;
+    background: var(--rose);
+  }
+
+  .barra-secciones-boton {
+    flex: none;
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: var(--rose);
+    color: #2b1426;
+    font-size: 1.25rem;
+    cursor: pointer;
+  }
+  .barra-secciones-boton:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
+
+  /* Panel: un <dialog> que sale desde abajo. Se le quitan los estilos que
+     trae del navegador (posición, tamaño, margen, borde, fondo). */
+  .panel-secciones {
+    position: fixed;
+    inset: auto 0 0;
+    width: min(520px, 100%);
+    max-width: none;
+    max-height: min(80vh, 640px);
+    margin: 0 auto;
+    padding: 0;
+    border: 1px solid var(--stroke-strong);
+    border-bottom: 0;
+    border-radius: 26px 26px 0 0;
+    background: var(--panel);
+    color: inherit;
+    overflow-y: auto;
+    transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.15, 1);
+  }
+  /* Al abrirse, sube desde abajo (en navegadores sin @starting-style, aparece). */
+  @starting-style {
+    .panel-secciones[open] {
+      transform: translateY(100%);
+    }
+  }
+  .panel-secciones::backdrop {
+    background: rgba(10, 3, 12, 0.6);
+  }
+  .panel-secciones-contenido {
+    padding: 8px 10px max(14px, env(safe-area-inset-bottom));
+  }
+  .panel-secciones-cabecera {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+  }
+  .panel-secciones-asa {
+    width: 38px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.3);
+  }
+  .panel-secciones-cerrar {
+    position: absolute;
+    top: 50%;
+    right: 4px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--stroke);
+    background: transparent;
+    color: var(--text);
+    font-size: 1.3rem;
+    cursor: pointer;
+    transform: translateY(-50%);
+  }
+  .panel-secciones-lista {
+    display: grid;
+    gap: 2px;
+    margin: 4px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .panel-secciones-enlace {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 14px;
+    border-radius: 14px;
+    color: var(--text);
+    font-size: 0.98rem;
+  }
+  .panel-secciones-enlace:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+  .panel-secciones-enlace.is-pendiente {
+    color: var(--muted);
+  }
+  .panel-secciones-enlace.is-actual {
+    background: rgba(255, 158, 184, 0.16);
+  }
+  .panel-secciones-enlace.is-inicio {
+    color: var(--gold);
+  }
+  .panel-secciones-marca {
+    flex: none;
+    width: 12px;
+    display: grid;
+    place-items: center;
+  }
+  .panel-secciones-enlace:focus-visible,
+  .panel-secciones-cerrar:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: -2px;
+  }
+}

@@ -55,6 +55,22 @@ Las secciones aparecen suavemente la primera vez que entran en pantalla.
   o con Escape (y el foco vuelve al botón). Abierto, el ícono es ✕.
 - Más de 1200 px: botones en una fila.
 
+**Barra de secciones** (en todos los tamaños), porque el menú se va con la
+portada:
+
+- Aparece abajo, flotando, cuando la portada ya quedó arriba, y se va al
+  volver a ella.
+- Muestra el nombre de la sección que se está viendo y una estrella por cada
+  sección del menú que existe, en el orden de la página (el día del
+  cumpleaños, Cumpleaños va antes de Carta): las que ya pasó en dorado, la
+  actual en rosa y más grande, las que faltan apagadas.
+- El botón ✦ abre un panel desde abajo (un `<dialog>`) con "Volver al
+  inicio" y todas esas secciones, con la actual marcada. Se cierra con la ×,
+  con Escape, tocando fuera o eligiendo una sección (que lleva a ella). Al
+  cerrarlo sin elegir, el foco vuelve al botón; al elegir, el teclado sigue
+  desde esa sección.
+- El final de la página deja espacio para que la barra no tape nada.
+
 ### 1.3 Sobre con la carta (portada)
 
 - Se abre y cierra tocando el sobre, con Enter o Espacio, o con el botón
@@ -415,7 +431,8 @@ Las reglas viven en `firestore.rules` y se publican a mano en la consola.
 
 1. **Mobile-first:**
    - a **375 px** no hay desplazamiento horizontal y nada se superpone (el
-     menú y la carta abierta, en especial);
+     menú, la carta abierta y la barra de secciones sobre el final de la
+     página, en especial);
    - funciona también en tablet (768 px) y escritorio (≥1200 px).
 2. **Movimiento reducido:** con `prefers-reduced-motion` no hay confeti, el
    cielo de adorno y la página del cielo quedan quietos (sin vaivén ni
@@ -429,6 +446,8 @@ Las reglas viven en `firestore.rules` y se publican a mano en la consola.
    - la ventana de una carta es un `<dialog>`: mientras está abierta, Tab no
      sale de ella y lo de atrás no se puede tocar; al cerrarla, el foco
      vuelve a donde estaba;
+   - la barra de secciones y su panel se usan con teclado; escondida, la
+     barra no se alcanza con Tab;
    - los botones solo con ícono tienen `aria-label`.
 4. **Privacidad y seguridad:**
    - cero correos en el código o el repo (solo UIDs);

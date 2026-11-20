@@ -1,7 +1,8 @@
 import { useRevelar } from "../../hooks/useRevelar.ts";
 import { TEXTOS } from "../../lib/contenido.ts";
 import { estadoCumple } from "../../lib/cumple.ts";
-import Menu, { type EnlacesVisibles } from "./Menu.tsx";
+import type { EnlacesVisibles } from "../navegacion/index.ts";
+import Menu from "./Menu.tsx";
 import Sobre from "./Sobre.tsx";
 
 interface InicioProps {

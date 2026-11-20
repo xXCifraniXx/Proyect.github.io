@@ -170,7 +170,8 @@
     margin: 0 auto;
     position: relative;
     z-index: 1;
-    padding: max(18px, env(safe-area-inset-top)) 0 max(32px, env(safe-area-inset-bottom));
+    /* Abajo deja lugar para la barra de secciones, que flota sobre el final. */
+    padding: max(18px, env(safe-area-inset-top)) 0 calc(max(32px, env(safe-area-inset-bottom)) + 76px);
   }
   /* backdrop-filter va sin -webkit-: la compilación agrega el prefijo para
      Safari. Si se escribe a mano, la compilación deja solo el prefijado y
