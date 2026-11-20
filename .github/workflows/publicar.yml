@@ -1,16 +1,15 @@
 # PUBLICAR
 # Cada vez que algo llega a main: revisa (calidad.yml), compila el sitio y lo
 # publica en Firebase Hosting (https://para-anthuanete.web.app/, plan Spark).
-# Después, y solo si eso salió bien, deja en el link viejo de GitHub Pages
-# (https://xxcifranixx.github.io/Proyect.github.io/) una página que lleva a
-# la misma dirección en el link nuevo (redireccion-github/index.html).
 #
-# Requiere en GitHub:
-#   - el secreto FIREBASE_SERVICE_ACCOUNT_ANTHUANETE_6D629 (lo crea
-#     `firebase init hosting:github`; ver README, "Publicación");
-#   - Settings → Pages → Source = "GitHub Actions".
-# Si falta el secreto, la publicación falla y nada cambia: el link viejo
-# sigue mostrando el sitio como estaba.
+# GitHub Pages ya no se publica. El link viejo
+# (https://xxcifranixx.github.io/Proyect.github.io/) sigue mostrando la
+# redirección que quedó el 20-11-2026 (redireccion-github/index.html) hasta
+# que se apague Pages en Settings → Pages (ver README, "Apagar GitHub Pages").
+#
+# Requiere en GitHub el secreto FIREBASE_SERVICE_ACCOUNT_ANTHUANETE_6D629 (lo
+# crea `firebase init hosting:github`; ver README, "Publicación"). Si falta,
+# la publicación falla y el sitio sigue como estaba.
 # También se puede lanzar a mano desde la pestaña Actions.
 name: Publicar
 
@@ -24,7 +23,7 @@ permissions:
 
 # Una publicación a la vez; si llegan dos seguidas, la segunda espera.
 concurrency:
-  group: pages
+  group: publicar
   cancel-in-progress: false
 
 jobs:
@@ -58,30 +57,3 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ANTHUANETE_6D629 }}
           projectId: anthuanete-6d629
           channelId: live
-
-  redireccion:
-    name: Link viejo → link nuevo (GitHub Pages)
-    needs: firebase
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.publicacion.outputs.page_url }}
-    steps:
-      - uses: actions/checkout@v7
-
-      # La misma página como 404.html: GitHub Pages la usa para cualquier
-      # dirección que no existe (…/constelacion/, …/herramientas/…).
-      - name: Preparar la redirección
-        run: cp redireccion-github/index.html redireccion-github/404.html
-
-      - uses: actions/configure-pages@v6
-
-      - uses: actions/upload-pages-artifact@v5
-        with:
-          path: redireccion-github
-
-      - id: publicacion
-        uses: actions/deploy-pages@v5
