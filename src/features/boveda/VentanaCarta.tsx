@@ -1,9 +1,10 @@
-import { useEffect, useRef, type MouseEvent } from "react";
+import { useEffect, useRef } from "react";
 import { useTextoCarta } from "../../hooks/useTextoCarta.ts";
 import type { CartaAbierta } from "./boveda.ts";
 import { formatoFechaLarga } from "../../lib/fechas.ts";
 import { TEXTOS } from "../../lib/contenido.ts";
 import { rellenar } from "../../lib/rellenar.ts";
+import { EnlacePagina, rutaDeSeccion } from "../navegacion/index.ts";
 
 interface VentanaCartaProps {
   /** La carta a mostrar, o null si la ventana está cerrada. */
@@ -14,8 +15,8 @@ interface VentanaCartaProps {
 /*
   VENTANA DE UNA CARTA ABIERTA
   La usan La Bóveda y el pastel de cumpleaños. Se cierra con la ×, con
-  Escape o tocando fuera. Si la carta trae un botón (accion), lleva a esa
-  sección.
+  Escape o tocando fuera. Si la carta trae un botón (accion), lleva a la
+  página de esa sección.
 
   Es un <dialog> del navegador: mientras está abierta, lo de atrás no se
   puede tocar ni alcanzar con Tab, y al cerrarla el foco vuelve al botón
@@ -43,13 +44,14 @@ export default function VentanaCarta({ abierta, onCerrar }: VentanaCartaProps) {
 
   const accion = abierta && !abierta.sinAccion ? abierta.carta.accion : undefined;
 
-  const irA = (event: MouseEvent<HTMLAnchorElement>) => {
-    if (!accion) return;
-    event.preventDefault();
-    // Primero se cierra (el foco vuelve a donde estaba) y después se va a la sección.
+  // "destino" es el id de una sección ("constelacion", "cumple"…), como lo
+  // guardan las cartas desde antes de las páginas.
+  const destino = accion ? rutaDeSeccion(accion.destino) : null;
+
+  // Primero se cierra (el foco vuelve a donde estaba) y después el link lleva a la página.
+  const irA = () => {
     ventana.current?.close();
     onCerrar();
-    document.getElementById(accion.destino)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
@@ -84,10 +86,10 @@ export default function VentanaCarta({ abierta, onCerrar }: VentanaCartaProps) {
           </span>
           <h3>{abierta.carta.titulo || TEXTOS.cartaSinTitulo}</h3>
           <p>{texto}</p>
-          {accion && (
-            <a className="btn btn-primary" href={`#${accion.destino}`} onClick={irA}>
+          {accion && destino && (
+            <EnlacePagina className="btn btn-primary" ruta={destino} onClick={irA}>
               {accion.etiqueta || TEXTOS.cartaIrAhi}
-            </a>
+            </EnlacePagina>
           )}
         </div>
       )}

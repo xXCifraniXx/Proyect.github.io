@@ -1,33 +1,29 @@
 import { clsx } from "clsx";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import { TEXTOS } from "../../lib/contenido.ts";
-import { enlacesVisibles, estadoEstrella, idDe, type Enlace, type EnlacesVisibles } from "./enlaces.ts";
+import { estadoEstrella, type Enlace } from "./enlaces.ts";
 import PanelSecciones from "./PanelSecciones.tsx";
-import { useNavegacion } from "./useNavegacion.ts";
+import { useBarraVisible } from "./useBarraVisible.ts";
 
 interface BarraSeccionesProps {
-  visibles: EnlacesVisibles;
+  /** Las páginas que existen hoy, en su orden. */
+  enlaces: Enlace[];
+  /** La página que se está viendo, o null en la portada. */
+  actual: Enlace | null;
 }
 
 /*
   BARRA DE SECCIONES
-  Aparece abajo cuando la portada ya quedó arriba (el menú de la portada se
-  va con ella). Dice en qué sección está y muestra una estrella por sección,
-  en el orden de la página: las que ya pasó, en dorado; la actual, en rosa.
-  El botón ✦ abre el panel con todas las secciones.
+  Abajo en todas las páginas (en la portada, cuando su menú ya quedó
+  arriba). Dice en qué página está y muestra una estrella por página, en
+  orden: las de antes, en dorado; la actual, en rosa. El botón ✦ abre el
+  panel con todas las páginas.
 */
-export default function BarraSecciones({ visibles }: BarraSeccionesProps) {
-  const { mes, cumple } = visibles;
-  const enlaces = useMemo(() => enlacesVisibles({ mes, cumple }), [mes, cumple]);
-  const ids = useMemo(() => enlaces.map(idDe), [enlaces]);
-  const { visible, presentes, actual } = useNavegacion(ids);
+export default function BarraSecciones({ enlaces, actual }: BarraSeccionesProps) {
+  const visible = useBarraVisible(actual === null);
   const [abierto, setAbierto] = useState(false);
   const cerrar = useCallback(() => setAbierto(false), []);
-
-  // En el orden de la página y solo las que existen.
-  const porId = new Map(enlaces.map((enlace) => [idDe(enlace), enlace]));
-  const secciones = presentes.map((id) => porId.get(id)).filter((enlace): enlace is Enlace => !!enlace);
-  const indiceActual = secciones.findIndex((enlace) => idDe(enlace) === actual);
+  const indiceActual = actual ? enlaces.findIndex((enlace) => enlace.id === actual.id) : -1;
 
   return (
     <>
@@ -38,10 +34,10 @@ export default function BarraSecciones({ visibles }: BarraSeccionesProps) {
         inert={!visible}
       >
         <div className="barra-secciones-donde">
-          <span className="barra-secciones-nombre">{secciones[indiceActual]?.texto}</span>
+          <span className="barra-secciones-nombre">{actual?.texto ?? TEXTOS.navInicio}</span>
           <ol className="barra-secciones-estrellas" aria-hidden="true">
-            {secciones.map((enlace, i) => (
-              <li key={enlace.href} className={`is-${estadoEstrella(i, indiceActual)}`} />
+            {enlaces.map((enlace, i) => (
+              <li key={enlace.id} className={`is-${estadoEstrella(i, indiceActual)}`} />
             ))}
           </ol>
         </div>
@@ -56,7 +52,7 @@ export default function BarraSecciones({ visibles }: BarraSeccionesProps) {
           <span aria-hidden="true">✦</span>
         </button>
       </nav>
-      <PanelSecciones abierto={abierto} secciones={secciones} indiceActual={indiceActual} onCerrar={cerrar} />
+      <PanelSecciones abierto={abierto} secciones={enlaces} indiceActual={indiceActual} onCerrar={cerrar} />
     </>
   );
 }

@@ -1,10 +1,11 @@
 import { clsx } from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { NOMBRES, TEXTOS } from "../../lib/contenido.ts";
-import { enlacesVisibles, type EnlacesVisibles } from "../navegacion/index.ts";
+import { EnlacePagina, INICIO, type Enlace } from "../navegacion/index.ts";
 
 interface MenuProps {
-  visibles?: EnlacesVisibles;
+  /** Las páginas que existen hoy, en su orden. */
+  enlaces: Enlace[];
 }
 
 /*
@@ -13,7 +14,7 @@ interface MenuProps {
   esconden en un menú de tres líneas (lo decide el CSS). Se cierra al elegir
   una opción, con Escape o tocando fuera.
 */
-export default function Menu({ visibles = {} }: MenuProps) {
+export default function Menu({ enlaces }: MenuProps) {
   const [abierto, setAbierto] = useState(false);
   const panel = useRef<HTMLDivElement>(null);
   const boton = useRef<HTMLButtonElement>(null);
@@ -38,13 +39,11 @@ export default function Menu({ visibles = {} }: MenuProps) {
     };
   }, [abierto]);
 
-  const enlaces = enlacesVisibles(visibles);
-
   return (
     <nav className="topbar" aria-label={TEXTOS.ariaNavegacion}>
-      <a href="#inicio" className="brand">
+      <EnlacePagina ruta={INICIO} className="brand">
         Para {NOMBRES.novia}
-      </a>
+      </EnlacePagina>
       <button
         ref={boton}
         className="menu-toggle"
@@ -62,9 +61,9 @@ export default function Menu({ visibles = {} }: MenuProps) {
       </button>
       <div ref={panel} className={clsx("nav-links", abierto && "is-open")} id="navLinks">
         {enlaces.map((enlace) => (
-          <a key={enlace.href} href={enlace.href} onClick={() => setAbierto(false)}>
+          <EnlacePagina key={enlace.id} ruta={enlace.ruta} onClick={() => setAbierto(false)}>
             {enlace.texto}
-          </a>
+          </EnlacePagina>
         ))}
       </div>
     </nav>

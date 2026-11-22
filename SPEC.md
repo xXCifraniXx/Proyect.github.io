@@ -1,8 +1,9 @@
 # SPEC.md: Contrato de la aplicación
 
-Versión 1 (noviembre de 2026). Describe el comportamiento que el sitio debe
-conservar en cualquier refactorización. Cambiarlo requiere la aprobación de
-Jorge.
+Versión 2 (noviembre de 2026; la 2 pasó de una sola página larga a una
+página por sección, aprobado por Jorge el 22-11-2026). Describe el
+comportamiento que el sitio debe conservar en cualquier refactorización.
+Cambiarlo requiere la aprobación de Jorge.
 
 Todas las fechas y horas se calculan con el **reloj del dispositivo que abre
 la página** (hora local; hoy Perú, UTC−5).
@@ -11,65 +12,93 @@ la página** (hora local; hoy Perú, UTC−5).
 
 ## 1. Páginas, vistas y secciones
 
-### 1.1 Página principal (`/`)
+### 1.1 El sitio (`index.html`): portada y una página por sección
 
-Capas fijas, siempre presentes:
+Es una sola página HTML (SPA): según la ruta del link se ve la portada o una
+de las páginas, y se cambia de página **sin recargar**, con el historial del
+navegador (atrás y adelante funcionan; cada página tiene su link).
 
-- **Barra de progreso** arriba: se llena según cuánto se bajó en la página.
+Capas fijas, en todas las páginas:
+
+- **Barra de progreso** arriba: se llena según cuánto se bajó en la página
+  que se está viendo (si la página entra entera en la pantalla, no se ve).
 - **Fondo**: tres luces (rosa, lila, dorada) y `opciones.corazones` (18)
   corazones que flotan (♡ ❤). El día del cumpleaños son 🎈 ✨ ❤ 🎉 ♡.
 - **Bienvenida**: pantalla encima de todo con etiqueta, título, texto, botón
-  "Entrar a la carta" y nota. Al pulsar se oculta. El día del cumpleaños
-  usa `cumpleanos.textosHoy` y lanza confeti a los 300 ms.
+  "Entrar a la carta" y nota. Al pulsar se oculta. Sale **una vez, solo si se
+  abre el sitio por la portada** (`/`): un link directo a una página entra
+  directo, y volver a la portada desde el sitio no la muestra de nuevo. El
+  día del cumpleaños usa `cumpleanos.textosHoy` y lanza confeti a los 300 ms.
 - **Ventana de carta** (modal): la abren La Bóveda y el pastel (ver 2.2).
+- **Barra de secciones** (1.2).
 
-Secciones, en este orden:
+Páginas, en este orden (el del menú):
 
-| # | id | Sección | Condición | Elementos |
+| Ruta | id | Página | Condición | Elementos |
 |---|---|---|---|---|
-| 0 | `inicio` | Portada | siempre | Menú (1.2); etiqueta, título y texto; botones "Abrir mi carta" (→ `#carta`) y segundo botón (→ `#boveda`, o `#cumple` el día del cumpleaños); sobre con carta (1.3) |
-| 1 | `mensaje-mes` | Mensaje del mes | solo si hay uno vigente (2.3) | Hoja de papel: fecha larga, título ("Ocho meses"), párrafos, firma |
-| 1′ | `cumple` | Cumpleaños | **solo el día del cumpleaños**: va aquí, antes de Carta | ver 2.4 |
-| 2 | `carta` | Carta | siempre | Cabecera; botón "Ver mensaje sorpresa 💗" / "Ocultar mensaje 💌" que muestra u oculta `textos.surpriseMessage` |
-| 3 | `linea-tiempo` | Galería mensual | siempre | Una foto por mes (2.6), flechas ‹ ›, línea de meses |
-| 4 | `tiempo` | Tiempo juntos | siempre | 4 contadores: años, meses, días, días en total (cada segundo). Tarjeta de regreso solo si la rotación está desactivada y `fechas.regreso` es válida |
-| 5 | `calendario` | Bajada (14×7) | si la rotación está activa | Leyenda, estado actual con cuenta regresiva, barra (‹ mes › y "Hoy"), mes(es) del calendario, panel "Ajustar bajadas de mina" (2.1) |
-| 6 | `musica` | Música | si `musica.cancion.src` existe | Título, artista, botón Reproducir/Pausar, control de volumen (inicial `0.24`) |
-| 7 | `boveda` | La Bóveda | siempre | Tarjetas de cartas selladas o abiertas (2.2) |
-| 8 | `cumple` | Cumpleaños | estados `antes` o `despues` (en `hoy` va en 1′) | ver 2.4 |
-| 9 | `constelacion` | Constelación | siempre | Cielo animado de adorno y botón "Abrir nuestra constelación ✦" → `constelacion/index.html` |
-| 10 | `juego` | Minijuego | siempre | Movimientos, parejas `n/6`, "Reiniciar", tablero, mensaje de victoria con "Otra vez" (2.7) |
-| 11 | `final` | Cierre | siempre | Etiqueta, frase final, firma |
+| `/` | `inicio` | Portada | siempre | Menú (1.2); etiqueta, título y texto; botones "Abrir mi carta" (→ `/carta`) y segundo botón (→ `/boveda`, o `/cumple` el día del cumpleaños); sobre con carta (1.3); al final, el **cierre**: etiqueta, frase final, firma |
+| `/este-mes` | `mensaje-mes` | Mensaje del mes | solo si hay uno vigente (2.3) | Hoja de papel: fecha larga, título ("Ocho meses"), párrafos, firma |
+| `/carta` | `carta` | Carta | siempre | Cabecera; botón "Ver mensaje sorpresa 💗" / "Ocultar mensaje 💌" que muestra u oculta `textos.surpriseMessage` |
+| `/meses` | `linea-tiempo` | Galería mensual | siempre | Una foto por mes (2.6), flechas ‹ ›, línea de meses |
+| `/tiempo` | `tiempo` | Tiempo juntos | siempre | 4 contadores: años, meses, días, días en total (cada segundo). Tarjeta de regreso solo si la rotación está desactivada y `fechas.regreso` es válida |
+| `/bajada` | `calendario` | Bajada (14×7) | si la rotación está activa en `config` | Leyenda, estado actual con cuenta regresiva, barra (‹ mes › y "Hoy"), mes(es) del calendario, panel "Ajustar bajadas de mina" (2.1) |
+| `/musica` | `musica` | Música | si `musica.cancion.src` existe | Título, artista, botón Reproducir/Pausar, control de volumen (inicial `0.24`) |
+| `/cumple` | `cumple` | Cumpleaños | estados `antes`, `hoy` o `despues` (2.4); **el día del cumpleaños sube justo después de "Este mes"** | ver 2.4 |
+| `/boveda` | `boveda` | La Bóveda | siempre | Tarjetas de cartas selladas o abiertas (2.2) |
+| `/cielo` | `constelacion` | Constelación | siempre | Cielo animado de adorno y botón "Abrir nuestra constelación ✦" → `constelacion/index.html` (la página del cielo, 1.4) |
+| `/juego` | `juego` | Minijuego | siempre | Movimientos, parejas `n/6`, "Reiniciar", tablero, mensaje de victoria con "Otra vez" (2.7) |
+
+- Cada página (no la portada) termina con el botón **"Seguir: {siguiente} →"**
+  a la página que sigue en este orden; en la última, "Volver al inicio".
+- Una ruta cuya página hoy no existe (por ejemplo `/este-mes` sin mensaje
+  vigente) lleva a la portada, sin dejarla en el historial.
+- `/index.html` y una ruta con `/` al final (`/boveda/`) se corrigen solas
+  (`/`, `/boveda`).
+- **Al cambiar de página**: la nueva empieza arriba, el título de la pestaña
+  pasa a "{página} | Para {novia}" (en la portada, "Para {novia} | Una carta
+  de {autor}") y el foco va al contenido. Al abrir el sitio no se mueve nada.
+- El `?…` del link (la vista previa `?cumple=…`) se conserva al cambiar de
+  página.
+- **Links viejos** (de cuando todo era una sola página): `/#{id}` pasa solo,
+  sin recargar, a la ruta de esa página (`/#boveda` → `/boveda`,
+  `/#linea-tiempo` → `/meses`), con su `?…`. `#inicio`, `#final` y
+  `#welcome` llevan a la portada. También si el `#` cambia con el sitio
+  abierto.
 
 Las secciones aparecen suavemente la primera vez que entran en pantalla.
 
-### 1.2 Menú
+### 1.2 Menú y barra de secciones
 
-- Marca "Para {novia}" (→ `#inicio`) y estos enlaces, en orden:
+**Menú de la portada:**
+
+- Marca "Para {novia}" (→ `/`) y un enlace por página, en el orden de 1.1:
   Este mes*, Carta, Meses, Tiempo, Bajada, Música, Cumpleaños*, La Bóveda,
   Constelación, Juego.
   - *"Este mes" solo con un mensaje del mes vigente.
-  - *"Cumpleaños" solo en los estados `hoy` y `despues`.
+  - *"Cumpleaños" en los estados `antes`, `hoy` y `despues`; el día del
+    cumpleaños, justo después de "Este mes".
+  - Sin canción o con la rotación apagada, Música o Bajada no están.
 - Hasta **1200 px** de ancho: botón "☰ Menú" que abre un panel de dos
   columnas sobre la portada. Se cierra al elegir una opción, al tocar fuera
   o con Escape (y el foco vuelve al botón). Abierto, el ícono es ✕.
 - Más de 1200 px: botones en una fila.
 
-**Barra de secciones** (en todos los tamaños), porque el menú se va con la
-portada:
+**Barra de secciones** (en todos los tamaños): la navegación de todo el sitio.
 
-- Aparece abajo, flotando, cuando la portada ya quedó arriba, y se va al
-  volver a ella.
-- Muestra el nombre de la sección que se está viendo y una estrella por cada
-  sección del menú que existe, en el orden de la página (el día del
-  cumpleaños, Cumpleaños va antes de Carta): las que ya pasó en dorado, la
-  actual en rosa y más grande, las que faltan apagadas.
+- Flota abajo **en todas las páginas**. En la portada aparece cuando su menú
+  ya quedó arriba (nunca dos menús a la vez) y se va al volver a él.
+- Muestra el nombre de la página que se está viendo ("Inicio" en la portada)
+  y una estrella por cada página del menú, en el mismo orden: las de antes en
+  dorado, la actual en rosa y más grande, las que siguen apagadas (en la
+  portada, todas apagadas).
 - El botón ✦ abre un panel desde abajo (un `<dialog>`) con "Volver al
-  inicio" y todas esas secciones, con la actual marcada. Se cierra con la ×,
-  con Escape, tocando fuera o eligiendo una sección (que lleva a ella). Al
-  cerrarlo sin elegir, el foco vuelve al botón; al elegir, el teclado sigue
-  desde esa sección.
-- El final de la página deja espacio para que la barra no tape nada.
+  inicio" y todas las páginas, con la actual marcada. Se cierra con la ×,
+  con Escape, tocando fuera o eligiendo una página (que lleva a ella). Al
+  cerrarlo sin elegir, el foco vuelve al botón; al elegir, el foco pasa a la
+  página nueva.
+- El final de cada página deja espacio para que la barra no tape nada.
+- Los enlaces del menú, de la barra, del panel y de "Seguir" son links de
+  verdad (`<a href>`): se pueden abrir en otra pestaña.
 
 ### 1.3 Sobre con la carta (portada)
 
@@ -191,8 +220,10 @@ mina y de descanso (1–60) y hora de regreso.
 Se revisa cada **60 s** por si una carta se desbloquea con la página abierta.
 
 **Ventana de carta:** ícono, fecha, título y texto completo. Si la carta
-tiene `accion`, muestra el botón, que cierra la ventana y lleva a
-`#{destino}`.
+tiene `accion`, muestra el botón, que cierra la ventana y lleva a la página
+de esa sección (`destino` es el id de 1.1: `"constelacion"` → `/cielo`,
+`"cumple"` → `/cumple`). Un `destino` que no es de ninguna página no muestra
+el botón.
 
 - Se cierra con ×, Escape o tocando fuera; al abrirse, el foco va a la ×.
 - **Nunca abre una carta antes de su fecha**, venga de donde venga.
@@ -233,8 +264,8 @@ velas = 5
 
 | Estado | Comportamiento |
 |---|---|
-| `antes` | 🎁 + etiqueta + cuenta regresiva (cada segundo). Al llegar a `C` la página se recarga. La carta aparece **sellada** en La Bóveda. Sin enlace en el menú. |
-| `hoy` | `body.is-birthday`; `textosHoy` reemplaza esas claves; globos en el fondo; confeti al entrar; la sección va antes de Carta; el segundo botón de la portada → `#cumple`; pastel. |
+| `antes` | 🎁 + etiqueta + cuenta regresiva (cada segundo). Al llegar a `C` la página se recarga. La carta aparece **sellada** en La Bóveda. |
+| `hoy` | `body.is-birthday`; `textosHoy` reemplaza esas claves; globos en el fondo; confeti al entrar (con la bienvenida); su página sube justo después de "Este mes"; el segundo botón de la portada → `/cumple`; pastel. |
 | `despues` | Sección de recuerdo con pastel; se pueden volver a encender las velas. |
 
 **Pastel:** `velas`, limitado entre 1 y 9 (por defecto 5).
@@ -368,7 +399,7 @@ interface Config {
     activa: boolean; salidaBase: string; diasMina: number; diasDescanso: number;
     horaRegreso: "HH:MM"; mesesAMostrar: 1 | 2 | 3 | 4;
   };
-  textos: Record<ClaveTexto, string>;          // 119 claves, ver abajo
+  textos: Record<ClaveTexto, string>;          // 202 claves, ver abajo
   lineaTiempo: { mes: "AAAA-MM"; titulo: string; src: string; texto: string }[];
   mensajesMes: Carta[];                         // normalmente un día 8
   musica: { volumenInicial: number; cancion: { titulo: string; artista: string; src: string } };
@@ -400,10 +431,12 @@ interface NubeConfig {
 }
 ```
 
-**Grupos de `textos`** (prefijo: cantidad): nav 10, welcome 5, hero 5,
-letter 7, carta 3, surprise 3, timeline 4, mes 1, tiempo/time 3, label 8,
-return 2, countdown 1, calendar 4, legend 5, roster 16, musica/music 7,
-boveda 7, constelacion 4, juego 8, cumple 13, final 3.
+**Grupos de `textos`** (prefijo: cantidad): nav 11, titulo/seguir 3,
+welcome 5, hero 5, letter 7, carta 3, surprise 3, timeline 4, mes 1,
+tiempo/time 3, label 8, return 2, countdown 1, calendar 4, legend 5,
+roster 16, musica/music 7, boveda 7, constelacion 4, juego 8, cumple 13,
+final 3. El resto son los textos que antes estaban dentro de los componentes
+(accesibilidad, avisos, página del cielo, sesión, errores).
 
 - Las frases pueden contener `{edad}`.
 - "unu" y "uwu" son intencionales.
@@ -449,6 +482,9 @@ dominio empiezan vacías, porque el navegador las guarda por dominio):
      vuelve a donde estaba;
    - la barra de secciones y su panel se usan con teclado; escondida, la
      barra no se alcanza con Tab;
+   - al cambiar de página, el foco pasa al contenido de la página nueva y el
+     título de la pestaña dice en qué página está; la página actual está
+     marcada (`aria-current="page"`) en el panel;
    - los botones solo con ícono tienen `aria-label`.
 4. **Privacidad y seguridad:**
    - cero correos en el código o el repo (solo UIDs);
@@ -459,7 +495,10 @@ dominio empiezan vacías, porque el navegador las guarda por dominio):
 6. **Rendimiento:**
    - Firebase se carga aparte y solo cuando se usa;
    - la carga inicial queda por debajo de ~100 KB comprimidos de JS propio
-     y de React.
+     y de React;
+   - las páginas que no hacen falta al abrir se descargan aparte; unos
+     segundos después de abrir el sitio se bajan en segundo plano, para que
+     cambiar de página sea inmediato.
 7. **Vista previa del link:**
    - `og:image` absoluto a `compartir.jpg` de 1200×630;
    - título y descripción fijos en el HTML;
@@ -474,13 +513,20 @@ dominio empiezan vacías, porque el navegador las guarda por dominio):
      (`anthuanete-6d629.web.app`, con un 301) y, mientras GitHub Pages siga
      encendido, el de GitHub Pages (`/Proyect.github.io/…`), con la página
      que quedó publicada el 20-11-2026.
-   - El HTML no se guarda en la caché del navegador; los `.js` y `.css` con
-     hash, un año; las fotos y la canción, un día.
+   - Las rutas de las páginas (1.1) sirven `index.html` (`rewrites` de
+     `firebase.json`, con o sin `/` al final); cualquier otra ruta sin
+     archivo da 404. Un test revisa que las rutas de `firebase.json` sean
+     las mismas que las de las páginas.
+   - El HTML no se guarda en la caché del navegador (tampoco el de las rutas
+     de las páginas); los `.js` y `.css` con hash, un año; las fotos y la
+     canción, un día.
 10. **Calidad:** `typecheck`, `lint` (sin ningún aviso), los tests y
     `build` sin errores antes de cada merge.
 11. **Robustez:**
-    - si una sección falla al mostrarse, desaparece solo esa y el resto de la
-      página sigue funcionando; si falla la página entera, se ve
+    - si una página falla al mostrarse (o no se pudo descargar), en su lugar
+      se ve `textos.errorPagina` con un botón para recargar, y la barra de
+      secciones sigue funcionando; si falla una parte de la portada, se
+      pierde solo esa parte; si falla el sitio entero, se ve
       `textos.errorPagina` con un botón para recargar;
     - lo que depende del día (mensaje del mes, foto del mes nuevo) se
       actualiza solo al pasar la medianoche, sin recargar;

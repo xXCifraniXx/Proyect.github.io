@@ -173,6 +173,11 @@
     /* Abajo deja lugar para la barra de secciones, que flota sobre el final. */
     padding: max(18px, env(safe-area-inset-top)) 0 calc(max(32px, env(safe-area-inset-bottom)) + 76px);
   }
+  /* Al cambiar de página el foco pasa al contenido (para los lectores de
+     pantalla); no es un control, así que no lleva marco. */
+  .app-shell:focus {
+    outline: none;
+  }
   /* backdrop-filter va sin -webkit-: la compilación agrega el prefijo para
      Safari. Si se escribe a mano, la compilación deja solo el prefijado y
      Chrome pierde el desenfoque. */

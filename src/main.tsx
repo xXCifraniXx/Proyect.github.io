@@ -3,10 +3,11 @@ import { createRoot } from "react-dom/client";
 import "./styles/index.css";
 import App from "./App.tsx";
 import { LimiteDeError, PaginaConError } from "./components/ui/index.ts";
-import { NOMBRES } from "./lib/contenido.ts";
 import { estadoCumple } from "./lib/cumple.ts";
+import { corregirLink } from "./features/navegacion/index.ts";
 
-document.title = `Para ${NOMBRES.novia} | Una carta de ${NOMBRES.autor}`;
+// Antes de dibujar: un link viejo (/#boveda) pasa a su página (/boveda).
+corregirLink();
 if (estadoCumple() === "hoy") document.body.classList.add("is-birthday");
 
 const raiz = document.getElementById("root");

@@ -41,7 +41,7 @@ cartas selladas, miembros iguales a `firestore.rules`).
 
 ```text
 Proyect.github.io/
-├── index.html                  Página principal (la carta)
+├── index.html                  El sitio: la portada y una página por sección (/carta, /boveda…)
 ├── constelacion/index.html     Página del cielo
 ├── herramientas/sellar-carta.html  Sellar / abrir cartas (para ti)
 ├── public/assets/
@@ -49,13 +49,14 @@ Proyect.github.io/
 │   └── audio/                  Canción
 ├── src/
 │   ├── config/                 ← TODO el contenido editable (ver abajo)
-│   ├── main.tsx                Arranque de la página principal
+│   ├── main.tsx                Arranque del sitio (corrige los links viejos /#sección)
 │   ├── constelacion/main.tsx   Arranque de la página del cielo
 │   ├── herramientas/           Lógica de sellar-carta.html
-│   ├── App.tsx                 Junta las secciones en orden
+│   ├── App.tsx                 Muestra la página que pide la ruta
+│   ├── paginas.ts              Las páginas que se descargan aparte
 │   ├── features/               Una carpeta por sección (inicio, mensaje-mes, carta,
 │   │                           galeria, tiempo, bajadas, musica, boveda, cumple,
-│   │                           constelacion, cielo, juego, cierre, sesion)
+│   │                           constelacion, cielo, juego, cierre, sesion, navegacion)
 │   ├── components/ui/          Piezas que usan varias secciones (Seccion, CuentaRegresiva, LimiteDeError…)
 │   ├── hooks/                  Hooks compartidos (useAhora / useDia, useRevelar, useTextoCarta, useSuscripcionFirestore)
 │   ├── lib/                    Lógica compartida sin pantalla (fechas, sello, Firebase, cumpleaños…)
@@ -69,15 +70,49 @@ Proyect.github.io/
 └── .github/workflows/          Revisión y publicación automáticas
 ```
 
-Piezas que usa toda la página:
+### Páginas y rutas
+
+El sitio es una sola página HTML (SPA): React muestra la portada en `/` y cada
+sección en su propia ruta, sin recargar. Atrás y adelante del celular
+funcionan, y el `?cumple=…` se conserva al cambiar de página.
+
+| Ruta | Página |
+|---|---|
+| `/` | Portada (menú, saludo, sobre) y el cierre |
+| `/este-mes` | Mensaje del mes (solo cuando hay uno vigente) |
+| `/carta`, `/meses`, `/tiempo`, `/bajada`, `/musica` | Carta, galería, tiempo juntos, rotación de mina, canción |
+| `/cumple` | Cumpleaños (solo en sus fechas) |
+| `/boveda`, `/cielo`, `/juego` | La Bóveda, constelación de adorno, minijuego |
+
+La página del cielo sigue aparte, en `/constelacion/`.
+
+- **Una sola lista:** las páginas están en
+  [`src/features/navegacion/enlaces.ts`](src/features/navegacion/enlaces.ts)
+  (`PAGINAS`). De ahí salen el menú, la barra de abajo, el botón "Seguir" al
+  final de cada página y las rutas.
+- **Agregar una página:** una entrada en `PAGINAS` (y su id en `IdPagina`), su
+  componente en `App.tsx` (si no hace falta al abrir, con `lazy()` en
+  `src/paginas.ts`) y su ruta en `firebase.json`, en el `rewrite` **y** en la
+  cabecera sin caché. Un test avisa si la lista y `firebase.json` no coinciden.
+- **Links viejos:** `/#boveda` pasa solo a `/boveda` (y `#linea-tiempo` a
+  `/meses`, `#calendario` a `/bajada`, `#constelacion` a `/cielo`,
+  `#mensaje-mes` a `/este-mes`), sin perder el `?…`.
+- **Bienvenida:** "Entrar a la carta" sale una vez, solo si se abre el sitio
+  por la portada; un link directo a una página entra directo.
+- **Peso:** la portada, La Bóveda y el mensaje del mes vienen en la carga
+  inicial; las demás páginas se descargan aparte (y en segundo plano unos
+  segundos después de abrir el sitio).
+
+Piezas que usa todo el sitio:
 
 - **Reloj:** `useAhora()` (cada segundo) y `useDia()` (cambia a medianoche)
   comparten un solo temporizador (`src/lib/reloj.ts`). Para lo del cumpleaños,
   `useAhora(RELOJ_CUMPLE)`, que respeta la vista previa `?cumple=…`.
 - **Ventana de carta:** `const { abrir } = useVentanaCarta()` desde cualquier
   componente; nunca abre una carta antes de su fecha.
-- **Errores:** cada sección va dentro de `LimiteDeError`; si una falla, las
-  demás se siguen viendo y el error queda en la consola con su nombre.
+- **Errores:** cada página va dentro de `LimiteDeError`; si una falla, se ve
+  un aviso con un botón para recargar, la barra sigue funcionando y el error
+  queda en la consola con su nombre.
 
 Un componente por archivo `.tsx`, con el mismo nombre que el componente. Cada
 carpeta de `features/` y `components/ui/` tiene un `index.ts` con lo que se usa
@@ -131,8 +166,9 @@ regresiva; a partir de ahí se puede abrir y leer. Una carta puede incluir:
 accion: { destino: "constelacion", etiqueta: "Ir a nuestra constelación ✦" }
 ```
 
-que añade un botón dentro de la carta para saltar a esa sección (`destino` es
-el `id` de la sección: `constelacion`, `juego`, `cumple`…).
+que añade un botón dentro de la carta que lleva a la página de esa sección
+(`destino` es el `id` de la sección: `constelacion`, `juego`, `cumple`…; ver
+la lista en "Páginas y rutas").
 
 **Cartas selladas.** El texto va cifrado en `mensajeSellado`, para que no se
 pueda leer en el código de la página antes de su fecha; la página solo lo
@@ -174,13 +210,14 @@ o tocando un mes en la línea de abajo.
 Todo sale de `cumpleanos.ts`. La única fecha que se escribe es la de
 `nacimiento` (`"1999-10-11"`): de ahí se calcula el cumpleaños de cada año y la
 **edad**, que se puede usar como `{edad}` en cualquier texto (27 en 2026, 28 en
-2027…). Cada año pasa por tres momentos y el resto del tiempo la sección no se ve:
+2027…). Cada año pasa por tres momentos y el resto del tiempo la página
+`/cumple` no existe:
 
 | Momento | Cuándo | Qué pasa |
 |---|---|---|
-| **Antes** | desde `diasAntes` (45) días antes | Sección con un regalo sellado y cuenta regresiva. La carta aparece sellada en La Bóveda. |
-| **Hoy** | el día del cumpleaños | Modo cumpleaños: bienvenida especial (`textosHoy`), confeti al entrar, globos flotando, la sección del pastel sube al inicio y el botón del inicio lleva a las velas. |
-| **Después** | `diasDespues` (60) días | La sección queda de recuerdo y se pueden volver a encender las velas. |
+| **Antes** | desde `diasAntes` (45) días antes | Página con un regalo sellado y cuenta regresiva. La carta aparece sellada en La Bóveda. |
+| **Hoy** | el día del cumpleaños | Modo cumpleaños: bienvenida especial (`textosHoy`), confeti al entrar, globos flotando, la página del pastel sube al principio del menú y el botón del inicio lleva a las velas. |
+| **Después** | `diasDespues` (60) días | La página queda de recuerdo y se pueden volver a encender las velas. |
 
 - **Pastel:** ella toca cada vela o usa "Soplar las velas". Al apagarlas todas
   hay confeti y aparece "Abrir mi carta". Se acuerda de que ya las apagó
@@ -193,7 +230,7 @@ Todo sale de `cumpleanos.ts`. La única fecha que se escribe es la de
 
 ### Ajustar bajadas de mina desde la página
 
-Dentro de la sección **Bajada** hay un panel plegable **"Ajustar bajadas de
+En la página **Bajada** (`/bajada`) hay un panel plegable **"Ajustar bajadas de
 mina"**. Se elige el día de la próxima bajada (y, si cambia, días en mina,
 descanso y hora de regreso) y el calendario, el estado y la cuenta regresiva se
 recalculan desde esa fecha.
@@ -207,8 +244,8 @@ Para que un cambio valga para siempre aunque no haya ajuste, actualiza
 
 ## Constelación y Firebase
 
-`constelacion/` es una página aparte, enlazada desde la sección
-**Constelación**: un cielo donde cada toque crea una estrella con un recuerdo,
+`constelacion/` es una página aparte, enlazada desde la página
+**Constelación** (`/cielo`): un cielo donde cada toque crea una estrella con un recuerdo,
 y se pueden guardar como imagen. Con Firebase, los dos ven y crean las mismas
 estrellas en tiempo real; las bajadas compartidas usan el mismo proyecto.
 
