@@ -1,27 +1,46 @@
-import { useMemo } from "react";
-import { Bajadas } from "./features/bajadas/index.ts";
+import { Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Bienvenida, Inicio } from "./features/inicio/index.ts";
-import { BarraSecciones, type EnlacesVisibles } from "./features/navegacion/index.ts";
+import {
+  BarraSecciones,
+  enlacesVisibles,
+  INICIO,
+  navegar,
+  SiguientePagina,
+  siguienteDe,
+  useCambioDePagina,
+  useRuta,
+  type IdPagina
+} from "./features/navegacion/index.ts";
 import { Boveda, ProveedorVentanaCarta } from "./features/boveda/index.ts";
-import { CartaSorpresa } from "./features/carta/index.ts";
 import { Cierre } from "./features/cierre/index.ts";
-import { Constelacion } from "./features/constelacion/index.ts";
-import { Cumpleanos } from "./features/cumple/index.ts";
-import { Fondo, LimiteDeError, ProgresoScroll } from "./components/ui/index.ts";
-import { Galeria } from "./features/galeria/index.ts";
+import { Fondo, LimiteDeError, PaginaConError, ProgresoScroll } from "./components/ui/index.ts";
 import { MensajeDelMes, mensajeMesVigente } from "./features/mensaje-mes/index.ts";
-import { Minijuego } from "./features/juego/index.ts";
-import { Musica } from "./features/musica/index.ts";
-import { TiempoJuntos } from "./features/tiempo/index.ts";
+import {
+  Bajadas,
+  CartaSorpresa,
+  Constelacion,
+  Cumpleanos,
+  Galeria,
+  Minijuego,
+  Musica,
+  precargarPaginas,
+  TiempoJuntos
+} from "./paginas.ts";
 import { celebrar } from "./lib/confeti.ts";
+import { NOMBRES, TEXTOS } from "./lib/contenido.ts";
+import { rellenar } from "./lib/rellenar.ts";
 import { useDia } from "./hooks/useAhora.ts";
 import { useRecargarSiCambia } from "./hooks/useRecargarSiCambia.ts";
 import { ocurrenciaEn, RELOJ_CUMPLE } from "./lib/cumple.ts";
 
+// Las demás páginas se bajan en segundo plano cuando la primera ya se ve.
+const ESPERA_PRECARGA_MS = 2000;
+
 /*
-  PÁGINA PRINCIPAL
-  Cada sección vive en su carpeta de src/features y se junta aquí, en el
-  mismo orden que la página.
+  EL SITIO
+  Una sola página HTML con varias páginas adentro: la portada en "/" y una
+  por sección (/carta, /meses…, la lista está en features/navegacion/enlaces.ts).
+  Cada sección vive en su carpeta de src/features.
 */
 export default function App() {
   // Dependen del día: si la página queda abierta, cambian a medianoche
@@ -29,73 +48,86 @@ export default function App() {
   const dia = useDia(RELOJ_CUMPLE);
   const nota = useMemo(() => mensajeMesVigente(undefined, dia), [dia]);
   const cumple = useMemo(() => ocurrenciaEn(dia), [dia]);
-  const esHoy = cumple?.estado === "hoy";
+  const estadoCumple = cumple?.estado ?? null;
 
   // Los textos, la carta y los adornos del cumpleaños se arman al cargar la
   // página: si su estado cambia con la página abierta, se recarga.
-  useRecargarSiCambia(cumple?.estado);
+  useRecargarSiCambia(estadoCumple);
 
-  const visibles: EnlacesVisibles = {
-    mes: nota !== null,
-    cumple: cumple?.estado === "hoy" || cumple?.estado === "despues"
-  };
+  const hayNota = nota !== null;
+  const enlaces = useMemo(() => enlacesVisibles({ mes: hayNota, cumple: estadoCumple }), [hayNota, estadoCumple]);
 
+  const ruta = useRuta();
+  const pagina = enlaces.find((enlace) => enlace.ruta === ruta) ?? null;
+  // Una ruta que hoy no tiene página (el mensaje del mes ya pasó) lleva a la portada.
+  useEffect(() => {
+    if (ruta !== INICIO && !pagina) navegar(INICIO, true);
+  }, [ruta, pagina]);
+
+  const contenido = useRef<HTMLElement>(null);
+  const titulo = pagina
+    ? rellenar(TEXTOS.tituloPagina, { pagina: pagina.texto, novia: NOMBRES.novia })
+    : rellenar(TEXTOS.tituloInicio, { novia: NOMBRES.novia, autor: NOMBRES.autor });
+  useCambioDePagina(ruta, titulo, contenido);
+
+  useEffect(() => {
+    const espera = setTimeout(precargarPaginas, ESPERA_PRECARGA_MS);
+    return () => clearTimeout(espera);
+  }, []);
+
+  // La bienvenida sale una vez, solo si se abre el sitio por la portada: un
+  // link directo a una página entra directo.
+  const [conBienvenida] = useState(ruta === INICIO);
   // El día del cumpleaños, al entrar hay confeti.
   const alEntrar = () => {
-    if (esHoy) setTimeout(celebrar, 300);
+    if (estadoCumple === "hoy") setTimeout(celebrar, 300);
   };
 
-  const seccionCumple = cumple && <Cumpleanos ocurrencia={cumple} />;
+  const secciones: Record<IdPagina, ReactNode> = {
+    "mensaje-mes": nota && <MensajeDelMes nota={nota} />,
+    carta: <CartaSorpresa />,
+    "linea-tiempo": <Galeria />,
+    tiempo: <TiempoJuntos />,
+    calendario: <Bajadas />,
+    musica: <Musica />,
+    cumple: cumple && <Cumpleanos ocurrencia={cumple} />,
+    boveda: <Boveda />,
+    constelacion: <Constelacion />,
+    juego: <Minijuego />
+  };
 
   // Una sola ventana de carta para La Bóveda y el pastel (ver features/boveda/ventanaCarta.ts).
-  // Cada sección va dentro de un LimiteDeError: si una falla, las demás se siguen viendo.
+  // Cada parte va dentro de un LimiteDeError: si una falla, lo demás se sigue viendo.
   return (
     <ProveedorVentanaCarta>
       <ProgresoScroll />
       <Fondo />
-      <LimiteDeError nombre="bienvenida">
-        <Bienvenida onEntrar={alEntrar} />
-      </LimiteDeError>
-      <div className="app-shell">
-        <LimiteDeError nombre="inicio">
-          <Inicio visibles={visibles} />
+      {conBienvenida && (
+        <LimiteDeError nombre="bienvenida">
+          <Bienvenida onEntrar={alEntrar} />
         </LimiteDeError>
-        <main>
-          <LimiteDeError nombre="mensaje del mes">{nota && <MensajeDelMes nota={nota} />}</LimiteDeError>
-          {/* El día del cumpleaños, lo primero que ve es su sorpresa. */}
-          <LimiteDeError nombre="cumpleaños">{esHoy && seccionCumple}</LimiteDeError>
-          <LimiteDeError nombre="carta">
-            <CartaSorpresa />
+      )}
+      {/* tabIndex -1: al cambiar de página recibe el foco (useCambioDePagina). */}
+      <main ref={contenido} className="app-shell" tabIndex={-1}>
+        {pagina ? (
+          // key: cada página empieza de cero (y un error en una no sigue en la otra).
+          <LimiteDeError key={pagina.id} nombre={pagina.texto} respaldo={<PaginaConError soloTarjeta />}>
+            <Suspense fallback={null}>{secciones[pagina.id]}</Suspense>
+            <SiguientePagina siguiente={siguienteDe(enlaces, pagina)} />
           </LimiteDeError>
-          <LimiteDeError nombre="galería">
-            <Galeria />
-          </LimiteDeError>
-          <LimiteDeError nombre="tiempo">
-            <TiempoJuntos />
-          </LimiteDeError>
-          <LimiteDeError nombre="bajadas">
-            <Bajadas />
-          </LimiteDeError>
-          <LimiteDeError nombre="música">
-            <Musica />
-          </LimiteDeError>
-          <LimiteDeError nombre="bóveda">
-            <Boveda />
-          </LimiteDeError>
-          <LimiteDeError nombre="cumpleaños">{!esHoy && seccionCumple}</LimiteDeError>
-          <LimiteDeError nombre="constelación">
-            <Constelacion />
-          </LimiteDeError>
-          <LimiteDeError nombre="juego">
-            <Minijuego />
-          </LimiteDeError>
-          <LimiteDeError nombre="cierre">
-            <Cierre />
-          </LimiteDeError>
-        </main>
-      </div>
+        ) : (
+          <>
+            <LimiteDeError nombre="inicio">
+              <Inicio enlaces={enlaces} />
+            </LimiteDeError>
+            <LimiteDeError nombre="cierre">
+              <Cierre />
+            </LimiteDeError>
+          </>
+        )}
+      </main>
       <LimiteDeError nombre="barra de secciones">
-        <BarraSecciones visibles={visibles} />
+        <BarraSecciones enlaces={enlaces} actual={pagina} />
       </LimiteDeError>
     </ProveedorVentanaCarta>
   );

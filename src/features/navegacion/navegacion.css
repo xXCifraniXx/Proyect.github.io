@@ -176,7 +176,8 @@
   .panel-secciones-enlace.is-pendiente {
     color: var(--muted);
   }
-  .panel-secciones-enlace.is-actual {
+  .panel-secciones-enlace.is-actual,
+  .panel-secciones-enlace.is-inicio[aria-current="page"] {
     background: rgba(255, 158, 184, 0.16);
   }
   .panel-secciones-enlace.is-inicio {
@@ -192,5 +193,12 @@
   .panel-secciones-cerrar:focus-visible {
     outline: 2px solid var(--gold);
     outline-offset: -2px;
+  }
+
+  /* "Seguir: …" al final de cada página. */
+  .siguiente-pagina {
+    display: flex;
+    justify-content: center;
+    padding-top: 28px;
   }
 }

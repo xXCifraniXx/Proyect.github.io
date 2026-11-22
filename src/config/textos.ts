@@ -16,6 +16,12 @@ export const textos = {
   navBoveda: "La Bóveda",
   navConstelacion: "Constelación",
   navJuego: "Juego",
+  navInicio: "Inicio",
+
+  // Páginas: título de la pestaña y link al final de cada una ({pagina}, {novia} y {autor} se rellenan solos)
+  tituloInicio: "Para {novia} | Una carta de {autor}",
+  tituloPagina: "{pagina} | Para {novia}",
+  seguirPagina: "Seguir: {pagina} →",
 
   // Pantalla de bienvenida
   welcomeEyebrow: "Una sorpresa para ti",
@@ -195,9 +201,9 @@ export const textos = {
   ariaElegirMes: "Elegir mes",
   ariaCalendario: "Calendario de rotación",
   ariaLeyendaCalendario: "Leyenda del calendario",
-  ariaBarraSecciones: "Secciones de la página",
-  ariaAbrirSecciones: "Ver todas las secciones",
-  ariaPanelSecciones: "Todas las secciones",
+  ariaBarraSecciones: "Páginas del sitio",
+  ariaAbrirSecciones: "Ver todas las páginas",
+  ariaPanelSecciones: "Todas las páginas",
   ariaCerrarSecciones: "Cerrar",
   barraVolverInicio: "Volver al inicio",
   ariaPastel: "Pastel de cumpleaños",
