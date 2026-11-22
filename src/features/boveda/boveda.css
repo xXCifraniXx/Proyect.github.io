@@ -171,6 +171,14 @@
   .boveda-modal-card .btn {
     margin-top: 6px;
   }
+  /* Foto de la carta (las puertas del adviento pueden traer una). */
+  .boveda-modal-foto {
+    width: 100%;
+    max-height: 48vh;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--stroke);
+  }
 
   @media (max-width: 920px) {
     .boveda-grid {

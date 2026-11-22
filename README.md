@@ -56,7 +56,8 @@ Proyect.github.io/
 │   ├── paginas.ts              Las páginas que se descargan aparte
 │   ├── features/               Una carpeta por sección (inicio, mensaje-mes, carta,
 │   │                           galeria, tiempo, bajadas, musica, boveda, cumple,
-│   │                           constelacion, cielo, juego, cierre, sesion, navegacion)
+│   │                           constelacion, cielo, juego, cierre, sesion, navegacion,
+│   │                           adviento)
 │   ├── components/ui/          Piezas que usan varias secciones (Seccion, CuentaRegresiva, LimiteDeError…)
 │   ├── hooks/                  Hooks compartidos (useAhora / useDia, useRevelar, useTextoCarta, useSuscripcionFirestore)
 │   ├── lib/                    Lógica compartida sin pantalla (fechas, sello, Firebase, cumpleaños…)
@@ -80,6 +81,7 @@ funcionan, y el `?cumple=…` se conserva al cambiar de página.
 |---|---|
 | `/` | Portada (menú, saludo, sobre) y el cierre |
 | `/este-mes` | Mensaje del mes (solo cuando hay uno vigente) |
+| `/adviento` | Calendario de adviento (en su época, ver abajo) |
 | `/carta`, `/meses`, `/tiempo`, `/bajada`, `/musica` | Carta, galería, tiempo juntos, rotación de mina, canción |
 | `/cumple` | Cumpleaños (solo en sus fechas) |
 | `/boveda`, `/cielo`, `/juego` | La Bóveda, constelación de adorno, minijuego |
@@ -150,6 +152,7 @@ el desenfoque.
 | `meses.ts` | `lineaTiempo` (una foto por mes, `mes` en formato `"AAAA-MM"`) y `mensajesMes` (mensaje de cada mesiversario). |
 | `boveda.ts` | Las cartas de La Bóveda. |
 | `cumpleanos.ts` | Fecha de nacimiento, carta, velas y textos del día del cumpleaños. |
+| `adviento.ts` y `puertas.ts` | Año y fechas del calendario de adviento, y sus 24 puertas. |
 | `general.ts` | `nombres`, `fechas.inicioRelacion`, `rotacionMina` (turno 14×7), la canción, los emojis del juego y opciones. |
 | `firebase.ts` | Proyecto de Firebase, `cieloId` y UID de las cuentas que pueden cambiar cosas. |
 
@@ -182,6 +185,26 @@ carta abre `herramientas/sellar-carta.html` (en el link publicado o con
 > que alguna vez estuvieron sin sellar siguen en el historial de Git.
 
 **Borradores.** `borrador: true` oculta una carta que aún no tiene texto.
+
+### Calendario de adviento
+
+24 puertas, del 1 al 24 de diciembre, en la página `/adviento`. Cada puerta se
+abre a las 00:00 de su día (hora del celular) y muestra una sorpresa pequeña:
+un mensaje sellado y, si quieres, una foto.
+
+- **Cuándo se ve:** `anio`, `desde` y `hasta` en `adviento.ts`. Fuera de esas
+  fechas la página y su enlace no existen.
+- **Las puertas:** en `puertas.ts`, una por día, como las cartas de La Bóveda
+  (`icono`, `titulo`, `mensajeSellado`, y `foto` o `accion` si quieres). El
+  texto se sella con `herramientas/sellar-carta.html`. La foto va en
+  `public/assets/images/adviento/` (`.webp` de unos 1080 px).
+- **Borradores:** una puerta con `borrador: true` se ve cerrada y no se abre,
+  aunque haya llegado su día. Cada puerta tiene que estar sellada y publicada
+  antes de las 00:00 de su día.
+- Las que ella ya abrió quedan abiertas en su celular (`localStorage`) y las
+  puede volver a leer.
+- `puertas.ts` se descarga solo al abrir esa página: los 24 mensajes sellados
+  no pesan en la primera carga.
 
 ### Mensaje del mes
 

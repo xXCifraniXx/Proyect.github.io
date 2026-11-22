@@ -7,6 +7,9 @@
     meses.ts       la foto de cada mes y el mensaje de cada mesiversario
     boveda.ts      las cartas de La Bóveda
     cumpleanos.ts  fecha de nacimiento, carta y textos del día del cumpleaños
+    adviento.ts    año y fechas del calendario de adviento
+    puertas.ts     las 24 puertas del adviento (no van en CONFIG: se cargan
+                   solo con su página)
     general.ts     nombres, fechas, rotación de mina, canción, juego y opciones
     firebase.ts    proyecto de Firebase y cuentas que pueden cambiar cosas
 
@@ -14,6 +17,7 @@
   y aquí se escriben como "assets/images/…" y "assets/audio/…".
 */
 import type { Config } from "../types/config.ts";
+import { adviento } from "./adviento.ts";
 import { boveda } from "./boveda.ts";
 import { cumpleanos } from "./cumpleanos.ts";
 import { fechas, juego, musica, nombres, opciones, rotacionMina } from "./general.ts";
@@ -31,5 +35,6 @@ export const CONFIG: Config = {
   boveda,
   juego,
   cumpleanos,
-  opciones
+  opciones,
+  adviento
 };

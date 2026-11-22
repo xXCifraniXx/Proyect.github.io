@@ -11,6 +11,7 @@ import type { Ocurrencia } from "../../lib/cumple.ts";
 /** Id de cada página: el de su sección y el de los links viejos (#carta, #linea-tiempo…). */
 export type IdPagina =
   | "mensaje-mes"
+  | "adviento"
   | "carta"
   | "linea-tiempo"
   | "tiempo"
@@ -35,6 +36,7 @@ export const INICIO = "/";
 /** Todas las páginas, en el orden del menú. */
 export const PAGINAS: readonly Enlace[] = [
   { id: "mensaje-mes", ruta: "/este-mes", texto: TEXTOS.navMes },
+  { id: "adviento", ruta: "/adviento", texto: TEXTOS.navAdviento },
   { id: "carta", ruta: "/carta", texto: TEXTOS.navCarta },
   { id: "linea-tiempo", ruta: "/meses", texto: TEXTOS.navMeses },
   { id: "tiempo", ruta: "/tiempo", texto: TEXTOS.navTiempo },
@@ -51,6 +53,8 @@ export const PAGINAS: readonly Enlace[] = [
 export interface EnlacesVisibles {
   /** Hay un mensaje del mes vigente. */
   mes?: boolean;
+  /** Es época del calendario de adviento (config/adviento.ts). */
+  adviento?: boolean;
   /** Estado del cumpleaños; fuera de sus fechas (null) no hay página. */
   cumple?: Ocurrencia["estado"] | null;
 }
@@ -63,13 +67,14 @@ const SIN_PAGINA_POR_CONFIG: Partial<Record<IdPagina, boolean>> = {
 
 /**
  * Las páginas que existen hoy, en su orden (SPEC 1.2). "Este mes" solo con
- * un mensaje del mes vigente y "Cumpleaños" solo en sus fechas; el día del
- * cumpleaños esa página sube justo después de "Este mes".
+ * un mensaje del mes vigente, "Adviento" en su época y "Cumpleaños" solo en
+ * sus fechas; el día del cumpleaños esa página sube justo después de "Este mes".
  */
-export function enlacesVisibles({ mes = false, cumple = null }: EnlacesVisibles = {}): Enlace[] {
+export function enlacesVisibles({ mes = false, adviento = false, cumple = null }: EnlacesVisibles = {}): Enlace[] {
   const existe = (enlace: Enlace): boolean => {
     if (SIN_PAGINA_POR_CONFIG[enlace.id]) return false;
     if (enlace.id === "mensaje-mes") return mes;
+    if (enlace.id === "adviento") return adviento;
     if (enlace.id === "cumple") return cumple !== null;
     return true;
   };

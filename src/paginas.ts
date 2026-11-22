@@ -9,6 +9,7 @@ import { lazy } from "react";
   inicial: App ya usa algo de sus carpetas.
 */
 const cargadores = {
+  adviento: () => import("./features/adviento/index.ts").then((m) => ({ default: m.Adviento })),
   carta: () => import("./features/carta/index.ts").then((m) => ({ default: m.CartaSorpresa })),
   galeria: () => import("./features/galeria/index.ts").then((m) => ({ default: m.Galeria })),
   tiempo: () => import("./features/tiempo/index.ts").then((m) => ({ default: m.TiempoJuntos })),
@@ -19,6 +20,7 @@ const cargadores = {
   juego: () => import("./features/juego/index.ts").then((m) => ({ default: m.Minijuego }))
 };
 
+export const Adviento = lazy(cargadores.adviento);
 export const CartaSorpresa = lazy(cargadores.carta);
 export const Galeria = lazy(cargadores.galeria);
 export const TiempoJuntos = lazy(cargadores.tiempo);
