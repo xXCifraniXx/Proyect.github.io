@@ -24,6 +24,16 @@
         {
           "source": "/constelacion/",
           "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+        },
+        {
+          "source": "/@(este-mes|adviento|carta|meses|tiempo|bajada|musica|cumple|boveda|cielo|juego){,/}",
+          "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+        }
+      ],
+      "rewrites": [
+        {
+          "source": "/@(este-mes|adviento|carta|meses|tiempo|bajada|musica|cumple|boveda|cielo|juego){,/}",
+          "destination": "/index.html"
         }
       ]
     },

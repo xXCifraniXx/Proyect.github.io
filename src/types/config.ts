@@ -62,6 +62,24 @@ export interface Carta {
   /** Oculta la carta hasta que tenga texto. */
   borrador?: boolean;
   accion?: AccionCarta;
+  /** Foto que se ve al abrirla, "assets/images/…" (la usan las puertas del adviento). */
+  foto?: string;
+}
+
+/** Calendario de adviento: de qué año son las puertas y cuándo se ve la página. */
+export interface Adviento {
+  /** Año de las puertas: se abren del 1 al 24 de diciembre de ese año. */
+  anio: number;
+  /** Desde cuándo se ve la página (y su enlace), "AAAA-MM-DDTHH:MM:SS". */
+  desde: string;
+  /** Hasta cuándo, sin incluirlo, "AAAA-MM-DDTHH:MM:SS". */
+  hasta: string;
+}
+
+/** Una puerta del calendario de adviento: una carta corta (con foto, si quieres) para un día. */
+export interface PuertaAdviento extends Omit<Carta, "fecha"> {
+  /** Día de diciembre, del 1 al 24: la puerta se abre a las 00:00 de ese día. */
+  dia: number;
 }
 
 export interface Cancion {
@@ -113,6 +131,8 @@ export interface Config {
   juego?: Juego;
   cumpleanos?: Cumpleanos;
   opciones?: Opciones;
+  /** Las puertas no van aquí: están en config/puertas.ts y se cargan con su página. */
+  adviento?: Adviento;
 }
 
 /** Configuración de Firebase (src/config/firebase.ts). */

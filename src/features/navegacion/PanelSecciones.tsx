@@ -1,24 +1,25 @@
 import { clsx } from "clsx";
 import { useEffect, useRef } from "react";
 import { TEXTOS } from "../../lib/contenido.ts";
-import { estadoEstrella, type Enlace } from "./enlaces.ts";
+import EnlacePagina from "./EnlacePagina.tsx";
+import { estadoEstrella, INICIO, type Enlace } from "./enlaces.ts";
 
 interface PanelSeccionesProps {
   abierto: boolean;
-  /** Las secciones en el orden de la página. */
+  /** Las páginas, en su orden. */
   secciones: Enlace[];
-  /** Posición de la sección actual en "secciones" (-1 si todavía ninguna). */
+  /** Posición de la página actual en "secciones" (-1 en la portada). */
   indiceActual: number;
   onCerrar: () => void;
 }
 
 /*
-  PANEL CON TODAS LAS SECCIONES
+  PANEL CON TODAS LAS PÁGINAS
   Sale desde abajo al tocar ✦ en la barra. Es un <dialog> del navegador,
   como la ventana de las cartas: mientras está abierto, lo de atrás no se
   puede tocar ni alcanzar con Tab, y al cerrarlo sin elegir el foco vuelve
   al botón.
-  Se cierra con la ×, con Escape, tocando fuera o eligiendo una sección.
+  Se cierra con la ×, con Escape, tocando fuera o eligiendo una página.
 */
 export default function PanelSecciones({ abierto, secciones, indiceActual, onCerrar }: PanelSeccionesProps) {
   const panel = useRef<HTMLDialogElement>(null);
@@ -31,8 +32,8 @@ export default function PanelSecciones({ abierto, secciones, indiceActual, onCer
     else if (!abierto && el.open) el.close();
   }, [abierto]);
 
-  // Primero se cierra y después el enlace lleva a la sección como cualquier
-  // ancla: el teclado sigue desde esa sección, igual que con el menú.
+  // Primero se cierra y después el enlace lleva a la página: el foco pasa a
+  // la página nueva (useCambioDePagina).
   const alElegir = () => {
     panel.current?.close();
     onCerrar();
@@ -69,28 +70,33 @@ export default function PanelSecciones({ abierto, secciones, indiceActual, onCer
         </div>
         <ol className="panel-secciones-lista">
           <li>
-            <a className="panel-secciones-enlace is-inicio" href="#inicio" onClick={alElegir}>
+            <EnlacePagina
+              className="panel-secciones-enlace is-inicio"
+              ruta={INICIO}
+              aria-current={indiceActual < 0 ? "page" : undefined}
+              onClick={alElegir}
+            >
               <span className="panel-secciones-marca" aria-hidden="true">
                 ↑
               </span>
               {TEXTOS.barraVolverInicio}
-            </a>
+            </EnlacePagina>
           </li>
           {secciones.map((enlace, i) => {
             const estado = estadoEstrella(i, indiceActual);
             return (
-              <li key={enlace.href}>
-                <a
+              <li key={enlace.id}>
+                <EnlacePagina
                   className={clsx("panel-secciones-enlace", `is-${estado}`)}
-                  href={enlace.href}
-                  aria-current={estado === "actual" ? "location" : undefined}
+                  ruta={enlace.ruta}
+                  aria-current={estado === "actual" ? "page" : undefined}
                   onClick={alElegir}
                 >
                   <span className="panel-secciones-marca" aria-hidden="true">
                     <span className="panel-secciones-estrella" />
                   </span>
                   {enlace.texto}
-                </a>
+                </EnlacePagina>
               </li>
             );
           })}
