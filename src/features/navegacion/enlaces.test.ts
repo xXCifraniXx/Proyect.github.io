@@ -24,6 +24,15 @@ describe("enlacesVisibles", () => {
     expect(lista).toHaveLength(10);
   });
 
+  it("el calendario de adviento, en su época, va justo después de 'Este mes'", () => {
+    expect(ids(enlacesVisibles({ mes: true, adviento: true })).slice(0, 3)).toEqual([
+      "mensaje-mes",
+      "adviento",
+      "carta"
+    ]);
+    expect(ids(enlacesVisibles())).not.toContain("adviento");
+  });
+
   it("antes del cumpleaños su página también existe (la del regalo con la cuenta regresiva)", () => {
     expect(ids(enlacesVisibles({ cumple: "antes" }))).toContain("cumple");
   });

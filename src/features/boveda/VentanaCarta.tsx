@@ -85,6 +85,15 @@ export default function VentanaCarta({ abierta, onCerrar }: VentanaCartaProps) {
             {rellenar(TEXTOS.bovedaDesbloqueada, { fecha: formatoFechaLarga(abierta.fecha) })}
           </span>
           <h3>{abierta.carta.titulo || TEXTOS.cartaSinTitulo}</h3>
+          {/* La foto se pide recién al abrir la carta, nunca antes de su fecha. */}
+          {abierta.carta.foto && (
+            <img
+              className="boveda-modal-foto"
+              src={abierta.carta.foto}
+              alt={abierta.carta.titulo || TEXTOS.cartaSinTitulo}
+              decoding="async"
+            />
+          )}
           <p>{texto}</p>
           {accion && destino && (
             <EnlacePagina className="btn btn-primary" ruta={destino} onClick={irA}>

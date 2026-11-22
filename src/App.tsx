@@ -16,6 +16,7 @@ import { Cierre } from "./features/cierre/index.ts";
 import { Fondo, LimiteDeError, PaginaConError, ProgresoScroll } from "./components/ui/index.ts";
 import { MensajeDelMes, mensajeMesVigente } from "./features/mensaje-mes/index.ts";
 import {
+  Adviento,
   Bajadas,
   CartaSorpresa,
   Constelacion,
@@ -26,6 +27,7 @@ import {
   precargarPaginas,
   TiempoJuntos
 } from "./paginas.ts";
+import { advientoVisible } from "./lib/adviento.ts";
 import { celebrar } from "./lib/confeti.ts";
 import { NOMBRES, TEXTOS } from "./lib/contenido.ts";
 import { rellenar } from "./lib/rellenar.ts";
@@ -55,7 +57,11 @@ export default function App() {
   useRecargarSiCambia(estadoCumple);
 
   const hayNota = nota !== null;
-  const enlaces = useMemo(() => enlacesVisibles({ mes: hayNota, cumple: estadoCumple }), [hayNota, estadoCumple]);
+  const hayAdviento = advientoVisible(dia);
+  const enlaces = useMemo(
+    () => enlacesVisibles({ mes: hayNota, adviento: hayAdviento, cumple: estadoCumple }),
+    [hayNota, hayAdviento, estadoCumple]
+  );
 
   const ruta = useRuta();
   const pagina = enlaces.find((enlace) => enlace.ruta === ruta) ?? null;
@@ -85,6 +91,7 @@ export default function App() {
 
   const secciones: Record<IdPagina, ReactNode> = {
     "mensaje-mes": nota && <MensajeDelMes nota={nota} />,
+    adviento: <Adviento />,
     carta: <CartaSorpresa />,
     "linea-tiempo": <Galeria />,
     tiempo: <TiempoJuntos />,

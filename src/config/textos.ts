@@ -17,6 +17,7 @@ export const textos = {
   navConstelacion: "Constelación",
   navJuego: "Juego",
   navInicio: "Inicio",
+  navAdviento: "Adviento 🎄",
 
   // Páginas: título de la pestaña y link al final de cada una ({pagina}, {novia} y {autor} se rellenan solos)
   tituloInicio: "Para {novia} | Una carta de {autor}",
@@ -145,6 +146,21 @@ export const textos = {
   bovedaReadHint: "Toca para leer",
   bovedaEmpty: "Pronto habrá cartas esperándote aquí 💌",
   bovedaSelloError: "No se pudo abrir esta carta en este navegador. Prueba a abrir la página en otro.",
+
+  // Calendario de adviento ({fecha}, {dia} y {titulo} se rellenan solos)
+  advientoEyebrow: "Calendario de adviento",
+  advientoTitle: "Una puerta para cada día de diciembre",
+  advientoIntro:
+    "Del 1 al 24 de diciembre, cada día se abre una puerta con una sorpresa pequeña. " +
+    "Las que ya abriste las puedes volver a leer cuando quieras.",
+  advientoPrimera: "La primera puerta se abre el {fecha} ✨",
+  advientoHoy: "Hoy se abre la puerta {dia} 🎁",
+  advientoPuertaTitulo: "Día {dia}",
+  ariaPuertasAdviento: "Puertas del calendario",
+  ariaPuertaCerrada: "Puerta {dia}: se abre el {fecha}",
+  ariaPuertaPronto: "Puerta {dia}: todavía no está lista",
+  ariaPuertaAbrir: "Abrir la puerta {dia}",
+  ariaPuertaAbierta: "Volver a leer la puerta {dia}: {titulo}",
 
   // Constelación
   constelacionEyebrow: "Nuestro cielo",

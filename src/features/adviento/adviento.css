@@ -1,0 +1,123 @@
+/* Calendario de adviento: las 24 puertas. */
+@layer secciones {
+  .adviento-card {
+    margin-top: 18px;
+    padding: clamp(14px, 4vw, 28px);
+    border-radius: var(--radius-lg);
+  }
+  .adviento-aviso {
+    margin-bottom: 14px;
+    text-align: center;
+    color: var(--gold);
+    line-height: 1.6;
+  }
+  .adviento-puertas {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .adviento-puerta {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 1;
+    padding: 0;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--stroke);
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+    color: var(--text);
+    font: inherit;
+    animation: adviento-aparecer 0.5s ease both;
+  }
+  .adviento-numero {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(1.3rem, 5vw, 1.8rem);
+    line-height: 1;
+  }
+  .adviento-candado {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 0.7rem;
+    opacity: 0.7;
+  }
+
+  /* Cerrada o en borrador: apagada. */
+  .adviento-puerta.is-cerrada,
+  .adviento-puerta.is-pronto {
+    color: var(--muted-2);
+  }
+
+  /* Disponible: dorada y con un brillo suave hasta que se abre. */
+  .adviento-puerta.is-disponible {
+    border-color: var(--gold);
+    background: linear-gradient(160deg, rgba(243, 217, 159, 0.28), rgba(255, 158, 184, 0.14));
+    box-shadow: 0 0 18px rgba(243, 217, 159, 0.3);
+    cursor: pointer;
+    animation:
+      adviento-aparecer 0.5s ease both,
+      adviento-brillo 2.4s ease-in-out 0.5s infinite;
+  }
+
+  /* Abierta: su ícono arriba y el número más chico. */
+  .adviento-puerta.is-abierta {
+    align-content: center;
+    gap: 2px;
+    background: rgba(255, 158, 184, 0.14);
+    cursor: pointer;
+  }
+  .adviento-puerta.is-abierta .adviento-numero {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .adviento-icono {
+    font-size: clamp(1.4rem, 6vw, 1.9rem);
+    line-height: 1;
+  }
+
+  /* La de hoy, con borde rosa. */
+  .adviento-puerta.is-hoy {
+    border: 2px solid var(--rose);
+  }
+
+  button.adviento-puerta:hover {
+    border-color: var(--rose);
+  }
+  .adviento-puerta:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
+
+  @keyframes adviento-aparecer {
+    from {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes adviento-brillo {
+    50% {
+      box-shadow: 0 0 30px rgba(243, 217, 159, 0.6);
+    }
+  }
+
+  @media (min-width: 641px) {
+    .adviento-puertas {
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+    }
+  }
+  @media (min-width: 900px) {
+    .adviento-puertas {
+      grid-template-columns: repeat(8, 1fr);
+    }
+  }
+}

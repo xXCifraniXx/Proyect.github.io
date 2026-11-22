@@ -38,6 +38,7 @@ Páginas, en este orden (el del menú):
 |---|---|---|---|---|
 | `/` | `inicio` | Portada | siempre | Menú (1.2); etiqueta, título y texto; botones "Abrir mi carta" (→ `/carta`) y segundo botón (→ `/boveda`, o `/cumple` el día del cumpleaños); sobre con carta (1.3); al final, el **cierre**: etiqueta, frase final, firma |
 | `/este-mes` | `mensaje-mes` | Mensaje del mes | solo si hay uno vigente (2.3) | Hoja de papel: fecha larga, título ("Ocho meses"), párrafos, firma |
+| `/adviento` | `adviento` | Calendario de adviento | entre `adviento.desde` y `adviento.hasta` (2.8) | Cabecera, aviso del día y 24 puertas (2.8) |
 | `/carta` | `carta` | Carta | siempre | Cabecera; botón "Ver mensaje sorpresa 💗" / "Ocultar mensaje 💌" que muestra u oculta `textos.surpriseMessage` |
 | `/meses` | `linea-tiempo` | Galería mensual | siempre | Una foto por mes (2.6), flechas ‹ ›, línea de meses |
 | `/tiempo` | `tiempo` | Tiempo juntos | siempre | 4 contadores: años, meses, días, días en total (cada segundo). Tarjeta de regreso solo si la rotación está desactivada y `fechas.regreso` es válida |
@@ -72,9 +73,10 @@ Las secciones aparecen suavemente la primera vez que entran en pantalla.
 **Menú de la portada:**
 
 - Marca "Para {novia}" (→ `/`) y un enlace por página, en el orden de 1.1:
-  Este mes*, Carta, Meses, Tiempo, Bajada, Música, Cumpleaños*, La Bóveda,
-  Constelación, Juego.
+  Este mes*, Adviento 🎄*, Carta, Meses, Tiempo, Bajada, Música, Cumpleaños*,
+  La Bóveda, Constelación, Juego.
   - *"Este mes" solo con un mensaje del mes vigente.
+  - *"Adviento 🎄" solo entre `adviento.desde` y `adviento.hasta` (2.8).
   - *"Cumpleaños" en los estados `antes`, `hoy` y `despues`; el día del
     cumpleaños, justo después de "Este mes".
   - Sin canción o con la rotación apagada, Música o Bajada no están.
@@ -219,7 +221,8 @@ mina y de descanso (1–60) y hora de regreso.
 
 Se revisa cada **60 s** por si una carta se desbloquea con la página abierta.
 
-**Ventana de carta:** ícono, fecha, título y texto completo. Si la carta
+**Ventana de carta:** ícono, fecha, título, foto (si la carta tiene `foto`)
+y texto completo. Si la carta
 tiene `accion`, muestra el botón, que cierra la ventana y lleva a la página
 de esa sección (`destino` es el id de 1.1: `"constelacion"` → `/cielo`,
 `"cumple"` → `/cumple`). Un `destino` que no es de ninguna página no muestra
@@ -374,7 +377,42 @@ del cumpleaños, de La Bóveda y del mensaje del mes.
 - Al completar todas las parejas: mensaje `textos.juegoWin`, 26 corazones y
   "Otra vez" (mezcla de nuevo y pone todo en cero).
 
-### 2.8 Otras reglas
+### 2.8 Calendario de adviento
+
+Fuente: `adviento` (`src/config/adviento.ts`) y las puertas de
+`src/config/puertas.ts`.
+
+```text
+anio = 2026
+desde = 2026-11-22 00:00   (la página y su enlace existen desde aquí…)
+hasta = 2027-01-01 00:00   (…hasta antes de aquí)
+```
+
+- **24 puertas**, del 1 al 24 de diciembre de `anio`, siempre en ese orden.
+  La puerta `d` se abre a las **00:00 del `d` de diciembre**, hora del
+  celular, con la misma regla que La Bóveda (`puedeAbrirse`): **nunca antes**.
+- Cada puerta es una carta (`Carta` sin `fecha`, más `dia`): `icono`,
+  `titulo` (si falta, "Día {d}"), `mensajeSellado`, `foto` y `accion`
+  opcionales. Un día que falta en `puertas.ts`, o que está repetido, se ve
+  como borrador.
+- **Estados:**
+  - **cerrada** (antes de su día): número y 🔒; no se toca; su texto no se
+    descifra y su foto no se pide.
+  - **pronto** (ya es su día, pero es `borrador`): igual que cerrada.
+  - **disponible**: dorada y con un brillo suave; es un botón.
+  - **abierta** (ya se abrió en este celular): su ícono y el número chico; es
+    un botón para volver a leerla.
+- Al tocarla se abre la ventana de carta (2.2) con su foto (si tiene) y su
+  texto; queda guardada como abierta en `adviento-abiertas-{anio}`.
+- La puerta de hoy lleva borde rosa. Aviso arriba de las puertas: antes del
+  1 de diciembre, "La primera puerta se abre el {fecha larga} ✨"; del 1 al
+  24, "Hoy se abre la puerta {d} 🎁"; después, ninguno.
+- Usa el mismo "ahora" que La Bóveda (con la vista previa `?cumple=…`) y
+  cambia sola a medianoche.
+- Hasta 640 px, 4 puertas por fila; hasta 900 px, 6; más, 8.
+- Las puertas se descargan con su página, no en la carga inicial.
+
+### 2.9 Otras reglas
 
 - La tarjeta "Tiempo juntos" cuenta años, meses y días completos desde
   `inicioRelacion`.
@@ -386,7 +424,8 @@ del cumpleaños, de La Bóveda y del mensaje del mes.
 ## 3. Contrato de datos
 
 El contenido está en `src/config/` (`textos.ts`, `meses.ts`, `boveda.ts`,
-`cumpleanos.ts`, `general.ts`), unido en `CONFIG` por `src/config/index.ts`;
+`cumpleanos.ts`, `general.ts`, `adviento.ts`), unido en `CONFIG` por
+`src/config/index.ts`; las puertas del adviento, aparte en `puertas.ts`;
 Firebase en `src/config/firebase.ts` (`NUBE`). Las fotos y la canción, en
 `public/assets/`. Tipos en `src/types/config.ts`. Las fechas son `"AAAA-MM-DDTHH:MM:SS"` en hora
 local.
@@ -399,7 +438,7 @@ interface Config {
     activa: boolean; salidaBase: string; diasMina: number; diasDescanso: number;
     horaRegreso: "HH:MM"; mesesAMostrar: 1 | 2 | 3 | 4;
   };
-  textos: Record<ClaveTexto, string>;          // 202 claves, ver abajo
+  textos: Record<ClaveTexto, string>;          // 214 claves, ver abajo
   lineaTiempo: { mes: "AAAA-MM"; titulo: string; src: string; texto: string }[];
   mensajesMes: Carta[];                         // normalmente un día 8
   musica: { volumenInicial: number; cancion: { titulo: string; artista: string; src: string } };
@@ -412,6 +451,7 @@ interface Config {
     textosHoy: Partial<Record<ClaveTexto, string>>;
   };
   opciones: { corazones: number; calendarioDesdeHoy: boolean };
+  adviento: { anio: number; desde: string; hasta: string };   // las puertas, en puertas.ts
 }
 
 interface Carta {
@@ -422,7 +462,11 @@ interface Carta {
   mensaje?: string;          // solo texto vacío en borradores; nunca texto plano real
   borrador?: boolean;
   accion?: { destino: IdSeccion; etiqueta: string };
+  foto?: string;             // "assets/images/…": se ve al abrirla (puertas del adviento)
 }
+
+// src/config/puertas.ts
+type PuertaAdviento = Omit<Carta, "fecha"> & { dia: number };   // dia: 1 a 24, sin repetir
 
 interface NubeConfig {
   cieloId: string;           // "nosotros-7f3k9q2m"
@@ -431,12 +475,12 @@ interface NubeConfig {
 }
 ```
 
-**Grupos de `textos`** (prefijo: cantidad): nav 11, titulo/seguir 3,
+**Grupos de `textos`** (prefijo: cantidad): nav 12, titulo/seguir 3,
 welcome 5, hero 5, letter 7, carta 3, surprise 3, timeline 4, mes 1,
 tiempo/time 3, label 8, return 2, countdown 1, calendar 4, legend 5,
-roster 16, musica/music 7, boveda 7, constelacion 4, juego 8, cumple 13,
-final 3. El resto son los textos que antes estaban dentro de los componentes
-(accesibilidad, avisos, página del cielo, sesión, errores).
+roster 16, musica/music 7, boveda 7, adviento 6, constelacion 4, juego 8,
+cumple 13, final 3. El resto son los textos que antes estaban dentro de los
+componentes (accesibilidad, avisos, página del cielo, sesión, errores).
 
 - Las frases pueden contener `{edad}`.
 - "unu" y "uwu" son intencionales.
@@ -458,6 +502,7 @@ dominio empiezan vacías, porque el navegador las guarda por dominio):
 - `constelacion-migrada-{cieloId}`
 - `constelacion-pendientes-{cieloId}`
 - `cumple-velas-AAAA-MM-DD`
+- `adviento-abiertas-{anio}` (los días de las puertas ya abiertas, `[1,3]`)
 
 ---
 
@@ -489,7 +534,8 @@ dominio empiezan vacías, porque el navegador las guarda por dominio):
 4. **Privacidad y seguridad:**
    - cero correos en el código o el repo (solo UIDs);
    - las cartas solo en `mensajeSellado`;
-   - una carta sellada no se descifra ni aparece antes de su fecha.
+   - una carta sellada no se descifra ni aparece antes de su fecha; lo mismo
+     las puertas del adviento, cuya foto tampoco se pide antes de su día.
 5. **Firebase:** solo el plan **Spark** (Firestore, Authentication con Google,
    Hosting). Prohibido lo que requiera el plan Blaze.
 6. **Rendimiento:**
