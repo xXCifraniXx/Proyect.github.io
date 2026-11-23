@@ -8,7 +8,19 @@
     celebrar()                               dos cañones laterales + lluvia
     lanzarConfeti({ x, y, count, spread })   ráfaga desde un punto (0..1)
 */
-const COLORES = ["#ff9eb8", "#ff6f9a", "#c99bff", "#f3d99f", "#9ef0c6", "#fff8fb"];
+import { leerTokens } from "./tokens.ts";
+
+// Los colores de los tokens (también el tema café); por defecto, los del rosa.
+// Se leen la primera vez que se lanza.
+const COLORES_ROSA = {
+  rose: "#ff9eb8",
+  "rose-strong": "#ff6f9a",
+  lilac: "#c99bff",
+  gold: "#f3d99f",
+  mint: "#9ef0c6",
+  text: "#fff8fb"
+};
+let colores: string[] = [];
 const GRAVEDAD = 900;
 const ROCE = 0.992;
 
@@ -59,6 +71,7 @@ function ajustarTamano() {
 
 function asegurarLienzo(): CanvasRenderingContext2D | null {
   if (ctx) return ctx;
+  colores = Object.values(leerTokens(COLORES_ROSA));
   lienzo = document.createElement("canvas");
   lienzo.setAttribute("aria-hidden", "true");
   Object.assign(lienzo.style, {
@@ -83,7 +96,7 @@ function nuevaPieza(x: number, y: number, angulo: number, velocidad: number): Pi
     vx: Math.cos(angulo) * velocidad,
     vy: Math.sin(angulo) * velocidad,
     size: 6 + Math.random() * 6,
-    color: COLORES[Math.floor(Math.random() * COLORES.length)],
+    color: colores[Math.floor(Math.random() * colores.length)],
     round: Math.random() < 0.25,
     rot: Math.random() * Math.PI * 2,
     vrot: (Math.random() - 0.5) * 10,

@@ -39,6 +39,17 @@
     <meta name="twitter:image" content="https://para-anthuanete.web.app/assets/images/compartir.jpg" />
 
     <meta name="theme-color" content="#120817" />
+    <!--
+      Vista previa del tema café (SPEC 1.6): con ?tema=cafe en el link, el
+      sitio se ve café (src/styles/tokens.css). Va aquí, antes de pintar, para
+      que no se vea rosa un instante. Sin ?tema=cafe no cambia nada.
+    -->
+    <script>
+      if (new URLSearchParams(location.search).get("tema") === "cafe") {
+        document.documentElement.dataset.tema = "cafe";
+        document.querySelector('meta[name="theme-color"]')?.setAttribute("content", "#140c08");
+      }
+    </script>
     <link rel="icon" href="/assets/images/icono.svg" type="image/svg+xml" />
     <link rel="icon" href="/assets/images/icono-32.png" type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href="/assets/images/icono-180.png" />

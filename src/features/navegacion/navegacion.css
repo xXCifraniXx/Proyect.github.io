@@ -62,7 +62,7 @@
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.28);
+    background: rgb(var(--claro-rgb) / 0.28);
     transition:
       background-color 0.3s ease,
       width 0.3s ease,
@@ -88,7 +88,7 @@
     border: 0;
     border-radius: 50%;
     background: var(--rose);
-    color: #2b1426;
+    color: var(--texto-sobre-acento);
     font-size: 1.25rem;
     cursor: pointer;
   }
@@ -122,7 +122,7 @@
     }
   }
   .panel-secciones::backdrop {
-    background: rgba(10, 3, 12, 0.6);
+    background: rgb(var(--velo-rgb) / 0.6);
   }
   .panel-secciones-contenido {
     padding: 8px 10px max(14px, env(safe-area-inset-bottom));
@@ -138,7 +138,7 @@
     width: 38px;
     height: 4px;
     border-radius: 2px;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgb(var(--claro-rgb) / 0.3);
   }
   .panel-secciones-cerrar {
     position: absolute;
@@ -171,14 +171,14 @@
     font-size: 0.98rem;
   }
   .panel-secciones-enlace:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgb(var(--claro-rgb) / 0.06);
   }
   .panel-secciones-enlace.is-pendiente {
     color: var(--muted);
   }
   .panel-secciones-enlace.is-actual,
   .panel-secciones-enlace.is-inicio[aria-current="page"] {
-    background: rgba(255, 158, 184, 0.16);
+    background: rgb(var(--rose-rgb) / 0.16);
   }
   .panel-secciones-enlace.is-inicio {
     color: var(--gold);

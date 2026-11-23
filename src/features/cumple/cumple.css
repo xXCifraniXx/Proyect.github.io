@@ -52,7 +52,7 @@
     padding: 18px;
     width: min(520px, 100%);
     border-radius: var(--radius-md);
-    background: linear-gradient(160deg, rgba(255, 158, 184, 0.18), rgba(201, 155, 255, 0.14));
+    background: linear-gradient(160deg, rgb(var(--rose-rgb) / 0.18), rgb(var(--lilac-rgb) / 0.14));
     border: 1px solid var(--stroke-strong);
   }
   .cumple-wish p {
@@ -103,7 +103,7 @@
     top: 0;
     height: 1.3em;
     border-radius: 1em 1em 0.7em 0.7em;
-    background: #fff8fb;
+    background: var(--text);
   }
   .cake-layer::after {
     content: "";
@@ -112,25 +112,25 @@
     left: 0.5em;
     right: 0.5em;
     height: 1.4em;
-    background: radial-gradient(circle at 1.1em 0, #fff8fb 0.62em, transparent 0.68em) 0 0 / 2.2em 1.4em repeat-x;
+    background: radial-gradient(circle at 1.1em 0, var(--text) 0.62em, transparent 0.68em) 0 0 / 2.2em 1.4em repeat-x;
   }
   .cake-base {
     bottom: 0.9em;
     width: 20em;
     height: 5.4em;
-    background: linear-gradient(180deg, #ff9eb8, #ff6f9a);
+    background: linear-gradient(180deg, var(--rose), var(--rose-strong));
   }
   .cake-mid {
     bottom: 6.2em;
     width: 15.4em;
     height: 4.8em;
-    background: linear-gradient(180deg, #c99bff, #a678e6);
+    background: linear-gradient(180deg, var(--lilac), var(--pastel-lila));
   }
   .cake-top {
     bottom: 10.9em;
     width: 10.8em;
     height: 4.2em;
-    background: linear-gradient(180deg, #f3d99f, #e9b872);
+    background: linear-gradient(180deg, var(--gold), var(--pastel-dorado));
   }
   .cake-plate {
     position: absolute;
@@ -140,7 +140,7 @@
     height: 1.5em;
     transform: translateX(-50%);
     border-radius: 50%;
-    background: linear-gradient(180deg, #fff8fb, #d8c3d6);
+    background: linear-gradient(180deg, var(--text), var(--pastel-plato));
     box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.3);
   }
   .cake-candles {
@@ -155,21 +155,21 @@
     z-index: 2;
   }
   .candle {
-    --c: #ff9eb8;
+    --c: var(--rose);
     position: relative;
     width: 0.9em;
     height: 3.6em;
     padding: 0;
     border: 0;
     border-radius: 0.3em;
-    background: repeating-linear-gradient(45deg, #fff8fb 0 0.45em, var(--c) 0.45em 0.9em);
+    background: repeating-linear-gradient(45deg, var(--text) 0 0.45em, var(--c) 0.45em 0.9em);
     cursor: pointer;
   }
   .candle:nth-child(3n + 2) {
-    --c: #c99bff;
+    --c: var(--lilac);
   }
   .candle:nth-child(3n) {
-    --c: #f3d99f;
+    --c: var(--gold);
   }
   .candle::after {
     content: "";
@@ -223,7 +223,7 @@
     width: 0.55em;
     height: 0.55em;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.55);
+    background: rgb(var(--claro-rgb) / 0.55);
     filter: blur(2px);
     opacity: 0;
     transform: translateX(-50%);

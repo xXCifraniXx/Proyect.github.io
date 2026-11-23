@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { conAlfa, leerTokens } from "../../lib/tokens.ts";
 
 interface Punto {
   x: number;
@@ -19,6 +20,8 @@ export default function CieloDecorativo() {
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return undefined;
     const quieto = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Colores del tema (tokens.css); por defecto, los del rosa.
+    const tono = leerTokens({ "rose-rgb": "255 158 184", "text-rgb": "255 248 251" });
     let puntos: Punto[] = [];
     let cuadro = 0;
 
@@ -43,7 +46,7 @@ export default function CieloDecorativo() {
       const h = canvas.clientHeight;
       ctx.clearRect(0, 0, w, h);
 
-      ctx.strokeStyle = "rgba(255,158,184,0.32)";
+      ctx.strokeStyle = conAlfa(tono["rose-rgb"], 0.32);
       ctx.lineWidth = 1;
       ctx.beginPath();
       puntos.slice(0, 6).forEach((p, i) => {
@@ -56,7 +59,7 @@ export default function CieloDecorativo() {
         const brillo = quieto ? 0.7 : 0.5 + 0.5 * Math.sin(t * 0.002 + p.tw);
         ctx.beginPath();
         ctx.arc(p.x * w, p.y * h, p.r * (0.7 + brillo * 0.6), 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,248,251,${(0.3 + brillo * 0.5).toFixed(3)})`;
+        ctx.fillStyle = conAlfa(tono["text-rgb"], Number((0.3 + brillo * 0.5).toFixed(3)));
         ctx.fill();
       });
 

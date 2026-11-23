@@ -23,7 +23,7 @@
     padding: 8px 10px;
     border-radius: 999px;
     border: 1px solid var(--stroke);
-    background: rgba(255, 255, 255, 0.06);
+    background: rgb(var(--claro-rgb) / 0.06);
   }
   .legend-dot {
     width: 10px;
@@ -55,7 +55,7 @@
     align-items: center;
     gap: 18px;
     border: 1px solid var(--stroke);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.065));
+    background: linear-gradient(180deg, rgb(var(--claro-rgb) / 0.13), rgb(var(--claro-rgb) / 0.065));
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-soft);
   }
@@ -89,7 +89,7 @@
     padding: 12px;
     text-align: center;
     border-radius: 18px;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgb(var(--claro-rgb) / 0.08);
     border: 1px solid var(--stroke);
   }
   .roster-countdown-grid strong {
@@ -108,7 +108,7 @@
     margin-top: 14px;
     padding: 14px;
     border: 1px solid var(--stroke);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.065));
+    background: linear-gradient(180deg, rgb(var(--claro-rgb) / 0.13), rgb(var(--claro-rgb) / 0.065));
     border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
@@ -127,14 +127,14 @@
     height: 48px;
     border-radius: 999px;
     color: var(--text);
-    background: rgba(255, 255, 255, 0.08);
+    background: rgb(var(--claro-rgb) / 0.08);
     border: 1px solid var(--stroke);
     cursor: pointer;
     font-size: 1.6rem;
   }
   .today-btn {
     border: 1px solid var(--stroke-strong);
-    background: rgba(255, 255, 255, 0.1);
+    background: rgb(var(--claro-rgb) / 0.1);
     color: var(--text);
     border-radius: 999px;
     padding: 10px 14px;
@@ -145,7 +145,7 @@
   }
   .today-btn:hover {
     transform: translateY(-1px);
-    background: rgba(255, 255, 255, 0.16);
+    background: rgb(var(--claro-rgb) / 0.16);
   }
   .calendar-months {
     display: grid;
@@ -157,7 +157,7 @@
   .calendar-month {
     padding: 16px;
     border: 1px solid var(--stroke);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.065));
+    background: linear-gradient(180deg, rgb(var(--claro-rgb) / 0.13), rgb(var(--claro-rgb) / 0.065));
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-soft);
   }
@@ -185,8 +185,8 @@
     min-height: 66px;
     padding: 8px 6px;
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.055);
+    border: 1px solid rgb(var(--claro-rgb) / 0.1);
+    background: rgb(var(--claro-rgb) / 0.055);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -203,7 +203,7 @@
     padding: 3px 6px;
     border-radius: 999px;
     color: var(--text);
-    background: rgba(255, 255, 255, 0.1);
+    background: rgb(var(--claro-rgb) / 0.1);
     font-size: 0.68rem;
     white-space: nowrap;
     overflow: hidden;
@@ -213,38 +213,38 @@
     visibility: hidden;
   }
   .calendar-day.mine {
-    background: linear-gradient(180deg, rgba(255, 111, 154, 0.18), rgba(255, 111, 154, 0.08));
-    border-color: rgba(255, 111, 154, 0.34);
+    background: linear-gradient(180deg, rgb(var(--rose-strong-rgb) / 0.18), rgb(var(--rose-strong-rgb) / 0.08));
+    border-color: rgb(var(--rose-strong-rgb) / 0.34);
   }
   .calendar-day.rest {
-    background: linear-gradient(180deg, rgba(201, 155, 255, 0.18), rgba(201, 155, 255, 0.08));
-    border-color: rgba(201, 155, 255, 0.34);
+    background: linear-gradient(180deg, rgb(var(--lilac-rgb) / 0.18), rgb(var(--lilac-rgb) / 0.08));
+    border-color: rgb(var(--lilac-rgb) / 0.34);
   }
   /* Sube: el color que antes tenía la bajada (dorado -> rosa) */
   .calendar-day.departure {
-    background: linear-gradient(135deg, rgba(243, 217, 159, 0.92), rgba(255, 158, 184, 0.92));
-    border-color: rgba(255, 255, 255, 0.5);
+    background: linear-gradient(135deg, rgb(var(--gold-rgb) / 0.92), rgb(var(--rose-rgb) / 0.92));
+    border-color: rgb(var(--claro-rgb) / 0.5);
     box-shadow: none;
   }
   /* Bajada: verde */
   .calendar-day.return {
-    background: linear-gradient(135deg, rgba(87, 210, 158, 0.95), rgba(158, 240, 198, 0.95));
-    border-color: rgba(255, 255, 255, 0.5);
+    background: linear-gradient(135deg, rgb(var(--mint-strong-rgb) / 0.95), rgb(var(--mint-rgb) / 0.95));
+    border-color: rgb(var(--claro-rgb) / 0.5);
   }
   .calendar-day.departure strong,
   .calendar-day.departure span,
   .calendar-day.return strong,
   .calendar-day.return span {
-    color: #14261d;
+    color: var(--texto-sobre-menta);
   }
   .calendar-day.departure span,
   .calendar-day.return span {
-    background: rgba(255, 255, 255, 0.34);
+    background: rgb(var(--claro-rgb) / 0.34);
   }
   .calendar-day.today {
     box-shadow:
       inset 0 0 0 2px var(--gold),
-      0 0 22px rgba(243, 217, 159, 0.16);
+      0 0 22px rgb(var(--gold-rgb) / 0.16);
   }
 
   /* Editor de bajadas */
@@ -304,7 +304,7 @@
     min-height: 44px;
     color: var(--text);
     color-scheme: dark;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgb(var(--claro-rgb) / 0.08);
     border: 1px solid var(--stroke);
     border-radius: 12px;
     padding: 0 12px;
@@ -326,7 +326,7 @@
     flex-wrap: wrap;
     padding: 12px 14px;
     border-radius: 14px;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgb(var(--claro-rgb) / 0.06);
     border: 1px solid var(--stroke);
     color: var(--muted);
     font-size: 0.88rem;
