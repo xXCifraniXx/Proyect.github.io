@@ -260,8 +260,9 @@ mina y de descanso (1–60) y hora de regreso.
 - Sin cartas: se muestra `textos.bovedaEmpty`.
 
 **Recuerdos** (debajo de las cartas, con el título `textos.bovedaRecuerdos`,
-solo si hay alguno): una tarjeta por cada cosa que ya pasó, que lleva a su
-página (fuera del menú).
+solo si hay alguno): un sobre más bajo, en tono cacao rosa, por cada cosa que
+ya pasó, con su ícono en el sello y una flecha; lleva a su página (fuera del
+menú).
 
 - El cumpleaños, en su estado `despues` (2.4): 🎂 "Tu cumpleaños {edad}" →
   `/cumple` (el pastel, para volver a encender las velas).
@@ -270,21 +271,28 @@ página (fuera del menú).
 
 **Estados:**
 
-- **Sellada** (`fecha > ahora`): 🔒, "Carta sellada", "Se abre el {fecha
-  larga}", "Faltan {a} {m} {d}". No se puede abrir y **su texto no se
-  descifra ni aparece en la página**.
-- **Abierta**: ícono, título, los primeros 90 caracteres (+ "…") y
-  "Desbloqueada el {fecha}". Al tocarla (o con Enter o Espacio) se abre la
-  ventana.
+Cada carta se ve como un **sobre** (lo eligió Jorge el 24-11-2026): solapa en
+V y un sello de cera en su punta, con los colores del sobre de la portada
+(cambian con el tema, 1.6). Hasta 640 px, uno por fila; hasta 920 px, dos;
+más, tres.
+
+- **Sellada** (`fecha > ahora`): sobre atado con un cordel, con 🔒 en el
+  sello, "Carta sellada" y "Se abre el {día, mes y año} · faltan {a} {m} {d}".
+  No se puede abrir y **su texto no se descifra ni aparece en la página**.
+- **Abierta**: el ícono de la carta en el sello, el matasellos con su fecha
+  ("8 MAR" y "2026"), el título y "Abierta el {día y mes} · toca para leer".
+  El sobre no muestra el texto: se descifra al abrir la ventana. Al tocarlo
+  (o con Enter o Espacio) se abre la ventana.
 
 Se revisa cada **60 s** por si una carta se desbloquea con la página abierta.
 
 **Ventana de carta:** ícono, fecha, título, foto (si la carta tiene `foto`)
 y texto completo. Si la carta
 tiene `accion`, muestra el botón, que cierra la ventana y lleva a la página
-de esa sección (`destino` es el id de 1.1: `"constelacion"` → `/cielo`,
-`"cumple"` → `/cumple`). Un `destino` que no es de ninguna página no muestra
-el botón.
+de esa sección, bajando hasta ella si va dentro de otra (`destino` es el id
+de la sección: `"constelacion"` → `/entretenimiento`, en la constelación;
+`"cumple"` → `/cumple`). Un `destino` que no es de ninguna sección no
+muestra el botón.
 
 - Se cierra con ×, Escape o tocando fuera; al abrirse, el foco va a la ×.
 - **Nunca abre una carta antes de su fecha**, venga de donde venga.
@@ -497,7 +505,7 @@ interface Config {
     activa: boolean; salidaBase: string; diasMina: number; diasDescanso: number;
     horaRegreso: "HH:MM"; mesesAMostrar: 1 | 2 | 3 | 4;
   };
-  textos: Record<ClaveTexto, string>;          // 215 claves, ver abajo
+  textos: Record<ClaveTexto, string>;          // 214 claves, ver abajo
   lineaTiempo: { mes: "AAAA-MM"; titulo: string; src: string; texto: string }[];
   mensajesMes: Carta[];                         // normalmente un día 8
   musica: { volumenInicial: number; cancion: { titulo: string; artista: string; src: string } };
@@ -538,7 +546,7 @@ interface NubeConfig {
 welcome 5, hero 5, letter 7, carta 3, surprise 3, timeline 4, mes 1,
 tiempo 9 (título y la franja de arriba), franja 1, label 8, return 2,
 countdown 1, calendar 4, legend 5,
-roster 16, musica 2, boveda 12 (con los recuerdos), adviento 6,
+roster 16, musica 2, boveda 11 (con los recuerdos), adviento 6,
 constelacion 4, juego 8,
 cumple 13, final 3. El resto son los textos que antes estaban dentro de los
 componentes (accesibilidad, avisos, página del cielo, sesión, errores).

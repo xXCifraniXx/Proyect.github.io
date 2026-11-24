@@ -138,7 +138,6 @@ export const textos = {
   bovedaTitle: "Cartas que se abren con el tiempo",
   bovedaIntro: "Cada carta tiene su propio momento para abrirse. Antes de esa fecha solo verás cuánto falta.",
   bovedaLockedTitle: "Carta sellada",
-  bovedaReadHint: "Toca para leer",
   bovedaEmpty: "Pronto habrá cartas esperándote aquí 💌",
   // Recuerdos de La Bóveda: lo que ya pasó ({edad} y {anio} se rellenan solos)
   bovedaRecuerdos: "Recuerdos",
@@ -233,9 +232,10 @@ export const textos = {
   cartaSinTitulo: "Una carta para ti",
   cartaIcono: "💌",
   cartaIrAhi: "Ir ahí",
-  bovedaSeAbre: "Se abre el {fecha}",
-  bovedaFaltan: "Faltan {tiempo}",
   bovedaDesbloqueada: "Desbloqueada el {fecha}",
+  // Los sobres de La Bóveda ({fecha} y {tiempo} se rellenan solos)
+  bovedaSobreAbierto: "Abierta el {fecha} · toca para leer",
+  bovedaSobreSellado: "Se abre el {fecha} · faltan {tiempo}",
 
   // Música
   musicaSinTitulo: "Nuestra canción",

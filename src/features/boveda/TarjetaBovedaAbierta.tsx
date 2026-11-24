@@ -1,8 +1,7 @@
 import type { CSSProperties } from "react";
-import { useTextoCarta } from "../../hooks/useTextoCarta.ts";
-import type { CartaBoveda } from "./boveda.ts";
+import { matasellos, type CartaBoveda } from "./boveda.ts";
 import { useVentanaCarta } from "./ventanaCarta.ts";
-import { formatoFechaLarga } from "../../lib/fechas.ts";
+import { diaYMes } from "../../lib/fechas.ts";
 import { TEXTOS } from "../../lib/contenido.ts";
 import { rellenar } from "../../lib/rellenar.ts";
 
@@ -12,30 +11,34 @@ interface TarjetaBovedaAbiertaProps {
 }
 
 /*
-  Carta de La Bóveda que ya se puede leer: muestra un adelanto y se abre al
-  tocarla. El título es el botón, estirado para cubrir toda la tarjeta (ver
-  .boveda-abrir en boveda.css): así el botón se llama como la carta y el
-  adelanto se puede leer aparte. Va en su propio componente para descifrar el texto solo cuando la
-  carta ya está abierta (un hook no puede llamarse dentro de un "if").
+  Carta de La Bóveda que ya se puede leer: un sobre cerrado con un sello de
+  cera (el ícono de la carta) y el matasellos con su fecha; se abre al
+  tocarlo. El título es el botón, estirado para cubrir todo el sobre (ver
+  .boveda-abrir en boveda.css): así el botón se llama como la carta. El sobre
+  no muestra el texto: lo descifra la ventana al abrirla.
 */
 export default function TarjetaBovedaAbierta({ item, estilo }: TarjetaBovedaAbiertaProps) {
   const { abrir } = useVentanaCarta();
-  const texto = useTextoCarta(item.carta) ?? "";
-  const abrirEsta = () => abrir({ ...item, texto });
-  const adelanto = texto.length > 90 ? `${texto.slice(0, 90)}…` : texto;
+  const sello = matasellos(item.fecha);
 
   return (
-    <article className="boveda-card glass-soft is-unlocked" style={estilo}>
-      <span className="boveda-icon">{item.carta.icono || TEXTOS.cartaIcono}</span>
-      <h3>
-        <button className="boveda-abrir" type="button" onClick={abrirEsta}>
-          {item.carta.titulo || TEXTOS.cartaSinTitulo}
-        </button>
-      </h3>
-      <p>{adelanto}</p>
-      <span className="boveda-date">
-        {rellenar(TEXTOS.bovedaDesbloqueada, { fecha: formatoFechaLarga(item.fecha) })}
+    <article className="boveda-card boveda-sobre is-unlocked" style={estilo}>
+      <span className="boveda-sobre-solapa" aria-hidden="true" />
+      <span className="boveda-sobre-sello" aria-hidden="true">
+        {item.carta.icono || TEXTOS.cartaIcono}
       </span>
+      <span className="boveda-sobre-matasellos" aria-hidden="true">
+        {sello.diaMes}
+        <span>{sello.anio}</span>
+      </span>
+      <div className="boveda-sobre-texto">
+        <h3>
+          <button className="boveda-abrir" type="button" onClick={() => abrir(item)}>
+            {item.carta.titulo || TEXTOS.cartaSinTitulo}
+          </button>
+        </h3>
+        <p className="boveda-sobre-detalle">{rellenar(TEXTOS.bovedaSobreAbierto, { fecha: diaYMes(item.fecha) })}</p>
+      </div>
     </article>
   );
 }

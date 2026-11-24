@@ -7,64 +7,132 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
   }
+  /*
+    Cada carta es un sobre (la opción A del lienzo, que eligió Jorge el
+    24-11-2026): solapa en V, sello de cera con el ícono de la carta y
+    matasellos con su fecha. Usa los colores del sobre de la portada
+    (--sobre-*), así cambia solo con el tema.
+  */
   .boveda-card {
     position: relative;
-    padding: 22px;
-    min-height: 190px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    cursor: pointer;
-    transition:
-      transform 0.25s ease,
-      border-color 0.25s ease;
+    display: block;
+    aspect-ratio: 37 / 20;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background: linear-gradient(180deg, var(--sobre-fondo-1), var(--sobre-fondo-2));
+    color: var(--paper-text);
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.25s ease;
   }
   .boveda-card:hover {
     transform: translateY(-3px);
   }
-  .boveda-card .boveda-icon {
-    font-size: 1.9rem;
+  .boveda-sobre-solapa {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 40%;
+    background: linear-gradient(180deg, var(--sobre-solapa-1), var(--sobre-solapa-2));
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
   }
-  .boveda-card h3 {
+  /* El sello va justo en la punta de la solapa. */
+  .boveda-sobre-sello {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    z-index: 1;
+    width: 50px;
+    height: 50px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    line-height: 1;
+    background: radial-gradient(circle at 35% 30%, var(--rose), var(--rose-strong));
+    box-shadow:
+      0 6px 14px rgb(var(--paper-text-rgb) / 0.35),
+      inset 0 0 0 3px rgb(var(--claro-rgb) / 0.25);
+    transform: translate(-50%, -50%);
+  }
+  .boveda-sobre-matasellos {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 54px;
+    height: 54px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed rgb(var(--papel-titulo-rgb) / 0.5);
+    border-radius: 50%;
+    color: rgb(var(--papel-titulo-rgb) / 0.8);
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    line-height: 1.2;
+    transform: rotate(-12deg);
+  }
+  .boveda-sobre-texto {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 14px;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .boveda-sobre h3 {
+    font-family: var(--letra-titulo);
+    font-weight: 800;
     font-size: 1.05rem;
+    line-height: 1.2;
+    letter-spacing: 0;
+    color: var(--paper-text);
   }
-  .boveda-card p {
-    color: var(--muted);
-    line-height: 1.6;
-    font-size: 0.92rem;
-  }
-  .boveda-card .boveda-date {
-    margin-top: auto;
-    color: var(--gold);
+  .boveda-sobre-detalle {
+    color: rgb(var(--paper-text-rgb) / 0.78);
     font-size: 0.78rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-weight: 600;
+    line-height: 1.35;
   }
+
+  /* Sellada: atada con un cordel y con un candado en el sello. */
   .boveda-card.is-locked {
     cursor: default;
-    border-style: dashed;
-    opacity: 0.85;
+    filter: saturate(0.85) brightness(0.94);
   }
   .boveda-card.is-locked:hover {
     transform: none;
   }
-  .boveda-card.is-locked .boveda-icon {
-    filter: grayscale(1) opacity(0.7);
+  .boveda-sobre-cordel::before,
+  .boveda-sobre-cordel::after {
+    content: "";
+    position: absolute;
+    background: rgb(var(--papel-titulo-rgb) / 0.45);
   }
-  .boveda-card.is-locked h3 {
-    color: var(--muted-2);
+  /* El cordel vertical no llega abajo, para no pasar por el texto. */
+  .boveda-sobre-cordel::before {
+    left: 50%;
+    top: 0;
+    height: 62%;
+    width: 6px;
+    transform: translateX(-50%);
   }
-  .boveda-card .boveda-lock-note {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--muted-2);
-    font-size: 0.82rem;
+  .boveda-sobre-cordel::after {
+    left: 0;
+    right: 0;
+    top: 40%;
+    height: 6px;
+    transform: translateY(-50%);
   }
-  .boveda-card.is-unlocked .boveda-date {
-    color: var(--rose-strong);
+  .is-locked .boveda-sobre-sello {
+    font-size: 1.1rem;
+    background: radial-gradient(circle at 35% 30%, rgb(var(--papel-titulo-rgb) / 0.7), var(--papel-titulo));
   }
-  /* Botón de una carta abierta: es el título, estirado para cubrir toda la tarjeta. */
+
+  /* Botón de una carta abierta: es el título, estirado para cubrir todo el sobre. */
   .boveda-abrir {
     all: unset;
     cursor: pointer;
@@ -73,18 +141,11 @@
     content: "";
     position: absolute;
     inset: 0;
+    z-index: 2;
   }
   .boveda-card:has(.boveda-abrir:focus-visible) {
     outline: 2px solid var(--gold);
     outline-offset: 3px;
-  }
-  .boveda-card.is-unlocked::after {
-    content: "Toca para leer";
-    position: absolute;
-    bottom: 14px;
-    right: 18px;
-    font-size: 0.74rem;
-    color: var(--muted-2);
   }
   .boveda-empty {
     margin-top: 18px;
@@ -92,7 +153,8 @@
     line-height: 1.7;
   }
 
-  /* Recuerdos: lo que ya pasó (el cumpleaños, el adviento), con un link a su página. */
+  /* Recuerdos: lo que ya pasó (el cumpleaños, el adviento), en un sobre más
+     bajo y en tono cacao rosa, con un link a su página. */
   .boveda-subtitulo {
     margin-top: 30px;
     color: var(--muted);
@@ -102,19 +164,45 @@
     text-transform: uppercase;
   }
   .boveda-recuerdo {
-    min-height: 0;
-    gap: 6px;
-    color: var(--text);
+    aspect-ratio: auto;
+    height: 140px;
     text-decoration: none;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sobre-fondo-1), var(--lilac) 22%),
+      color-mix(in srgb, var(--sobre-fondo-2), var(--lilac) 30%)
+    );
+  }
+  .boveda-recuerdo .boveda-sobre-solapa {
+    height: 36%;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sobre-solapa-1), var(--lilac) 28%),
+      color-mix(in srgb, var(--sobre-solapa-2), var(--lilac) 34%)
+    );
+  }
+  .boveda-recuerdo .boveda-sobre-sello {
+    top: 36%;
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
+  }
+  .boveda-recuerdo .boveda-sobre-texto {
+    right: 44px;
   }
   .boveda-recuerdo-titulo {
+    font-family: var(--letra-titulo);
     font-weight: 800;
-    font-size: 1.05rem;
+    font-size: 1rem;
+    color: var(--paper-text);
   }
-  .boveda-recuerdo-detalle {
-    color: var(--muted);
-    font-size: 0.9rem;
-    line-height: 1.5;
+  .boveda-recuerdo-flecha {
+    position: absolute;
+    right: 16px;
+    bottom: 12px;
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: var(--paper-text);
   }
   .boveda-recuerdo:focus-visible {
     outline: 2px solid var(--gold);

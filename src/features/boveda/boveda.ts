@@ -10,6 +10,12 @@ export interface CartaBoveda {
   fecha: Date;
 }
 
+/** El matasellos del sobre: "8 MAR" y "2026" (el mes, en tres letras). */
+export function matasellos(fecha: Date): { diaMes: string; anio: string } {
+  const mes = new Intl.DateTimeFormat("es", { month: "short" }).format(fecha).replace(".", "").slice(0, 3);
+  return { diaMes: `${fecha.getDate()} ${mes.toUpperCase()}`, anio: String(fecha.getFullYear()) };
+}
+
 /**
  * Un recuerdo de La Bóveda: algo que ya pasó y se puede volver a ver en su
  * página (el cumpleaños en sus días de después, el adviento cuando terminó).

@@ -110,6 +110,14 @@ export function tiempoEntre(inicio: Date, fin: Date): TiempoJunto {
   return { years: Math.max(0, years), months: Math.max(0, months), days: Math.max(0, days), totalDays };
 }
 
+/** "8 de marzo" */
+export const diaYMes = (fecha: Date): string =>
+  new Intl.DateTimeFormat("es", { day: "numeric", month: "long" }).format(fecha);
+
+/** "24 de diciembre de 2026" */
+export const diaMesYAnio = (fecha: Date): string =>
+  new Intl.DateTimeFormat("es", { day: "numeric", month: "long", year: "numeric" }).format(fecha);
+
 /** "jueves, 12 de noviembre" */
 export const fechaSinAnio = (fecha: Date): string =>
   new Intl.DateTimeFormat("es", { weekday: "long", day: "numeric", month: "long" }).format(fecha);
