@@ -13,7 +13,7 @@ export default function Constelacion() {
       />
       <div className="constelacion-card glass-soft">
         <CieloDecorativo />
-        {/* Con el "?…" de ahora: la vista previa (?tema=cafe, ?cumple=…) sigue en la página del cielo. */}
+        {/* Con el "?…" de ahora: la vista previa (?tema=rosa, ?cumple=…) sigue en la página del cielo. */}
         <a className="btn btn-primary" href={"constelacion/index.html" + window.location.search}>
           {TEXTOS.constelacionBtn}
         </a>

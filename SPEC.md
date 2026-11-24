@@ -22,7 +22,7 @@ Capas fijas, en todas las páginas:
 
 - **Barra de progreso** arriba: se llena según cuánto se bajó en la página
   que se está viendo (si la página entra entera en la pantalla, no se ve).
-- **Fondo**: tres luces (rosa, lila, dorada) y `opciones.corazones` (18)
+- **Fondo**: tres luces (caramelo, cacao rosa, espuma; ver 1.6) y `opciones.corazones` (18)
   corazones que flotan (♡ ❤). El día del cumpleaños son 🎈 ✨ ❤ 🎉 ♡.
 - **Bienvenida**: pantalla encima de todo con etiqueta, título, texto, botón
   "Entrar a la carta" y nota. Al pulsar se oculta. Sale **una vez, solo si se
@@ -58,7 +58,7 @@ Páginas, en este orden (el del menú):
 - **Al cambiar de página**: la nueva empieza arriba, el título de la pestaña
   pasa a "{página} | Para {novia}" (en la portada, "Para {novia} | Una carta
   de {autor}") y el foco va al contenido. Al abrir el sitio no se mueve nada.
-- El `?…` del link (las vistas previas `?cumple=…` y `?tema=cafe`) se
+- El `?…` del link (las vistas previas `?cumple=…` y `?tema=rosa`) se
   conserva al cambiar de página, también al ir a la página del cielo y al
   volver de ella.
 - **Links viejos** (de cuando todo era una sola página): `/#{id}` pasa solo,
@@ -92,8 +92,8 @@ Las secciones aparecen suavemente la primera vez que entran en pantalla.
   ya quedó arriba (nunca dos menús a la vez) y se va al volver a él.
 - Muestra el nombre de la página que se está viendo ("Inicio" en la portada)
   y una estrella por cada página del menú, en el mismo orden: las de antes en
-  dorado, la actual en rosa y más grande, las que siguen apagadas (en la
-  portada, todas apagadas).
+  espuma (`--gold`), la actual en caramelo (`--rose`) y más grande, las que
+  siguen apagadas (en la portada, todas apagadas).
 - El botón ✦ abre un panel desde abajo (un `<dialog>`) con "Volver al
   inicio" y todas las páginas, con la actual marcada. Se cierra con la ×,
   con Escape, tocando fuera o eligiendo una página (que lleva a ella). Al
@@ -127,25 +127,27 @@ Página para Jorge: **sellar** un texto y **abrir** un sello existente, con el
 mismo formato que la página (2.2). Usa el mismo `src/lib/sello.ts` que el
 sitio y se publica en la misma ruta.
 
-### 1.6 Colores y tema café (vista previa)
+### 1.6 Colores y letras: café y crema (y el rosa de antes)
 
-- El sitio se ve en el **tema rosa** (fondo morado oscuro, rosa, lila y
-  dorado; títulos en Georgia y texto con la letra del dispositivo). Ningún
-  color ni letra va escrito en el CSS de las secciones: todos salen de los
-  tokens (`src/styles/tokens.css`; la página del cielo, los suyos en
+- El sitio y la página del cielo se ven en **café y crema** (fondo espresso,
+  acentos caramelo, cacao rosa y espuma, texto crema) con letra **Nunito**
+  (redondeada) en títulos y texto. Lo decidió Jorge el 24-11-2026, después
+  de probarlo como vista previa.
+- Nunito va guardada en el sitio (paquete `@fontsource-variable/nunito`,
+  licencia OFL): no se pide nada a Google. Mientras llega, se ve la letra de
+  respaldo.
+- Ningún color ni letra va escrito en el CSS de las secciones: todos salen
+  de los tokens (`src/styles/tokens.css`; la página del cielo, los suyos en
   `cielo.css`). El cielo, el cielo de adorno y el confeti toman colores y
   letra de los mismos tokens al empezar a dibujar.
-- **Vista previa del tema café y crema:** con `?tema=cafe` en el link, el
-  sitio y la página del cielo se ven en café (espresso, caramelo, crema) y
-  con letra **Nunito** (redondeada) en títulos y texto; tamaños y orden no
-  cambian. Nunito va guardada en el sitio (paquete
-  `@fontsource-variable/nunito`, licencia OFL) y solo se descarga en este
-  tema; mientras llega, se ve la letra de respaldo. Los colores se aplican
-  antes de pintar (sin un instante rosa) y también cambia el color de la
-  barra del navegador. No guarda nada: sin `?tema=cafe` el sitio se ve rosa.
-  Se puede combinar con `?cumple=…` (`?tema=cafe&cumple=hoy`).
-- Ella sigue viendo el tema rosa: el café no tiene botón ni se elige solo
-  (lo decidió Jorge el 23-11-2026).
+- **Vista previa del tema rosa de antes:** con `?tema=rosa` en el link, el
+  sitio y la página del cielo se ven como antes del café (fondo morado
+  oscuro, rosa, lila y dorado; títulos en Georgia y texto con la letra del
+  dispositivo), y Nunito no se descarga. Se aplica antes de pintar (sin un
+  instante café) y también cambia el color de la barra del navegador. No
+  guarda nada. Se puede combinar con `?cumple=…` (`?tema=rosa&cumple=hoy`).
+- `?tema=cafe` (la vista previa anterior) sigue funcionando: muestra lo mismo
+  que sin nada.
 
 ---
 
@@ -323,7 +325,7 @@ del cumpleaños, de La Bóveda y del mensaje del mes.
 **Dibujo:**
 
 - Líneas que unen las estrellas **en el orden de `born`**, con degradado
-  rosa → lila.
+  caramelo → cacao rosa (`--rose` → `--lilac`).
 - Cada estrella tiene halo, núcleo, destello en cruz y un titileo propio.
 - La etiqueta se ve en la última estrella creada (4 s), en la que tiene el
   mouse encima, y en todas al exportar.
@@ -420,12 +422,12 @@ hasta = 2027-01-01 00:00   (…hasta antes de aquí)
   - **cerrada** (antes de su día): número y 🔒; no se toca; su texto no se
     descifra y su foto no se pide.
   - **pronto** (ya es su día, pero es `borrador`): igual que cerrada.
-  - **disponible**: dorada y con un brillo suave; es un botón.
+  - **disponible**: color espuma (`--gold`) y con un brillo suave; es un botón.
   - **abierta** (ya se abrió en este celular): su ícono y el número chico; es
     un botón para volver a leerla.
 - Al tocarla se abre la ventana de carta (2.2) con su foto (si tiene) y su
   texto; queda guardada como abierta en `adviento-abiertas-{anio}`.
-- La puerta de hoy lleva borde rosa. Aviso arriba de las puertas: antes del
+- La puerta de hoy lleva borde caramelo (`--rose`). Aviso arriba de las puertas: antes del
   1 de diciembre, "La primera puerta se abre el {fecha larga} ✨"; del 1 al
   24, "Hoy se abre la puerta {d} 🎁"; después, ninguno.
 - Usa el mismo "ahora" que La Bóveda (con la vista previa `?cumple=…`) y
@@ -601,9 +603,10 @@ dominio empiezan vacías, porque el navegador las guarda por dominio):
       recarga (sus textos, su carta y sus adornos se arman al cargar);
     - sin conexión a Firebase, la sesión y lo compartido siguen funcionando
       solo en el dispositivo.
-12. **Colores (1.6):**
-    - sin `?tema=cafe`, el sitio se ve igual que antes de pasar colores y
-      letras a tokens (los mismos estilos calculados en cada página) y no
-      descarga Nunito;
-    - con `?tema=cafe`, a 375 px no queda nada del rosa ni del morado, todo
-      el texto va en Nunito y se lee bien sobre su fondo.
+12. **Colores y letras (1.6):**
+    - sin nada en el link, cada página se ve igual que la vista previa café
+      que se aprobó (los mismos estilos calculados que `?tema=cafe` el
+      24-11-2026): a 375 px no queda nada del rosa ni del morado, todo el
+      texto va en Nunito y se lee bien sobre su fondo;
+    - con `?tema=rosa`, cada página se ve igual que el sitio rosa de antes
+      del café (los mismos estilos calculados) y no descarga Nunito.
