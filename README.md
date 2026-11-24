@@ -298,12 +298,14 @@ JavaScript.
 
 ## Ramas, revisión y publicación
 
-- **`main`** es lo publicado; **`develop`** junta el trabajo revisado. Las tareas
-  van en ramas `feat/`, `fix/`, `refactor/` o `docs/` que salen de `develop`;
-  el contenido urgente (`content/`) sale de `main`.
-- **`calidad.yml`** corre en cada PR hacia `develop` o `main` y en cada push a
-  `develop`: tipos, lint, tests, formato, compilación, peso de la carga inicial
-  y que no haya correos en el repo.
+- **Todo se trabaja directo en `main`**, que es lo publicado: no hay ramas de
+  trabajo ni PR, y `develop` ya no se usa (desde el 24-11-2026). Antes de cada
+  push se corren las revisiones de abajo en la PC (`npm run typecheck`,
+  `lint`, `test`, `format:check`, `build` y `revisar-peso`).
+- **`calidad.yml`** tiene las revisiones: tipos, lint, tests, formato,
+  compilación, peso de la carga inicial y que no haya correos en el repo.
+  Corre sola en los PR y en los push a `develop` (que ya no se usan) y, sobre
+  todo, dentro de `publicar.yml`.
 - **`publicar.yml`** corre cuando algo llega a `main` (o a mano desde la pestaña
   Actions): pasa por las mismas revisiones, compila y publica `dist/` en
   Firebase Hosting. Si algo falla, no se publica nada y el sitio sigue como

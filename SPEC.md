@@ -590,7 +590,9 @@ dominio empiezan vacías, porque el navegador las guarda por dominio):
      de las páginas); los `.js` y `.css` con hash, un año; las fotos y la
      canción, un día.
 10. **Calidad:** `typecheck`, `lint` (sin ningún aviso), los tests y
-    `build` sin errores antes de cada merge.
+    `build` sin errores antes de cada push a `main` (todo se trabaja directo
+    en `main` desde el 24-11-2026; `publicar.yml` los vuelve a correr antes
+    de publicar).
 11. **Robustez:**
     - si una página falla al mostrarse (o no se pudo descargar), en su lugar
       se ve `textos.errorPagina` con un botón para recargar, y la barra de
