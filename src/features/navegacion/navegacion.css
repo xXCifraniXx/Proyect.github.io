@@ -113,6 +113,10 @@
     background: var(--panel);
     color: inherit;
     overflow-y: auto;
+    /* Si hace falta desplazarse, una barra fina del color del tema (la del
+       navegador salía blanca). */
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--claro-rgb) / 0.28) transparent;
     transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.15, 1);
   }
   /* Al abrirse, sube desde abajo (en navegadores sin @starting-style, aparece). */

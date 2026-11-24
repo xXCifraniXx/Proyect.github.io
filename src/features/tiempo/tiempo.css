@@ -1,53 +1,121 @@
-/* Tiempo juntos: contadores y tarjeta de regreso. */
+/* Tiempo juntos: la franja de arriba, sus contadores y la tarjeta de regreso. */
 @layer secciones {
+  /* Pegada arriba en todas las páginas; ocupa su lugar, así no tapa nada. */
+  .franja-tiempo {
+    position: sticky;
+    top: 0;
+    /* Debajo de la bienvenida (80) y encima del contenido. */
+    z-index: 55;
+    display: flex;
+    justify-content: center;
+    min-height: var(--alto-franja);
+    padding: env(safe-area-inset-top) max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left));
+    border-bottom: 1px solid var(--stroke);
+    background: rgb(var(--noche-rgb) / 0.86);
+    backdrop-filter: blur(12px);
+  }
+  .franja-tiempo-boton {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: var(--alto-franja);
+    padding: 0 10px;
+    border: 0;
+    background: none;
+    color: var(--text);
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .franja-tiempo-boton:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: -2px;
+    border-radius: 999px;
+  }
+  .franja-tiempo-corazon {
+    color: var(--rose);
+    font-size: 1rem;
+  }
+  .franja-tiempo-flecha {
+    color: var(--muted);
+    font-size: 0.75rem;
+    transition: transform 0.25s ease;
+  }
+  .franja-tiempo.is-abierta .franja-tiempo-flecha {
+    transform: rotate(180deg);
+  }
+  /* El detalle cae sobre la página, como un menú. */
+  .franja-tiempo-detalle {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    width: min(520px, calc(100% - 24px));
+    transform: translateX(-50%);
+    padding: 16px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--stroke-strong);
+    background: var(--panel);
+    box-shadow: var(--shadow);
+  }
+  .franja-tiempo-titulo {
+    font-family: var(--letra-titulo);
+    font-weight: 800;
+    font-size: 1.05rem;
+    text-align: center;
+  }
+
   .counter-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    margin-top: 14px;
+    gap: 10px;
+    margin-top: 12px;
   }
 
   .counter-card {
-    padding: 22px 16px;
+    padding: 14px 8px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--stroke);
+    background: rgb(var(--claro-rgb) / 0.05);
     text-align: center;
   }
   .counter-card strong {
     display: block;
     color: var(--gold);
-    font-size: clamp(2rem, 5vw, 3.1rem);
+    font-size: clamp(1.6rem, 6vw, 2.2rem);
     line-height: 1;
   }
   .counter-card span {
     display: block;
-    margin-top: 8px;
+    margin-top: 6px;
     color: var(--muted);
+    font-size: 0.82rem;
   }
 
   .return-card {
-    margin-top: 14px;
-    padding: 22px;
+    margin-top: 12px;
+    padding: 16px;
     display: grid;
     grid-template-columns: 1fr auto;
-    gap: 18px;
+    gap: 14px;
     align-items: center;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--stroke);
   }
   .return-card h3 {
-    margin-top: 14px;
-    font-size: clamp(1.4rem, 3vw, 2rem);
+    margin-top: 10px;
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
   }
   .return-card p {
-    margin-top: 10px;
+    margin-top: 8px;
     color: var(--muted);
-    line-height: 1.72;
+    line-height: 1.6;
   }
 
-  @media (max-width: 920px) {
+  @media (max-width: 520px) {
     .counter-grid {
       grid-template-columns: repeat(2, 1fr);
     }
-  }
-
-  @media (max-width: 920px) {
     .return-card {
       grid-template-columns: 1fr;
     }

@@ -1,6 +1,7 @@
 import { clsx } from "clsx";
 import { useCallback, useState } from "react";
 import { TEXTOS } from "../../lib/contenido.ts";
+import { BotonMusica } from "../musica/index.ts";
 import { estadoEstrella, type Enlace } from "./enlaces.ts";
 import PanelSecciones from "./PanelSecciones.tsx";
 import { useBarraVisible } from "./useBarraVisible.ts";
@@ -16,8 +17,9 @@ interface BarraSeccionesProps {
   BARRA DE SECCIONES
   Abajo en todas las páginas (en la portada, cuando su menú ya quedó
   arriba). Dice en qué página está y muestra una estrella por página, en
-  orden: las de antes, en dorado; la actual, en rosa. El botón ✦ abre el
-  panel con todas las páginas.
+  orden: las de antes, en espuma (--gold); la actual, en caramelo (--rose).
+  El botón ▶ / ❚❚ hace sonar o pausa la canción (sigue sonando al cambiar de
+  página) y el botón ✦ abre el panel con todas las páginas.
 */
 export default function BarraSecciones({ enlaces, actual }: BarraSeccionesProps) {
   const visible = useBarraVisible(actual === null);
@@ -41,6 +43,7 @@ export default function BarraSecciones({ enlaces, actual }: BarraSeccionesProps)
             ))}
           </ol>
         </div>
+        <BotonMusica />
         <button
           className="barra-secciones-boton"
           type="button"

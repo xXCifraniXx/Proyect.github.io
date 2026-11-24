@@ -1,1 +1,1 @@
-export { default as TiempoJuntos } from "./TiempoJuntos.tsx";
+export { default as FranjaTiempo } from "./FranjaTiempo.tsx";

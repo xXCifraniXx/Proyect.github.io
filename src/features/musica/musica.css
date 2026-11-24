@@ -1,51 +1,39 @@
-/* Música. */
+/* Música: el botón ▶ / ❚❚ de la barra de secciones. */
 @layer secciones {
-  /* Música */
-  .music-panel {
-    margin-top: 14px;
-    padding: 18px;
+  .boton-musica {
+    flex: none;
+    width: 46px;
+    height: 46px;
     display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: 18px;
-    align-items: center;
+    place-items: center;
+    border: 1px solid var(--stroke-strong);
+    border-radius: 50%;
+    background: rgb(var(--claro-rgb) / 0.06);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.95rem;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      background-color 0.25s ease,
+      border-color 0.25s ease;
   }
-  .music-info {
-    display: grid;
-    gap: 8px;
+  .boton-musica:hover {
+    border-color: var(--rose);
   }
-  .music-label {
+  /* Sonando: con el color de acento, para que se note que hay música. */
+  .boton-musica.is-sonando {
+    border-color: var(--rose);
+    background: rgb(var(--rose-rgb) / 0.18);
+    color: var(--rose);
+  }
+  .boton-musica.is-error {
+    border-color: var(--gold);
     color: var(--gold);
-    font-size: 0.8rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-weight: 800;
   }
-  .music-info strong {
-    font-size: 1.25rem;
-  }
-  .music-info span {
-    color: var(--muted);
-  }
-  .music-controls {
-    display: grid;
-    gap: 14px;
-  }
-  .music-controls .btn {
-    width: 100%;
-  }
-  .volume-control {
-    color: var(--muted);
-    display: grid;
-    gap: 6px;
-  }
-  .volume-control input {
-    width: 100%;
-    accent-color: var(--rose);
-    min-height: 32px;
-  }
-
-  @media (max-width: 920px) {
-    .music-panel {
-      grid-template-columns: 1fr;
-    }
+  .boton-musica:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
   }
 }

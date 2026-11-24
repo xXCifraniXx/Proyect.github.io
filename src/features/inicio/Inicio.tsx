@@ -25,7 +25,8 @@ export default function Inicio({ enlaces }: InicioProps) {
           <h1>{TEXTOS.heroTitle}</h1>
           <p className="lead">{TEXTOS.heroIntro}</p>
           <div className="hero-actions">
-            <EnlacePagina className="btn btn-primary" ruta={rutaDeSeccion("carta") ?? INICIO}>
+            {/* La carta está más abajo en la misma portada: el botón baja hasta ella. */}
+            <EnlacePagina className="btn btn-primary" ruta={INICIO} ancla="carta">
               {TEXTOS.heroCtaCarta}
             </EnlacePagina>
             <EnlacePagina className="btn btn-secondary" ruta={destinoSecundario}>

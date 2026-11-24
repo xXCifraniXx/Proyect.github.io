@@ -99,6 +99,8 @@
     --radius-lg: 26px;
     --radius-md: 18px;
     --maxw: 1120px;
+    /* Alto de la franja del tiempo juntos (arriba en todas las páginas). */
+    --alto-franja: 40px;
   }
 
   /*

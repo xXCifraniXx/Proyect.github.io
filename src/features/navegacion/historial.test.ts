@@ -1,13 +1,16 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { PAGINAS } from "./enlaces.ts";
-import { corregirLink, navegar, normalizar, rutaActual, suscribir } from "./historial.ts";
+import { PAGINAS, RUTAS_VIEJAS } from "./enlaces.ts";
+import { corregirLink, navegar, normalizar, rutaActual, suscribir, tomarAncla } from "./historial.ts";
 
 const ir = (link: string) => window.history.replaceState(null, "", link);
 const linkActual = () => window.location.pathname + window.location.search + window.location.hash;
 
-afterEach(() => ir("/"));
+afterEach(() => {
+  ir("/");
+  tomarAncla();
+});
 
 describe("normalizar", () => {
   it("quita la / del final y el index.html", () => {
@@ -25,10 +28,28 @@ describe("corregirLink (links viejos)", () => {
     expect(linkActual()).toBe("/boveda");
   });
 
-  it("conserva el ?… (la vista previa del cumpleaños)", () => {
+  it("conserva el ?… (la vista previa del cumpleaños) y baja a la sección que ahora va en la portada", () => {
     ir("/?cumple=hoy#carta");
     corregirLink();
-    expect(linkActual()).toBe("/carta?cumple=hoy");
+    expect(linkActual()).toBe("/?cumple=hoy");
+    expect(tomarAncla()).toBe("carta");
+  });
+
+  it("las rutas de las páginas que ya no existen llevan a su nuevo lugar, con su sección", () => {
+    ir("/juego?tema=rosa");
+    corregirLink();
+    expect(linkActual()).toBe("/entretenimiento?tema=rosa");
+    expect(tomarAncla()).toBe("juego");
+
+    ir("/carta/");
+    corregirLink();
+    expect(linkActual()).toBe("/");
+    expect(tomarAncla()).toBe("carta");
+
+    ir("/tiempo");
+    corregirLink();
+    expect(linkActual()).toBe("/");
+    expect(tomarAncla()).toBeNull();
   });
 
   it("también desde /index.html, y con los ids que cambiaron de nombre", () => {
@@ -44,9 +65,10 @@ describe("corregirLink (links viejos)", () => {
   });
 
   it("deja igual un # que no es de una sección y arregla la ruta", () => {
-    ir("/carta/?cumple=antes#algo");
+    ir("/boveda/?cumple=antes#algo");
     corregirLink();
-    expect(linkActual()).toBe("/carta?cumple=antes#algo");
+    expect(linkActual()).toBe("/boveda?cumple=antes#algo");
+    expect(tomarAncla()).toBeNull();
   });
 
   it("un # mal escrito no rompe nada", () => {
@@ -60,18 +82,25 @@ describe("navegar", () => {
     ir("/?cumple=hoy");
     const aviso = vi.fn();
     const dejar = suscribir(aviso);
-    navegar("/juego");
-    expect(linkActual()).toBe("/juego?cumple=hoy");
-    expect(rutaActual()).toBe("/juego");
+    navegar("/meses");
+    expect(linkActual()).toBe("/meses?cumple=hoy");
+    expect(rutaActual()).toBe("/meses");
     expect(aviso).toHaveBeenCalledTimes(1);
     dejar();
   });
 
   it("a la misma página no agrega otra entrada al historial", () => {
-    ir("/carta");
+    ir("/boveda");
     const largo = window.history.length;
-    navegar("/carta");
+    navegar("/boveda");
     expect(window.history.length).toBe(largo);
+  });
+
+  it("con ancla, la página nueva baja hasta esa sección (sin ponerla en el link)", () => {
+    navegar("/entretenimiento", false, "juego");
+    expect(linkActual()).toBe("/entretenimiento");
+    expect(tomarAncla()).toBe("juego");
+    expect(tomarAncla()).toBeNull();
   });
 });
 
@@ -92,9 +121,9 @@ describe("firebase.json", () => {
   // (sin comodines: lo demás sigue dando 404 y no toca los archivos ni el cielo).
   const FORMA = /^\/@\(([a-z-]+(?:\|[a-z-]+)*)\)\{,\/\}$/;
 
-  it("sirve index.html justo en las rutas de las páginas", () => {
+  it("sirve index.html justo en las rutas de las páginas y en las viejas (que llevan a su nuevo lugar)", () => {
     const rutas = reescritura?.source.match(FORMA)?.[1].split("|") ?? [];
-    expect(rutas.map((r) => `/${r}`).sort()).toEqual(PAGINAS.map((p) => p.ruta).sort());
+    expect(rutas.map((r) => `/${r}`).sort()).toEqual([...PAGINAS.map((p) => p.ruta), ...RUTAS_VIEJAS].sort());
   });
 
   it("esas rutas van sin caché", () => {

@@ -252,6 +252,9 @@
   /* Secciones */
   .section {
     padding: 24px 0 0;
+    /* Al bajar hasta una sección (la carta en la portada…), que la franja de
+       arriba no la tape. */
+    scroll-margin-top: calc(var(--alto-franja) + 8px);
   }
   .section-head {
     border-radius: var(--radius-lg);

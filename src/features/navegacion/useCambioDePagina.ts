@@ -1,15 +1,23 @@
 import { useEffect, useLayoutEffect, useRef, type RefObject } from "react";
+import { bajarA, tomarAncla } from "./historial.ts";
 
 /**
  * Lo que pasa al cambiar de página: el título de la pestaña cambia, la
- * página nueva empieza arriba y el foco va a su contenido (así un lector de
- * pantalla lee la página nueva y el teclado sigue desde ahí). Al abrir el
- * sitio no se mueve nada.
+ * página nueva empieza arriba (o baja hasta la sección pedida, si va dentro
+ * de otra página) y el foco va a su contenido (así un lector de pantalla lee
+ * la página nueva y el teclado sigue desde ahí). Al abrir el sitio no se
+ * mueve nada, salvo que el link pida una sección (un link viejo como /carta).
  */
 export function useCambioDePagina(ruta: string, titulo: string, contenido: RefObject<HTMLElement | null>): void {
   useEffect(() => {
     document.title = titulo;
   }, [titulo]);
+
+  // Al abrir con un link a una sección que va dentro de otra página.
+  useEffect(() => {
+    const ancla = tomarAncla();
+    if (ancla) bajarA(ancla);
+  }, []);
 
   // Con la ruta anterior y no con "es la primera vez": en desarrollo, React
   // corre los efectos dos veces al abrir y eso no es un cambio de página.
@@ -21,5 +29,7 @@ export function useCambioDePagina(ruta: string, titulo: string, contenido: RefOb
     // "instant": la página tiene scroll suave (base.css) y acá no corresponde.
     window.scrollTo({ top: 0, behavior: "instant" });
     contenido.current?.focus({ preventScroll: true });
+    const ancla = tomarAncla();
+    if (ancla) bajarA(ancla);
   }, [ruta, contenido]);
 }

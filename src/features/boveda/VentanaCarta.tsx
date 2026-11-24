@@ -4,7 +4,7 @@ import type { CartaAbierta } from "./boveda.ts";
 import { formatoFechaLarga } from "../../lib/fechas.ts";
 import { TEXTOS } from "../../lib/contenido.ts";
 import { rellenar } from "../../lib/rellenar.ts";
-import { EnlacePagina, rutaDeSeccion } from "../navegacion/index.ts";
+import { destinoDeSeccion, EnlacePagina } from "../navegacion/index.ts";
 
 interface VentanaCartaProps {
   /** La carta a mostrar, o null si la ventana está cerrada. */
@@ -45,8 +45,9 @@ export default function VentanaCarta({ abierta, onCerrar }: VentanaCartaProps) {
   const accion = abierta && !abierta.sinAccion ? abierta.carta.accion : undefined;
 
   // "destino" es el id de una sección ("constelacion", "cumple"…), como lo
-  // guardan las cartas desde antes de las páginas.
-  const destino = accion ? rutaDeSeccion(accion.destino) : null;
+  // guardan las cartas desde antes de las páginas. Si la sección va dentro de
+  // otra página (la constelación en Entretenimiento), se baja hasta ella.
+  const destino = accion ? destinoDeSeccion(accion.destino) : null;
 
   // Primero se cierra (el foco vuelve a donde estaba) y después el link lleva a la página.
   const irA = () => {
@@ -96,7 +97,7 @@ export default function VentanaCarta({ abierta, onCerrar }: VentanaCartaProps) {
           )}
           <p>{texto}</p>
           {accion && destino && (
-            <EnlacePagina className="btn btn-primary" ruta={destino} onClick={irA}>
+            <EnlacePagina className="btn btn-primary" ruta={destino.ruta} ancla={destino.ancla} onClick={irA}>
               {accion.etiqueta || TEXTOS.cartaIrAhi}
             </EnlacePagina>
           )}

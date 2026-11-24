@@ -10,6 +10,20 @@ export interface CartaBoveda {
   fecha: Date;
 }
 
+/**
+ * Un recuerdo de La Bóveda: algo que ya pasó y se puede volver a ver en su
+ * página (el cumpleaños en sus días de después, el adviento cuando terminó).
+ * Lo arma App, que sabe en qué fecha estamos.
+ */
+export interface Recuerdo {
+  id: string;
+  icono: string;
+  titulo: string;
+  detalle: string;
+  /** Ruta de su página (no está en el menú). */
+  ruta: string;
+}
+
 /** Lo que necesita la ventana para mostrar una carta abierta. */
 export interface CartaAbierta extends CartaBoveda {
   /** Texto ya descifrado (si se tiene); si no, la ventana lo descifra. */

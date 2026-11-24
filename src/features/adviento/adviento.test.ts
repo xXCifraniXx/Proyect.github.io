@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { advientoVisible } from "../../lib/adviento.ts";
+import { advientoVisible, estadoAdviento } from "../../lib/adviento.ts";
 import type { PuertaAdviento } from "../../types/config.ts";
 import { armarPuertas, estadoPuerta, guardarAbiertas, leerAbiertas, puertaDeHoy } from "./adviento.ts";
 
@@ -92,5 +92,19 @@ describe("advientoVisible", () => {
   it("sin configuración o con una fecha mal escrita, no se ve", () => {
     expect(advientoVisible(new Date("2026-12-10T12:00:00"), null)).toBe(false);
     expect(advientoVisible(new Date("2026-12-10T12:00:00"), { ...config, desde: "diciembre" })).toBe(false);
+  });
+});
+
+describe("estadoAdviento (menú o recuerdo de La Bóveda)", () => {
+  const config = { anio: 2026, desde: "2026-11-25T00:00:00", hasta: "2027-01-01T00:00:00" };
+
+  it("antes de 'desde' no hay; en su época está vigente; desde 'hasta', pasó", () => {
+    expect(estadoAdviento(new Date("2026-11-24T23:59:59"), config)).toBeNull();
+    expect(estadoAdviento(new Date("2026-12-24T10:00:00"), config)).toBe("vigente");
+    expect(estadoAdviento(new Date("2027-01-01T00:00:00"), config)).toBe("pasado");
+  });
+
+  it("sin configuración no hay calendario", () => {
+    expect(estadoAdviento(new Date("2027-02-01T00:00:00"), null)).toBeNull();
   });
 });

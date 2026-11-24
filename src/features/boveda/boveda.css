@@ -92,6 +92,35 @@
     line-height: 1.7;
   }
 
+  /* Recuerdos: lo que ya pasó (el cumpleaños, el adviento), con un link a su página. */
+  .boveda-subtitulo {
+    margin-top: 30px;
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .boveda-recuerdo {
+    min-height: 0;
+    gap: 6px;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .boveda-recuerdo-titulo {
+    font-weight: 800;
+    font-size: 1.05rem;
+  }
+  .boveda-recuerdo-detalle {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .boveda-recuerdo:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
+
   /* Modal de La Bóveda: un <dialog>. Se le quitan los estilos que trae del
      navegador (tamaño, margen, borde, fondo) para que cubra toda la pantalla. */
   .lightbox {

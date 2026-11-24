@@ -7,15 +7,10 @@
 ------------------------------------------------------------------------- */
 export const textos = {
   // Navegación
-  navMes: "Este mes",
-  navCarta: "Carta",
   navMeses: "Meses",
-  navTiempo: "Tiempo",
   navBajada: "Bajada",
-  navMusica: "Música",
   navBoveda: "La Bóveda",
-  navConstelacion: "Constelación",
-  navJuego: "Juego",
+  navEntretenimiento: "Entretenimiento",
   navInicio: "Inicio",
   navAdviento: "Adviento 🎄",
 
@@ -81,13 +76,20 @@ export const textos = {
   mesFirma: "Jorge",
 
   // Nuestro tiempo
-  tiempoEyebrow: "Nuestro tiempo",
   tiempoTitle: "El tiempo que hemos compartido",
-  timeIntro: "El tiempo contigo también se mide en calma, sonrisas y recuerdos.",
   labelYears: "Años",
   labelMonths: "Meses",
   labelDays: "Días",
   labelTotalDays: "Días en total",
+  // Franja de arriba: "Juntos: 8 meses y 16 días" ({n} es el número)
+  franjaJuntos: "Juntos: {tiempo}",
+  tiempoAnio: "{n} año",
+  tiempoAnios: "{n} años",
+  tiempoMes: "{n} mes",
+  tiempoMeses: "{n} meses",
+  tiempoDia: "{n} día",
+  tiempoDias: "{n} días",
+  tiempoY: " y ",
   returnTitle: "Para volver a verte",
   returnText: "Falta cada vez menos para volver a abrazarte con calma.",
   countdownEyebrow: "Cuenta regresiva",
@@ -130,13 +132,6 @@ export const textos = {
   rosterEditorStorageError: "No se pudo guardar en este navegador.",
 
   // Música
-  musicaEyebrow: "Música",
-  musicaTitle: "Una canción para acompañar el momento",
-  musicaIntro: "Nuestra canción, lista para sonar mientras lees.",
-  musicLabel: "Canción actual",
-  musicVolume: "Volumen",
-  musicPlay: "Reproducir 🎵",
-  musicPause: "Pausar ⏸",
 
   // La Bóveda
   bovedaEyebrow: "La Bóveda",
@@ -145,6 +140,12 @@ export const textos = {
   bovedaLockedTitle: "Carta sellada",
   bovedaReadHint: "Toca para leer",
   bovedaEmpty: "Pronto habrá cartas esperándote aquí 💌",
+  // Recuerdos de La Bóveda: lo que ya pasó ({edad} y {anio} se rellenan solos)
+  bovedaRecuerdos: "Recuerdos",
+  bovedaRecuerdoCumple: "Tu cumpleaños {edad}",
+  bovedaRecuerdoCumpleDetalle: "El pastel sigue aquí: vuelve a encender las velas 🎂",
+  bovedaRecuerdoAdviento: "Adviento {anio}",
+  bovedaRecuerdoAdvientoDetalle: "Las 24 puertas, para volver a abrirlas 🎄",
   bovedaSelloError: "No se pudo abrir esta carta en este navegador. Prueba a abrir la página en otro.",
 
   // Calendario de adviento ({fecha}, {dia} y {titulo} se rellenan solos)
@@ -239,6 +240,8 @@ export const textos = {
   // Música
   musicaSinTitulo: "Nuestra canción",
   musicaError: "No se pudo reproducir el audio en este navegador.",
+  ariaReproducirMusica: "Reproducir «{titulo}»",
+  ariaPausarMusica: "Pausar «{titulo}»",
 
   // Rotación de mina (sección Bajada)
   faseAntesTitulo: "Próxima subida programada",
