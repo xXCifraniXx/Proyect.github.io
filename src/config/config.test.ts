@@ -93,10 +93,13 @@ describe("calendario de adviento (adviento.ts y puertas.ts)", () => {
 });
 
 describe("música", () => {
-  it("la canción existe en public/", () => {
-    const src = CONFIG.musica?.cancion?.src;
-    expect(src).toBeTruthy();
-    expect(enPublic(src ?? ""), src).toBe(true);
+  it("hay al menos una canción y todas existen en public/", () => {
+    const canciones = CONFIG.musica?.canciones ?? [];
+    expect(canciones.length).toBeGreaterThan(0);
+    for (const cancion of canciones) {
+      expect(cancion.src, cancion.titulo).toBeTruthy();
+      expect(enPublic(cancion.src ?? ""), cancion.src).toBe(true);
+    }
   });
 });
 

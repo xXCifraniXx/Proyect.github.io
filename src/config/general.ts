@@ -32,16 +32,23 @@ export const rotacionMina: RotacionMina = {
 
 /* -------------------------------------------------------------------------
    MÚSICA
-   Una sola canción (el sitio no tiene servidor para subir más). Para
-   cambiarla: copia el mp3 a public/assets/audio y actualiza "src".
+   Las canciones, en orden: la primera suena al tocar ▶ y, al terminar una,
+   empieza la siguiente (después de la última, otra vez la primera). Con más
+   de una, en la barra sale ⏭ para pasar a la que sigue.
+   Cada canción se baja recién cuando le toca sonar, así que sumar más no
+   hace más pesada la página. Para agregar una: copia el archivo (.mp3 o
+   .m4a; mejor si pesa unos 2 MB) a public/assets/audio y suma aquí su
+   titulo, artista y src.
 ------------------------------------------------------------------------- */
 export const musica: Musica = {
   volumenInicial: 0.24,
-  cancion: {
-    titulo: "The First Time",
-    artista: "Damiano David",
-    src: "assets/audio/the-first-time.mp3"
-  }
+  canciones: [
+    {
+      titulo: "The First Time",
+      artista: "Damiano David",
+      src: "assets/audio/the-first-time.mp3"
+    }
+  ]
 };
 
 /* -------------------------------------------------------------------------

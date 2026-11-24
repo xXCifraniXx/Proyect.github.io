@@ -242,6 +242,7 @@ export const textos = {
   musicaError: "No se pudo reproducir el audio en este navegador.",
   ariaReproducirMusica: "Reproducir «{titulo}»",
   ariaPausarMusica: "Pausar «{titulo}»",
+  ariaSiguienteCancion: "Pasar a «{titulo}»",
 
   // Rotación de mina (sección Bajada)
   faseAntesTitulo: "Próxima subida programada",

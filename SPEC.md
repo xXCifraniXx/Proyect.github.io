@@ -32,9 +32,14 @@ Capas fijas, en todas las páginas:
   `config` y `fechas.regreso` es válida, la tarjeta de regreso con su cuenta
   regresiva (cada segundo). Se cierra con el mismo botón, con Escape o
   tocando fuera. Cambia sola a medianoche.
-- **Música**: la canción (`musica.cancion`) vive en toda la página y sigue
-  sonando al cambiar de página. Se toca desde la barra de secciones (1.2);
-  no suena sola. Volumen `musica.volumenInicial` (0.24).
+- **Música**: las canciones (`musica.canciones`, en orden) viven en toda la
+  página y siguen sonando al cambiar de página. Se tocan desde la barra de
+  secciones (1.2); no suenan solas. Al tocar ▶ suena la primera; al terminar
+  una empieza la siguiente y, después de la última, otra vez la primera (con
+  una sola, al terminar se queda en pausa). Cada canción se baja recién
+  cuando le toca sonar. Volumen `musica.volumenInicial` (0.24). En la
+  pantalla bloqueada del celular se ven el nombre y el artista de la que
+  suena, con sus controles (y "siguiente", si hay más de una).
 - **Fondo**: tres luces (caramelo, cacao rosa, espuma; ver 1.6) y `opciones.corazones` (18)
   corazones que flotan (♡ ❤). El día del cumpleaños son 🎈 ✨ ❤ 🎉 ♡.
   - **En diciembre** (todo el mes, cada año; `opciones.fondoNavidad`, que si
@@ -121,10 +126,12 @@ Las secciones aparecen suavemente la primera vez que entran en pantalla.
   espuma (`--gold`), la actual en caramelo (`--rose`) y más grande, las que
   siguen apagadas (en la portada, y en una página fuera del menú, todas
   apagadas).
-- Si hay canción (`musica.cancion.src`), un botón **▶ / ❚❚** la hace sonar o
-  la pausa; se llama "Reproducir «{título}»" o "Pausar «{título}»". Sonando,
+- Si hay canciones (con `src`), un botón **▶ / ❚❚** hace sonar o pausa la
+  que toca; se llama "Reproducir «{título}»" o "Pausar «{título}»". Sonando,
   va en caramelo. Si el navegador no puede reproducirla, muestra "!" y su
   nombre es `textos.musicaError`.
+- Si hay más de una, al lado sale un botón **⏭**, más chico, que pasa a la
+  siguiente y la hace sonar; se llama "Pasar a «{título de la que sigue}»".
 - El botón ✦ abre un panel desde abajo (un `<dialog>`) con "Volver al
   inicio" y las páginas del menú, con la actual marcada. Si no entran en la
   pantalla, se desplaza con una barra fina del color del tema. Se cierra con
@@ -499,7 +506,7 @@ hasta = 2027-01-01 00:00   (…hasta antes de aquí; desde aquí, la página
 El contenido está en `src/config/` (`textos.ts`, `meses.ts`, `boveda.ts`,
 `cumpleanos.ts`, `general.ts`, `adviento.ts`), unido en `CONFIG` por
 `src/config/index.ts`; las puertas del adviento, aparte en `puertas.ts`;
-Firebase en `src/config/firebase.ts` (`NUBE`). Las fotos y la canción, en
+Firebase en `src/config/firebase.ts` (`NUBE`). Las fotos y las canciones, en
 `public/assets/`. Tipos en `src/types/config.ts`. Las fechas son `"AAAA-MM-DDTHH:MM:SS"` en hora
 local.
 
@@ -511,10 +518,10 @@ interface Config {
     activa: boolean; salidaBase: string; diasMina: number; diasDescanso: number;
     horaRegreso: "HH:MM"; mesesAMostrar: 1 | 2 | 3 | 4;
   };
-  textos: Record<ClaveTexto, string>;          // 214 claves, ver abajo
+  textos: Record<ClaveTexto, string>;          // 215 claves, ver abajo
   lineaTiempo: { mes: "AAAA-MM"; titulo: string; src: string; texto: string }[];
   mensajesMes: Carta[];                         // normalmente un día 8
-  musica: { volumenInicial: number; cancion: { titulo: string; artista: string; src: string } };
+  musica: { volumenInicial: number; canciones: { titulo: string; artista: string; src: string }[] };  // al menos una
   boveda: { cartas: Carta[] };
   juego: { parejas: string[] };                 // 1 a 8 emojis
   cumpleanos: {
@@ -606,7 +613,8 @@ dominio empiezan vacías, porque el navegador las guarda por dominio):
      título de la pestaña dice en qué página está; la página actual está
      marcada (`aria-current="page"`) en el panel;
    - los botones solo con ícono tienen `aria-label` (el de la música dice qué
-     hace y con qué canción, y marca con `aria-pressed` si está sonando);
+     hace y con qué canción, y marca con `aria-pressed` si está sonando;
+     el ⏭ dice cuál sigue);
    - la franja del tiempo es un botón con `aria-expanded`, y su detalle se
      cierra con Escape.
 4. **Privacidad y seguridad:**
@@ -622,7 +630,10 @@ dominio empiezan vacías, porque el navegador las guarda por dominio):
      y de React;
    - las páginas que no hacen falta al abrir se descargan aparte; unos
      segundos después de abrir el sitio se bajan en segundo plano, para que
-     cambiar de página sea inmediato.
+     cambiar de página sea inmediato;
+   - las canciones no se bajan al abrir el sitio: cada una, recién cuando le
+     toca sonar (`preload="none"`), así que sumar canciones no cambia la
+     carga inicial.
 7. **Vista previa del link:**
    - `og:image` absoluto a `compartir.jpg` de 1200×630;
    - título y descripción fijos en el HTML;
@@ -642,8 +653,8 @@ dominio empiezan vacías, porque el navegador las guarda por dominio):
      ruta sin archivo da 404. Un test revisa que las rutas de `firebase.json`
      sean justo esas.
    - El HTML no se guarda en la caché del navegador (tampoco el de las rutas
-     de las páginas); los `.js` y `.css` con hash, un año; las fotos y la
-     canción, un día.
+     de las páginas); los `.js` y `.css` con hash, un año; las fotos y las
+     canciones, un día.
 10. **Calidad:** `typecheck`, `lint` (sin ningún aviso), los tests y
     `build` sin errores antes de cada push a `main` (todo se trabaja directo
     en `main` desde el 24-11-2026; `publicar.yml` los vuelve a correr antes

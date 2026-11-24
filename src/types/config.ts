@@ -90,7 +90,8 @@ export interface Cancion {
 
 export interface Musica {
   volumenInicial?: number;
-  cancion?: Cancion;
+  /** En orden: la primera suena al tocar ▶; al terminar una, la siguiente. */
+  canciones?: Cancion[];
 }
 
 export interface Cumpleanos {
