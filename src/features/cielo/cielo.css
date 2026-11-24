@@ -6,43 +6,12 @@
 
 /*
   Los tokens de esta página: los mismos nombres que src/styles/tokens.css
-  (ver ahí qué son los "-rgb"), con los valores que usa el cielo. El lienzo
-  (dibujo.ts) los lee al empezar a dibujar.
+  (ver ahí qué son los "-rgb"), con los valores que usa el cielo: café y
+  crema con Nunito, y el rosa de antes con ?tema=rosa. El lienzo (dibujo.ts)
+  los lee al empezar a dibujar.
 */
 @layer tokens {
   :root {
-    --bg-1: #120817;
-    --bg-2: #231027;
-    --bg-3: #421b3f;
-    --rose: #ff9eb8;
-    --rose-strong: #ff6f9a;
-    --lilac: #c99bff;
-    --gold: #f3d99f;
-    --text: #fff8fb;
-    --paper: #fff9fb;
-    --bg-1-rgb: 18 8 23;
-    --rose-rgb: 255 158 184;
-    --lilac-rgb: 201 155 255;
-    --gold-rgb: 243 217 159;
-    --text-rgb: 255 248 251;
-    --paper-rgb: 255 249 251;
-    --claro-rgb: 255 255 255;
-    --muted: rgb(var(--claro-rgb) / 0.72);
-    --stroke: rgb(var(--claro-rgb) / 0.16);
-    --stroke-strong: rgb(var(--claro-rgb) / 0.28);
-    /* Texto oscuro sobre el botón rosa. */
-    --texto-sobre-acento: #3a1226;
-    /* El panel del recuerdo, de arriba abajo. */
-    --cielo-panel-1-rgb: 40 20 46;
-    --cielo-panel-2-rgb: 28 14 34;
-    /* Letras: la de la página y la de las etiquetas del lienzo (dibujo.ts). */
-    --letra-texto: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-    --letra-lienzo: Inter, system-ui, sans-serif;
-    --radius: 18px;
-  }
-
-  /* Tema café (vista previa con ?tema=cafe): los mismos valores que en tokens.css. */
-  :root[data-tema="cafe"] {
     --bg-1: #140c08;
     --bg-2: #24160f;
     --bg-3: #3d2619;
@@ -59,11 +28,43 @@
     --text-rgb: 251 242 230;
     --paper-rgb: 251 243 231;
     --claro-rgb: 255 240 224;
+    --muted: rgb(var(--claro-rgb) / 0.72);
+    --stroke: rgb(var(--claro-rgb) / 0.16);
+    --stroke-strong: rgb(var(--claro-rgb) / 0.28);
+    /* Texto oscuro sobre el botón de acento. */
     --texto-sobre-acento: #241208;
+    /* El panel del recuerdo, de arriba abajo. */
     --cielo-panel-1-rgb: 46 29 20;
     --cielo-panel-2-rgb: 32 20 13;
+    /* Letras: la de la página y la de las etiquetas del lienzo (dibujo.ts). */
     --letra-texto: "Nunito Variable", "Nunito", ui-rounded, system-ui, sans-serif;
     --letra-lienzo: "Nunito Variable", ui-rounded, system-ui, sans-serif;
+    --radius: 18px;
+  }
+
+  /* Tema rosa (vista previa con ?tema=rosa): los mismos valores que en tokens.css. */
+  :root[data-tema="rosa"] {
+    --bg-1: #120817;
+    --bg-2: #231027;
+    --bg-3: #421b3f;
+    --rose: #ff9eb8;
+    --rose-strong: #ff6f9a;
+    --lilac: #c99bff;
+    --gold: #f3d99f;
+    --text: #fff8fb;
+    --paper: #fff9fb;
+    --bg-1-rgb: 18 8 23;
+    --rose-rgb: 255 158 184;
+    --lilac-rgb: 201 155 255;
+    --gold-rgb: 243 217 159;
+    --text-rgb: 255 248 251;
+    --paper-rgb: 255 249 251;
+    --claro-rgb: 255 255 255;
+    --texto-sobre-acento: #3a1226;
+    --cielo-panel-1-rgb: 40 20 46;
+    --cielo-panel-2-rgb: 28 14 34;
+    --letra-texto: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --letra-lienzo: Inter, system-ui, sans-serif;
   }
 }
 

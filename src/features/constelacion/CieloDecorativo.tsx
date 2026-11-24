@@ -20,8 +20,8 @@ export default function CieloDecorativo() {
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return undefined;
     const quieto = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // Colores del tema (tokens.css); por defecto, los del rosa.
-    const tono = leerTokens({ "rose-rgb": "255 158 184", "text-rgb": "255 248 251" });
+    // Colores del tema (tokens.css); si falta uno, el del café.
+    const tono = leerTokens({ "rose-rgb": "230 176 126", "text-rgb": "251 242 230" });
     let puntos: Punto[] = [];
     let cuadro = 0;
 
