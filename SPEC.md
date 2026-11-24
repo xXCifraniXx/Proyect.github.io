@@ -58,8 +58,9 @@ Páginas, en este orden (el del menú):
 - **Al cambiar de página**: la nueva empieza arriba, el título de la pestaña
   pasa a "{página} | Para {novia}" (en la portada, "Para {novia} | Una carta
   de {autor}") y el foco va al contenido. Al abrir el sitio no se mueve nada.
-- El `?…` del link (la vista previa `?cumple=…`) se conserva al cambiar de
-  página.
+- El `?…` del link (las vistas previas `?cumple=…` y `?tema=cafe`) se
+  conserva al cambiar de página, también al ir a la página del cielo y al
+  volver de ella.
 - **Links viejos** (de cuando todo era una sola página): `/#{id}` pasa solo,
   sin recargar, a la ruta de esa página (`/#boveda` → `/boveda`,
   `/#linea-tiempo` → `/meses`), con su `?…`. `#inicio`, `#final` y
@@ -125,6 +126,26 @@ Las secciones aparecen suavemente la primera vez que entran en pantalla.
 Página para Jorge: **sellar** un texto y **abrir** un sello existente, con el
 mismo formato que la página (2.2). Usa el mismo `src/lib/sello.ts` que el
 sitio y se publica en la misma ruta.
+
+### 1.6 Colores y tema café (vista previa)
+
+- El sitio se ve en el **tema rosa** (fondo morado oscuro, rosa, lila y
+  dorado; títulos en Georgia y texto con la letra del dispositivo). Ningún
+  color ni letra va escrito en el CSS de las secciones: todos salen de los
+  tokens (`src/styles/tokens.css`; la página del cielo, los suyos en
+  `cielo.css`). El cielo, el cielo de adorno y el confeti toman colores y
+  letra de los mismos tokens al empezar a dibujar.
+- **Vista previa del tema café y crema:** con `?tema=cafe` en el link, el
+  sitio y la página del cielo se ven en café (espresso, caramelo, crema) y
+  con letra **Nunito** (redondeada) en títulos y texto; tamaños y orden no
+  cambian. Nunito va guardada en el sitio (paquete
+  `@fontsource-variable/nunito`, licencia OFL) y solo se descarga en este
+  tema; mientras llega, se ve la letra de respaldo. Los colores se aplican
+  antes de pintar (sin un instante rosa) y también cambia el color de la
+  barra del navegador. No guarda nada: sin `?tema=cafe` el sitio se ve rosa.
+  Se puede combinar con `?cumple=…` (`?tema=cafe&cumple=hoy`).
+- Ella sigue viendo el tema rosa: el café no tiene botón ni se elige solo
+  (lo decidió Jorge el 23-11-2026).
 
 ---
 
@@ -580,3 +601,9 @@ dominio empiezan vacías, porque el navegador las guarda por dominio):
       recarga (sus textos, su carta y sus adornos se arman al cargar);
     - sin conexión a Firebase, la sesión y lo compartido siguen funcionando
       solo en el dispositivo.
+12. **Colores (1.6):**
+    - sin `?tema=cafe`, el sitio se ve igual que antes de pasar colores y
+      letras a tokens (los mismos estilos calculados en cada página) y no
+      descarga Nunito;
+    - con `?tema=cafe`, a 375 px no queda nada del rosa ni del morado, todo
+      el texto va en Nunito y se lee bien sobre su fondo.

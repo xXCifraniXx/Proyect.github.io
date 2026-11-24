@@ -6,7 +6,7 @@
     padding: 18px;
     border: 1px solid var(--stroke);
     border-radius: var(--radius-lg);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.065));
+    background: linear-gradient(180deg, rgb(var(--claro-rgb) / 0.13), rgb(var(--claro-rgb) / 0.065));
     box-shadow: var(--shadow-soft);
   }
   .game-stats {
@@ -61,18 +61,18 @@
     border: 1px solid var(--stroke);
   }
   .memory-front {
-    background: linear-gradient(160deg, rgba(255, 158, 184, 0.22), rgba(201, 155, 255, 0.18));
-    color: rgba(255, 255, 255, 0.55);
+    background: linear-gradient(160deg, rgb(var(--rose-rgb) / 0.22), rgb(var(--lilac-rgb) / 0.18));
+    color: rgb(var(--claro-rgb) / 0.55);
   }
   .memory-back {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgb(var(--claro-rgb) / 0.1);
     transform: rotateY(180deg);
   }
   .memory-card.is-matched .memory-back {
     border-color: var(--gold);
     box-shadow:
       inset 0 0 0 1px var(--gold),
-      0 0 20px rgba(243, 217, 159, 0.22);
+      0 0 20px rgb(var(--gold-rgb) / 0.22);
   }
   .memory-card.is-matched {
     cursor: default;
@@ -97,7 +97,7 @@
     padding: 20px;
     text-align: center;
     border-radius: var(--radius-md);
-    background: linear-gradient(160deg, rgba(255, 158, 184, 0.18), rgba(201, 155, 255, 0.14));
+    background: linear-gradient(160deg, rgb(var(--rose-rgb) / 0.18), rgb(var(--lilac-rgb) / 0.14));
     border: 1px solid var(--stroke-strong);
     display: grid;
     gap: 12px;

@@ -6,6 +6,26 @@
 */
 import type { Estrella } from "./estrellas.ts";
 import { textos } from "../../config/textos.ts";
+import { conAlfa, leerTokens } from "../../lib/tokens.ts";
+
+// Los colores salen de los tokens de cielo.css (también el tema café). Se
+// leen una vez, al primer dibujo: el tema no cambia con la página abierta.
+const TONOS_ROSA = {
+  "bg-1": "#120817",
+  "bg-2": "#231027",
+  "bg-3": "#421b3f",
+  paper: "#fff9fb",
+  "bg-1-rgb": "18 8 23",
+  "rose-rgb": "255 158 184",
+  "lilac-rgb": "201 155 255",
+  "gold-rgb": "243 217 159",
+  "text-rgb": "255 248 251",
+  "paper-rgb": "255 249 251",
+  "claro-rgb": "255 255 255",
+  "letra-lienzo": "Inter, system-ui, sans-serif"
+};
+let tonosLeidos: typeof TONOS_ROSA | null = null;
+const tonos = () => (tonosLeidos ??= leerTokens(TONOS_ROSA));
 
 /** Estrellitas de fondo (no se guardan). */
 export interface Polvo {
@@ -35,16 +55,17 @@ function nebulosa(ctx: CanvasRenderingContext2D, x: number, y: number, radio: nu
 }
 
 export function dibujarFondo(ctx: CanvasRenderingContext2D, w: number, h: number) {
+  const t = tonos();
   const g = ctx.createLinearGradient(0, 0, w, h);
-  g.addColorStop(0, "#120817");
-  g.addColorStop(0.5, "#231027");
-  g.addColorStop(1, "#421b3f");
+  g.addColorStop(0, t["bg-1"]);
+  g.addColorStop(0.5, t["bg-2"]);
+  g.addColorStop(1, t["bg-3"]);
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, w, h);
   const m = Math.max(w, h);
-  nebulosa(ctx, w * 0.18, h * 0.22, m * 0.5, "rgba(255,158,184,0.16)");
-  nebulosa(ctx, w * 0.85, h * 0.3, m * 0.45, "rgba(201,155,255,0.16)");
-  nebulosa(ctx, w * 0.55, h * 0.9, m * 0.55, "rgba(243,217,159,0.10)");
+  nebulosa(ctx, w * 0.18, h * 0.22, m * 0.5, conAlfa(t["rose-rgb"], 0.16));
+  nebulosa(ctx, w * 0.85, h * 0.3, m * 0.45, conAlfa(t["lilac-rgb"], 0.16));
+  nebulosa(ctx, w * 0.55, h * 0.9, m * 0.55, conAlfa(t["gold-rgb"], 0.1));
 }
 
 export function dibujarPolvo(
@@ -56,11 +77,12 @@ export function dibujarPolvo(
   offY: number,
   t: number
 ) {
+  const claro = tonos()["claro-rgb"];
   for (const d of polvo) {
     const brillo = 0.6 + 0.4 * Math.sin(t * 0.001 + d.tw);
     ctx.beginPath();
     ctx.arc(d.x * w + offX * 0.25, d.y * h + offY * 0.25, d.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255,255,255,${(d.a * brillo).toFixed(3)})`;
+    ctx.fillStyle = conAlfa(claro, Number((d.a * brillo).toFixed(3)));
     ctx.fill();
   }
 }
@@ -76,14 +98,15 @@ function rectanguloRedondeado(ctx: CanvasRenderingContext2D, x: number, y: numbe
 }
 
 function dibujarEtiqueta(ctx: CanvasRenderingContext2D, x: number, y: number, texto: string) {
-  ctx.font = "13px Inter, system-ui, sans-serif";
+  const t = tonos();
+  ctx.font = `13px ${t["letra-lienzo"]}`;
   ctx.textAlign = "center";
   ctx.textBaseline = "top";
   const anchoCaja = ctx.measureText(texto).width + 16;
-  ctx.fillStyle = "rgba(18,8,23,0.72)";
+  ctx.fillStyle = conAlfa(t["bg-1-rgb"], 0.72);
   rectanguloRedondeado(ctx, x - anchoCaja / 2, y, anchoCaja, 20, 8);
   ctx.fill();
-  ctx.fillStyle = "rgba(255,248,251,0.92)";
+  ctx.fillStyle = conAlfa(t["text-rgb"], 0.92);
   ctx.fillText(texto, x, y + 4);
 }
 
@@ -103,6 +126,7 @@ export function dibujarConstelacion(
   conEtiqueta: (estrella: Estrella, indice: number) => boolean
 ) {
   if (estrellas.length === 0) return;
+  const tono = tonos();
 
   ctx.lineWidth = 1;
   for (let i = 0; i < estrellas.length - 1; i += 1) {
@@ -113,8 +137,8 @@ export function dibujarConstelacion(
     const bx = b.x * w + offX;
     const by = b.y * h + offY;
     const lg = ctx.createLinearGradient(ax, ay, bx, by);
-    lg.addColorStop(0, "rgba(255,158,184,0.45)");
-    lg.addColorStop(1, "rgba(201,155,255,0.45)");
+    lg.addColorStop(0, conAlfa(tono["rose-rgb"], 0.45));
+    lg.addColorStop(1, conAlfa(tono["lilac-rgb"], 0.45));
     ctx.strokeStyle = lg;
     ctx.beginPath();
     ctx.moveTo(ax, ay);
@@ -130,21 +154,21 @@ export function dibujarConstelacion(
     const halo = 22 * titileo;
 
     const rg = ctx.createRadialGradient(x, y, 0, x, y, halo);
-    rg.addColorStop(0, "rgba(255,249,251,0.9)");
-    rg.addColorStop(0.25, "rgba(255,158,184,0.5)");
-    rg.addColorStop(1, "rgba(255,158,184,0)");
+    rg.addColorStop(0, conAlfa(tono["paper-rgb"], 0.9));
+    rg.addColorStop(0.25, conAlfa(tono["rose-rgb"], 0.5));
+    rg.addColorStop(1, conAlfa(tono["rose-rgb"], 0));
     ctx.fillStyle = rg;
     ctx.beginPath();
     ctx.arc(x, y, halo, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = "#fff9fb";
+    ctx.fillStyle = tono.paper;
     ctx.beginPath();
     ctx.arc(x, y, nucleo, 0, Math.PI * 2);
     ctx.fill();
 
     // destello en cruz
-    ctx.strokeStyle = `rgba(255,249,251,${(0.35 * titileo).toFixed(2)})`;
+    ctx.strokeStyle = conAlfa(tono["paper-rgb"], Number((0.35 * titileo).toFixed(2)));
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(x - halo * 0.6, y);
@@ -171,8 +195,8 @@ export function descargarImagen(estrellas: Estrella[], ancho: number, alto: numb
   dibujarPolvo(ctx, crearPolvo(ancho, alto), ancho, alto, 0, 0, t);
   dibujarConstelacion(ctx, estrellas, ancho, alto, 0, 0, t, () => true);
 
-  ctx.font = "600 16px Inter, system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,248,251,0.85)";
+  ctx.font = `600 16px ${tonos()["letra-lienzo"]}`;
+  ctx.fillStyle = conAlfa(tonos()["text-rgb"], 0.85);
   ctx.textAlign = "left";
   ctx.textBaseline = "alphabetic";
   ctx.fillText(textos.cieloTitulo, 20, alto - 20);

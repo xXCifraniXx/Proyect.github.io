@@ -10,7 +10,7 @@
     display: grid;
     place-items: center;
     border: 1px solid var(--stroke);
-    background: linear-gradient(160deg, rgba(30, 15, 38, 0.6), rgba(18, 8, 23, 0.75));
+    background: linear-gradient(160deg, rgb(var(--cielo-seccion-rgb) / 0.6), rgb(var(--bg-1-rgb) / 0.75));
   }
   #constelacionTeaser {
     position: absolute;
