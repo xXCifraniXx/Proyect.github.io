@@ -10,15 +10,15 @@
 */
 import { leerTokens } from "./tokens.ts";
 
-// Los colores de los tokens (también el tema café); por defecto, los del rosa.
-// Se leen la primera vez que se lanza.
-const COLORES_ROSA = {
-  rose: "#ff9eb8",
-  "rose-strong": "#ff6f9a",
-  lilac: "#c99bff",
-  gold: "#f3d99f",
-  mint: "#9ef0c6",
-  text: "#fff8fb"
+// Los colores de los tokens (también el rosa con ?tema=rosa); si falta uno,
+// el del café. Se leen la primera vez que se lanza.
+const COLORES_POR_DEFECTO = {
+  rose: "#e6b07e",
+  "rose-strong": "#cf8a4f",
+  lilac: "#d6a198",
+  gold: "#f1dcae",
+  mint: "#bcd19c",
+  text: "#fbf2e6"
 };
 let colores: string[] = [];
 const GRAVEDAD = 900;
@@ -71,7 +71,7 @@ function ajustarTamano() {
 
 function asegurarLienzo(): CanvasRenderingContext2D | null {
   if (ctx) return ctx;
-  colores = Object.values(leerTokens(COLORES_ROSA));
+  colores = Object.values(leerTokens(COLORES_POR_DEFECTO));
   lienzo = document.createElement("canvas");
   lienzo.setAttribute("aria-hidden", "true");
   Object.assign(lienzo.style, {

@@ -3,10 +3,11 @@
   ---------------------------------
   Un <canvas> no lee CSS: el cielo, el cielo de adorno y el confeti toman sus
   colores de los tokens (src/styles/tokens.css, o cielo.css en la página del
-  cielo) al empezar a dibujar. Así el tema café también les llega.
+  cielo) al empezar a dibujar. Así el tema que se vea (café, o el rosa con
+  ?tema=rosa) también les llega.
 
-  Cada llamada pasa los valores del tema rosa: son los que quedan si un token
-  no está (en los tests no se carga el CSS).
+  Cada llamada pasa los valores del café: son los que quedan si un token no
+  está (en los tests no se carga el CSS).
 */
 
 /**

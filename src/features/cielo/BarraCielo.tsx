@@ -29,7 +29,7 @@ export default function BarraCielo({
   return (
     <header className="topbar">
       <div className="title-wrap">
-        {/* Con el "?…" de ahora: la vista previa (?tema=cafe) sigue al volver. */}
+        {/* Con el "?…" de ahora: la vista previa (?tema=rosa) sigue al volver. */}
         <a className="back-link" href={"../index.html" + window.location.search}>
           {textos.cieloVolver}
         </a>

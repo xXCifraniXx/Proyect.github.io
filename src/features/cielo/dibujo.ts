@@ -8,24 +8,25 @@ import type { Estrella } from "./estrellas.ts";
 import { textos } from "../../config/textos.ts";
 import { conAlfa, leerTokens } from "../../lib/tokens.ts";
 
-// Los colores salen de los tokens de cielo.css (también el tema café). Se
-// leen una vez, al primer dibujo: el tema no cambia con la página abierta.
-const TONOS_ROSA = {
-  "bg-1": "#120817",
-  "bg-2": "#231027",
-  "bg-3": "#421b3f",
-  paper: "#fff9fb",
-  "bg-1-rgb": "18 8 23",
-  "rose-rgb": "255 158 184",
-  "lilac-rgb": "201 155 255",
-  "gold-rgb": "243 217 159",
-  "text-rgb": "255 248 251",
-  "paper-rgb": "255 249 251",
-  "claro-rgb": "255 255 255",
-  "letra-lienzo": "Inter, system-ui, sans-serif"
+// Colores y letra salen de los tokens de cielo.css (también el rosa con
+// ?tema=rosa). Se leen una vez, al primer dibujo: el tema no cambia con la
+// página abierta. Si falta un token, queda el valor del café.
+const TONOS_POR_DEFECTO = {
+  "bg-1": "#140c08",
+  "bg-2": "#24160f",
+  "bg-3": "#3d2619",
+  paper: "#fbf3e7",
+  "bg-1-rgb": "20 12 8",
+  "rose-rgb": "230 176 126",
+  "lilac-rgb": "214 161 152",
+  "gold-rgb": "241 220 174",
+  "text-rgb": "251 242 230",
+  "paper-rgb": "251 243 231",
+  "claro-rgb": "255 240 224",
+  "letra-lienzo": '"Nunito Variable", ui-rounded, system-ui, sans-serif'
 };
-let tonosLeidos: typeof TONOS_ROSA | null = null;
-const tonos = () => (tonosLeidos ??= leerTokens(TONOS_ROSA));
+let tonosLeidos: typeof TONOS_POR_DEFECTO | null = null;
+const tonos = () => (tonosLeidos ??= leerTokens(TONOS_POR_DEFECTO));
 
 /** Estrellitas de fondo (no se guardan). */
 export interface Polvo {
