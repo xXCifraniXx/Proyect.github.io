@@ -108,6 +108,8 @@ export interface Cumpleanos {
 export interface Opciones {
   corazones?: number;
   calendarioDesdeHoy?: boolean;
+  /** En diciembre, fondo navideño (nieve y luces de Navidad). Si falta, sí. */
+  fondoNavidad?: boolean;
 }
 
 export interface Boveda {

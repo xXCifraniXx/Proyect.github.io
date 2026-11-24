@@ -54,7 +54,11 @@ export const juego: Juego = {
 };
 
 export const opciones: Opciones = {
+  // Cuántos corazones flotan en el fondo (en diciembre, cuántos copos de nieve caen).
   corazones: 18,
   // true = el calendario abre en el mes actual.
-  calendarioDesdeHoy: true
+  calendarioDesdeHoy: true,
+  // true = todo diciembre el fondo es navideño: nieve y luces de Navidad.
+  // Para verlo antes: ?fondo=navidad en el link.
+  fondoNavidad: true
 };

@@ -37,6 +37,12 @@ Capas fijas, en todas las páginas:
   no suena sola. Volumen `musica.volumenInicial` (0.24).
 - **Fondo**: tres luces (caramelo, cacao rosa, espuma; ver 1.6) y `opciones.corazones` (18)
   corazones que flotan (♡ ❤). El día del cumpleaños son 🎈 ✨ ❤ 🎉 ♡.
+  - **En diciembre** (todo el mes, cada año; `opciones.fondoNavidad`, que si
+    falta es `true`): fondo navideño. En lugar de corazones que suben, cae
+    nieve que se mece (❄ ❅ ✻ ❆ •, la misma cantidad), y las luces pasan a
+    caramelo, verde pino y rojo arándano (`body.is-navidad`). El día del
+    cumpleaños gana su fondo. Al empezar o terminar diciembre con la página
+    abierta, se recarga. Vista previa en cualquier fecha: `?fondo=navidad`.
 - **Bienvenida**: pantalla encima de todo con etiqueta, título, texto, botón
   "Entrar a la carta" y nota. Al pulsar se oculta. Sale **una vez, solo si se
   abre el sitio por la portada** (`/`): un link directo a una página (o un
@@ -79,7 +85,7 @@ Páginas, en este orden (el del menú):
   `/este-mes` → la portada, en el mensaje del mes; `/carta` → la portada, en
   la carta; `/tiempo` y `/musica` → la portada; `/cielo` → `/entretenimiento`,
   en la constelación; `/juego` → `/entretenimiento`, en el juego.
-- El `?…` del link (las vistas previas `?cumple=…` y `?tema=rosa`) se
+- El `?…` del link (las vistas previas `?cumple=…`, `?tema=rosa` y `?fondo=navidad`) se
   conserva al cambiar de página, también al ir a la página del cielo y al
   volver de ella.
 - **Links viejos** (de cuando todo era una sola página): `/#{id}` pasa solo,
@@ -517,7 +523,7 @@ interface Config {
     carta: Omit<Carta, "fecha">;
     textosHoy: Partial<Record<ClaveTexto, string>>;
   };
-  opciones: { corazones: number; calendarioDesdeHoy: boolean };
+  opciones: { corazones: number; calendarioDesdeHoy: boolean; fondoNavidad?: boolean };
   adviento: { anio: number; desde: string; hasta: string };   // las puertas, en puertas.ts
 }
 
@@ -582,9 +588,9 @@ dominio empiezan vacías, porque el navegador las guarda por dominio):
      menú, la carta abierta, la franja de arriba sobre la sección a la que se
      baja y la barra de secciones sobre el final de la página, en especial);
    - funciona también en tablet (768 px) y escritorio (≥1200 px).
-2. **Movimiento reducido:** con `prefers-reduced-motion` no hay confeti, el
-   cielo de adorno y la página del cielo quedan quietos (sin vaivén ni
-   titileo) y la galería no anima su desplazamiento.
+2. **Movimiento reducido:** con `prefers-reduced-motion` no hay confeti ni
+   cae la nieve de diciembre, el cielo de adorno y la página del cielo quedan
+   quietos (sin vaivén ni titileo) y la galería no anima su desplazamiento.
 3. **Accesibilidad:**
    - todos los controles se pueden usar con teclado y tienen foco visible;
    - cada carta abierta de La Bóveda es un botón con el nombre de la carta

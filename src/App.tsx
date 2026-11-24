@@ -21,6 +21,7 @@ import { Fondo, LimiteDeError, PaginaConError, ProgresoScroll } from "./componen
 import { MensajeDelMes, mensajeMesVigente } from "./features/mensaje-mes/index.ts";
 import { Adviento, Bajadas, Cumpleanos, Entretenimiento, Galeria, precargarPaginas } from "./paginas.ts";
 import { estadoAdviento } from "./lib/adviento.ts";
+import { esNavidad } from "./lib/navidad.ts";
 import { celebrar } from "./lib/confeti.ts";
 import { CONFIG, NOMBRES, TEXTOS } from "./lib/contenido.ts";
 import { rellenar } from "./lib/rellenar.ts";
@@ -49,8 +50,10 @@ export default function App() {
   const adviento = estadoAdviento(dia);
 
   // Los textos, la carta y los adornos del cumpleaños se arman al cargar la
-  // página: si su estado cambia con la página abierta, se recarga.
+  // página: si su estado cambia con la página abierta, se recarga. Lo mismo
+  // el fondo navideño, al empezar y al terminar diciembre.
   useRecargarSiCambia(estadoCumple);
+  useRecargarSiCambia(esNavidad(dia));
 
   const { menu, todas } = useMemo(() => paginasDeHoy({ adviento, cumple: estadoCumple }), [adviento, estadoCumple]);
 

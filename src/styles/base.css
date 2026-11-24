@@ -138,6 +138,51 @@
       opacity: 0;
     }
   }
+  /*
+    Fondo navideño (todo diciembre, ver lib/navidad.ts): las luces pasan a
+    caramelo, verde pino y rojo arándano, y en lugar de corazones que suben
+    cae nieve que se mece. Con "reducir movimiento", la nieve no cae.
+  */
+  body.is-navidad {
+    background:
+      radial-gradient(circle at 12% 8%, rgb(var(--rose-rgb) / 0.2), transparent 28%),
+      radial-gradient(circle at 88% 14%, rgb(var(--pino-rgb) / 0.26), transparent 28%),
+      radial-gradient(circle at 50% 90%, rgb(var(--arandano-rgb) / 0.16), transparent 34%),
+      linear-gradient(145deg, var(--bg-1), var(--bg-2) 48%, var(--bg-3));
+  }
+  .is-navidad .orb-lilac {
+    background: rgb(var(--pino-rgb));
+    opacity: 0.24;
+  }
+  .is-navidad .orb-gold {
+    background: rgb(var(--arandano-rgb));
+  }
+  .is-navidad .heart:not(.burst) {
+    top: -44px;
+    bottom: auto;
+    color: rgb(var(--claro-rgb) / 0.9);
+    animation-name: caerNieve;
+  }
+  @keyframes caerNieve {
+    0% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.45;
+    }
+    50% {
+      transform: translate3d(var(--drift), 60vh, 0) rotate(90deg);
+    }
+    90% {
+      opacity: 0.45;
+    }
+    100% {
+      transform: translate3d(0, 120vh, 0) rotate(180deg);
+      opacity: 0;
+    }
+  }
+
   .heart.burst {
     bottom: 24%;
     opacity: 0.95;

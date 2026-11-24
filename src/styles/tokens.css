@@ -101,6 +101,11 @@
     --maxw: 1120px;
     /* Alto de la franja del tiempo juntos (arriba en todas las páginas). */
     --alto-franja: 40px;
+
+    /* Luces del fondo navideño de diciembre (lib/navidad.ts): las mismas en
+       los dos temas, porque son los colores de la Navidad. */
+    --pino-rgb: 70 122 88;
+    --arandano-rgb: 190 70 82;
   }
 
   /*

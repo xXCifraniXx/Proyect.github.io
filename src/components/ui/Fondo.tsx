@@ -1,28 +1,40 @@
 import { useState, type CSSProperties } from "react";
 import { CONFIG } from "../../lib/contenido.ts";
-import { estadoCumple } from "../../lib/cumple.ts";
+import { ahora, estadoCumple } from "../../lib/cumple.ts";
+import { esNavidad } from "../../lib/navidad.ts";
 
-interface Corazon {
+interface Figura {
   id: number;
   figura: string;
   // "--drift" es una variable CSS; CSSProperties no la conoce por nombre.
   estilo: CSSProperties & { "--drift": string };
 }
 
-/** Luces de fondo y corazones que flotan (globos y confeti el día del cumpleaños). */
+/*
+  FONDO
+  Luces difusas y figuras que se mueven detrás de todo:
+    - corazones que suben, el resto del año;
+    - globos y confeti que suben, el día del cumpleaños;
+    - copos de nieve que caen, en diciembre (lib/navidad.ts). Las luces
+      también cambian a caramelo, verde pino y rojo arándano (base.css).
+  Se arma una sola vez al cargar: si cambia el día del cumpleaños o empieza
+  o termina diciembre con la página abierta, App la recarga.
+*/
 export default function Fondo() {
-  // useState con función: los corazones se sortean una sola vez, no en cada render.
-  const [corazones] = useState<Corazon[]>(() => {
+  // useState con función: las figuras se sortean una sola vez, no en cada render.
+  const [figuras] = useState<Figura[]>(() => {
     const total = CONFIG.opciones?.corazones || 18;
-    const figuras = estadoCumple() === "hoy" ? ["🎈", "✨", "❤", "🎉", "♡"] : ["♡", "❤", "❤"];
+    const cumple = estadoCumple() === "hoy";
+    const nieve = !cumple && esNavidad(ahora());
+    const lista = cumple ? ["🎈", "✨", "❤", "🎉", "♡"] : nieve ? ["❄", "❅", "✻", "❆", "•"] : ["♡", "❤", "❤"];
     return Array.from({ length: total }, (_, i) => ({
       id: i,
-      figura: figuras[i % figuras.length],
+      figura: lista[i % lista.length],
       estilo: {
         left: `${Math.random() * 100}%`,
         "--drift": `${Math.random() * 70 - 35}px`,
-        animationDuration: `${10 + Math.random() * 10}s`,
-        animationDelay: `${Math.random() * 8}s`,
+        animationDuration: `${(nieve ? 14 : 10) + Math.random() * 10}s`,
+        animationDelay: `${(nieve ? -14 : 0) + Math.random() * 8}s`,
         fontSize: `${13 + Math.random() * 10}px`
       }
     }));
@@ -36,9 +48,9 @@ export default function Fondo() {
         <span className="orb orb-gold" />
       </div>
       <div className="floating-hearts" id="floatingHearts" aria-hidden="true">
-        {corazones.map((c) => (
-          <span key={c.id} className="heart" style={c.estilo}>
-            {c.figura}
+        {figuras.map((f) => (
+          <span key={f.id} className="heart" style={f.estilo}>
+            {f.figura}
           </span>
         ))}
       </div>
