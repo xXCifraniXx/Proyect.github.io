@@ -4,10 +4,12 @@ import "./styles/index.css";
 import App from "./App.tsx";
 import { LimiteDeError, PaginaConError } from "./components/ui/index.ts";
 import { estadoCumple } from "./lib/cumple.ts";
+import { cargarLetrasDelTema } from "./lib/tema.ts";
 import { corregirLink } from "./features/navegacion/index.ts";
 
 // Antes de dibujar: un link viejo (/#boveda) pasa a su página (/boveda).
 corregirLink();
+cargarLetrasDelTema();
 if (estadoCumple() === "hoy") document.body.classList.add("is-birthday");
 
 const raiz = document.getElementById("root");

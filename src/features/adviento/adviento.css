@@ -29,13 +29,13 @@
     padding: 0;
     border-radius: var(--radius-md);
     border: 1px solid var(--stroke);
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+    background: linear-gradient(160deg, rgb(var(--claro-rgb) / 0.12), rgb(var(--claro-rgb) / 0.04));
     color: var(--text);
     font: inherit;
     animation: adviento-aparecer 0.5s ease both;
   }
   .adviento-numero {
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: var(--letra-titulo);
     font-size: clamp(1.3rem, 5vw, 1.8rem);
     line-height: 1;
   }
@@ -56,8 +56,8 @@
   /* Disponible: dorada y con un brillo suave hasta que se abre. */
   .adviento-puerta.is-disponible {
     border-color: var(--gold);
-    background: linear-gradient(160deg, rgba(243, 217, 159, 0.28), rgba(255, 158, 184, 0.14));
-    box-shadow: 0 0 18px rgba(243, 217, 159, 0.3);
+    background: linear-gradient(160deg, rgb(var(--gold-rgb) / 0.28), rgb(var(--rose-rgb) / 0.14));
+    box-shadow: 0 0 18px rgb(var(--gold-rgb) / 0.3);
     cursor: pointer;
     animation:
       adviento-aparecer 0.5s ease both,
@@ -68,7 +68,7 @@
   .adviento-puerta.is-abierta {
     align-content: center;
     gap: 2px;
-    background: rgba(255, 158, 184, 0.14);
+    background: rgb(var(--rose-rgb) / 0.14);
     cursor: pointer;
   }
   .adviento-puerta.is-abierta .adviento-numero {
@@ -105,7 +105,7 @@
   }
   @keyframes adviento-brillo {
     50% {
-      box-shadow: 0 0 30px rgba(243, 217, 159, 0.6);
+      box-shadow: 0 0 30px rgb(var(--gold-rgb) / 0.6);
     }
   }
 

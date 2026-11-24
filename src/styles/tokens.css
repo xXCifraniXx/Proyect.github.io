@@ -1,4 +1,17 @@
-/* Colores, sombras, radios y medidas que usa todo el sitio. */
+/*
+  Colores, sombras, radios y medidas que usa todo el sitio.
+
+  Ningún color se escribe a mano en el CSS de las secciones: todos salen de
+  aquí. Así un tema cambia el sitio entero redefiniendo solo estos valores
+  (el tema café, abajo).
+
+  Los "-rgb" son el mismo color en canales R G B, para usarlo con
+  transparencia: rgb(var(--rose-rgb) / 0.14). Si cambias un color, cambia
+  también su "-rgb".
+
+  El <canvas> (cielo de adorno, confeti) no lee CSS: toma estos valores al
+  empezar a dibujar (src/lib/tokens.ts).
+*/
 @layer tokens {
   :root {
     --bg-1: #120817;
@@ -11,19 +24,143 @@
     --mint: #9ef0c6;
     --mint-strong: #57d29e;
     --text: #fff8fb;
-    --muted: rgba(255, 255, 255, 0.74);
-    --muted-2: rgba(255, 255, 255, 0.56);
     --paper: #fff9fb;
     /* Fondo opaco de los paneles que flotan: menú, barra de secciones. */
     --panel: #2a1230;
     --paper-text: #573144;
-    --stroke: rgba(255, 255, 255, 0.14);
-    --stroke-strong: rgba(255, 255, 255, 0.24);
+
+    /* Canales de los colores de arriba. */
+    --bg-1-rgb: 18 8 23;
+    --rose-rgb: 255 158 184;
+    --rose-strong-rgb: 255 111 154;
+    --lilac-rgb: 201 155 255;
+    --gold-rgb: 243 217 159;
+    --mint-rgb: 158 240 198;
+    --mint-strong-rgb: 87 210 158;
+    --text-rgb: 255 248 251;
+    --paper-text-rgb: 87 49 68;
+    /* Lo claro de los vidrios, bordes, brillos y textos suaves. */
+    --claro-rgb: 255 255 255;
+
+    --muted: rgb(var(--claro-rgb) / 0.74);
+    --muted-2: rgb(var(--claro-rgb) / 0.56);
+    --stroke: rgb(var(--claro-rgb) / 0.14);
+    --stroke-strong: rgb(var(--claro-rgb) / 0.24);
+
+    /* Texto oscuro sobre los botones claros y sobre los días de bajada y subida. */
+    --texto-sobre-acento: #2b1426;
+    --texto-sobre-menta: #14261d;
+
+    /* Oscuros con transparencia: el vidrio de la portada y de la ventana de
+       carta, el velo detrás del panel de secciones y el fondo del cielo de adorno. */
+    --noche-rgb: 17 9 21;
+    --portada-2-rgb: 35 16 38;
+    --portada-3-rgb: 59 24 55;
+    --velo-rgb: 10 3 12;
+    --cielo-seccion-rgb: 30 15 38;
+
+    /* Papel: la carta del sobre, la galería y el mensaje del mes. */
+    --papel-titulo: #7b3150;
+    --papel-titulo-rgb: 123 49 80;
+    --papel-acento: #c64f7d;
+    --papel-foto: #f3e4eb;
+    --papel-vacio: #fbf1f5;
+
+    /* El sobre de la portada (cada parte, de arriba abajo). */
+    --sobre-fondo-1: #ffe4ef;
+    --sobre-fondo-2: #ffc6dc;
+    --sobre-bolsillo-1: #ffd0e1;
+    --sobre-bolsillo-2: #ffbad4;
+    --sobre-frente-1: #fff3f7;
+    --sobre-frente-2: #ffd5e4;
+    --sobre-solapa-1: #ffe0eb;
+    --sobre-solapa-2: #ffc9dc;
+
+    /* El pastel: la sombra de dos velas y del plato (la llama no cambia). */
+    --pastel-lila: #a678e6;
+    --pastel-dorado: #e9b872;
+    --pastel-plato: #d8c3d6;
+
+    /* Letras: títulos y texto. El espaciado va en los títulos grandes; el peso,
+       en el título del mensaje del mes. */
+    --letra-titulo: Georgia, "Times New Roman", serif;
+    --letra-texto: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --titulo-espaciado: -0.03em;
+    --titulo-papel-peso: 400;
+
     --shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
     --shadow-soft: 0 14px 34px rgba(0, 0, 0, 0.18);
     --radius-xl: 34px;
     --radius-lg: 26px;
     --radius-md: 18px;
     --maxw: 1120px;
+  }
+
+  /*
+    TEMA CAFÉ Y CREMA (vista previa: el link con ?tema=cafe; ver SPEC 1.6)
+    Los mismos tokens con otros valores: colores y letra (Nunito). Tamaños y
+    orden no cambian.
+    El script del <head> de index.html pone data-tema="cafe" antes de pintar.
+  */
+  :root[data-tema="cafe"] {
+    --bg-1: #140c08;
+    --bg-2: #24160f;
+    --bg-3: #3d2619;
+    --rose: #e6b07e;
+    --rose-strong: #cf8a4f;
+    --lilac: #d6a198;
+    --gold: #f1dcae;
+    --mint: #bcd19c;
+    --mint-strong: #8fad66;
+    --text: #fbf2e6;
+    --paper: #fbf3e7;
+    --panel: #2b1a12;
+    --paper-text: #4a2c1c;
+
+    --bg-1-rgb: 20 12 8;
+    --rose-rgb: 230 176 126;
+    --rose-strong-rgb: 207 138 79;
+    --lilac-rgb: 214 161 152;
+    --gold-rgb: 241 220 174;
+    --mint-rgb: 188 209 156;
+    --mint-strong-rgb: 143 173 102;
+    --text-rgb: 251 242 230;
+    --paper-text-rgb: 74 44 28;
+    --claro-rgb: 255 240 224;
+
+    --texto-sobre-acento: #241208;
+    --texto-sobre-menta: #1c2412;
+
+    --noche-rgb: 20 12 8;
+    --portada-2-rgb: 36 22 15;
+    --portada-3-rgb: 61 38 25;
+    --velo-rgb: 10 6 3;
+    --cielo-seccion-rgb: 36 22 15;
+
+    --papel-titulo: #6b3b20;
+    --papel-titulo-rgb: 107 59 32;
+    --papel-acento: #9a5428;
+    --papel-foto: #efe2d0;
+    --papel-vacio: #f7eee2;
+
+    --sobre-fondo-1: #f6ebdc;
+    --sobre-fondo-2: #ecd8bd;
+    --sobre-bolsillo-1: #ecd8bd;
+    --sobre-bolsillo-2: #e2c6a2;
+    --sobre-frente-1: #fbf3e7;
+    --sobre-frente-2: #efdcc2;
+    --sobre-solapa-1: #e9d2b4;
+    --sobre-solapa-2: #dcbd96;
+
+    --pastel-lila: #b97e74;
+    --pastel-dorado: #d9b77a;
+    --pastel-plato: #dcc6ad;
+
+    /* Nunito (redondeada), la que eligió Jorge el 24-11-2026; se descarga
+       solo en este tema (src/lib/letrasCafe.ts). */
+    --letra-titulo: "Nunito Variable", "Nunito", ui-rounded, system-ui, sans-serif;
+    --letra-texto: "Nunito Variable", "Nunito", ui-rounded, system-ui, sans-serif;
+    --titulo-espaciado: -0.01em;
+    --titulo-papel-peso: 800;
   }
 }
