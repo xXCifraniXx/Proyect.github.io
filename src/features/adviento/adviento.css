@@ -35,7 +35,7 @@
     animation: adviento-aparecer 0.5s ease both;
   }
   .adviento-numero {
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: var(--letra-titulo);
     font-size: clamp(1.3rem, 5vw, 1.8rem);
     line-height: 1;
   }

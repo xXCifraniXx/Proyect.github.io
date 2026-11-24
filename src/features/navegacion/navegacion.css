@@ -39,7 +39,7 @@
   .barra-secciones-nombre {
     display: block;
     min-height: 1.2em;
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: var(--letra-titulo);
     font-size: 1.05rem;
     line-height: 1.2;
     white-space: nowrap;

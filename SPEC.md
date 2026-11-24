@@ -130,16 +130,20 @@ sitio y se publica en la misma ruta.
 ### 1.6 Colores y tema café (vista previa)
 
 - El sitio se ve en el **tema rosa** (fondo morado oscuro, rosa, lila y
-  dorado). Ningún color va escrito en el CSS de las secciones: todos salen
-  de los tokens (`src/styles/tokens.css`; la página del cielo, los suyos en
-  `cielo.css`). El cielo, el cielo de adorno y el confeti toman los colores
-  de los mismos tokens al empezar a dibujar.
+  dorado; títulos en Georgia y texto con la letra del dispositivo). Ningún
+  color ni letra va escrito en el CSS de las secciones: todos salen de los
+  tokens (`src/styles/tokens.css`; la página del cielo, los suyos en
+  `cielo.css`). El cielo, el cielo de adorno y el confeti toman colores y
+  letra de los mismos tokens al empezar a dibujar.
 - **Vista previa del tema café y crema:** con `?tema=cafe` en el link, el
-  sitio y la página del cielo se ven en café (espresso, caramelo, crema),
-  con las mismas letras, tamaños y orden. Se aplica antes de pintar (sin un
-  instante rosa) y también cambia el color de la barra del navegador. No
-  guarda nada: sin `?tema=cafe` el sitio se ve rosa. Se puede combinar con
-  `?cumple=…` (`?tema=cafe&cumple=hoy`).
+  sitio y la página del cielo se ven en café (espresso, caramelo, crema) y
+  con letra **Nunito** (redondeada) en títulos y texto; tamaños y orden no
+  cambian. Nunito va guardada en el sitio (paquete
+  `@fontsource-variable/nunito`, licencia OFL) y solo se descarga en este
+  tema; mientras llega, se ve la letra de respaldo. Los colores se aplican
+  antes de pintar (sin un instante rosa) y también cambia el color de la
+  barra del navegador. No guarda nada: sin `?tema=cafe` el sitio se ve rosa.
+  Se puede combinar con `?cumple=…` (`?tema=cafe&cumple=hoy`).
 - Ella sigue viendo el tema rosa: el café no tiene botón ni se elige solo
   (lo decidió Jorge el 23-11-2026).
 
@@ -598,7 +602,8 @@ dominio empiezan vacías, porque el navegador las guarda por dominio):
     - sin conexión a Firebase, la sesión y lo compartido siguen funcionando
       solo en el dispositivo.
 12. **Colores (1.6):**
-    - sin `?tema=cafe`, el sitio se ve igual que antes de pasar los colores a
-      tokens (los mismos estilos calculados en cada página);
-    - con `?tema=cafe`, a 375 px no queda nada del rosa ni del morado, y el
-      texto se lee bien sobre su fondo.
+    - sin `?tema=cafe`, el sitio se ve igual que antes de pasar colores y
+      letras a tokens (los mismos estilos calculados en cada página) y no
+      descarga Nunito;
+    - con `?tema=cafe`, a 375 px no queda nada del rosa ni del morado, todo
+      el texto va en Nunito y se lee bien sobre su fondo.

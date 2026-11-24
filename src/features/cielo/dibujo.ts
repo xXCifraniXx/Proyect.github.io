@@ -21,7 +21,8 @@ const TONOS_ROSA = {
   "gold-rgb": "243 217 159",
   "text-rgb": "255 248 251",
   "paper-rgb": "255 249 251",
-  "claro-rgb": "255 255 255"
+  "claro-rgb": "255 255 255",
+  "letra-lienzo": "Inter, system-ui, sans-serif"
 };
 let tonosLeidos: typeof TONOS_ROSA | null = null;
 const tonos = () => (tonosLeidos ??= leerTokens(TONOS_ROSA));
@@ -97,11 +98,11 @@ function rectanguloRedondeado(ctx: CanvasRenderingContext2D, x: number, y: numbe
 }
 
 function dibujarEtiqueta(ctx: CanvasRenderingContext2D, x: number, y: number, texto: string) {
-  ctx.font = "13px Inter, system-ui, sans-serif";
+  const t = tonos();
+  ctx.font = `13px ${t["letra-lienzo"]}`;
   ctx.textAlign = "center";
   ctx.textBaseline = "top";
   const anchoCaja = ctx.measureText(texto).width + 16;
-  const t = tonos();
   ctx.fillStyle = conAlfa(t["bg-1-rgb"], 0.72);
   rectanguloRedondeado(ctx, x - anchoCaja / 2, y, anchoCaja, 20, 8);
   ctx.fill();
@@ -194,7 +195,7 @@ export function descargarImagen(estrellas: Estrella[], ancho: number, alto: numb
   dibujarPolvo(ctx, crearPolvo(ancho, alto), ancho, alto, 0, 0, t);
   dibujarConstelacion(ctx, estrellas, ancho, alto, 0, 0, t, () => true);
 
-  ctx.font = "600 16px Inter, system-ui, sans-serif";
+  ctx.font = `600 16px ${tonos()["letra-lienzo"]}`;
   ctx.fillStyle = conAlfa(tonos()["text-rgb"], 0.85);
   ctx.textAlign = "left";
   ctx.textBaseline = "alphabetic";

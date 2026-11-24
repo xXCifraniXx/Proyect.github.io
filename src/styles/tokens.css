@@ -81,6 +81,13 @@
     --pastel-dorado: #e9b872;
     --pastel-plato: #d8c3d6;
 
+    /* Letras: títulos y texto. El espaciado va en los títulos grandes; el peso,
+       en el título del mensaje del mes. */
+    --letra-titulo: Georgia, "Times New Roman", serif;
+    --letra-texto: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --titulo-espaciado: -0.03em;
+    --titulo-papel-peso: 400;
+
     --shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
     --shadow-soft: 0 14px 34px rgba(0, 0, 0, 0.18);
     --radius-xl: 34px;
@@ -91,7 +98,8 @@
 
   /*
     TEMA CAFÉ Y CREMA (vista previa: el link con ?tema=cafe; ver SPEC 1.6)
-    Los mismos tokens con otros valores; letras, tamaños y orden no cambian.
+    Los mismos tokens con otros valores: colores y letra (Nunito). Tamaños y
+    orden no cambian.
     El script del <head> de index.html pone data-tema="cafe" antes de pintar.
   */
   :root[data-tema="cafe"] {
@@ -147,5 +155,12 @@
     --pastel-lila: #b97e74;
     --pastel-dorado: #d9b77a;
     --pastel-plato: #dcc6ad;
+
+    /* Nunito (redondeada), la que eligió Jorge el 24-11-2026; se descarga
+       solo en este tema (src/lib/letrasCafe.ts). */
+    --letra-titulo: "Nunito Variable", "Nunito", ui-rounded, system-ui, sans-serif;
+    --letra-texto: "Nunito Variable", "Nunito", ui-rounded, system-ui, sans-serif;
+    --titulo-espaciado: -0.01em;
+    --titulo-papel-peso: 800;
   }
 }

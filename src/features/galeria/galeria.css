@@ -73,7 +73,7 @@
     text-align: center;
   }
   .timeline-month {
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: var(--letra-titulo);
     font-size: 1.12rem;
     color: var(--papel-titulo);
   }

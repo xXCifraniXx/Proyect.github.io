@@ -164,7 +164,7 @@
   .calendar-month h3 {
     margin: 0 0 14px;
     color: var(--gold);
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: var(--letra-titulo);
     font-size: clamp(1.25rem, 3vw, 1.7rem);
   }
   .weekdays,

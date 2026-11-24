@@ -11,15 +11,15 @@
     box-shadow: var(--shadow);
   }
   .month-note-date {
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: var(--letra-titulo);
     font-style: italic;
     color: rgb(var(--paper-text-rgb) / 0.7);
   }
   .month-note .month-note-title {
     margin-top: 6px;
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: var(--letra-titulo);
     font-size: clamp(2.5rem, 8vw, 4.2rem);
-    font-weight: 400;
+    font-weight: var(--titulo-papel-peso);
     line-height: 1.02;
     letter-spacing: -0.035em;
     color: var(--papel-titulo);
@@ -29,14 +29,14 @@
     display: grid;
     gap: 1em;
     max-width: 60ch;
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: var(--letra-titulo);
     font-size: 1.06rem;
     line-height: 1.85;
   }
   .month-note-sign {
     margin-top: 26px;
     text-align: right;
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: var(--letra-titulo);
     font-style: italic;
     font-size: 1.15rem;
     color: var(--papel-acento);
